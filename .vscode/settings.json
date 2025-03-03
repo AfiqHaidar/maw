@@ -1,0 +1,11 @@
+{
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "cSpell.enabled": false,
+  "cSpell.words": [
+    "allprojects",
+    "nakes",
+    "Stetho",
+    "stetholink",
+    "subprojects"
+  ]
+}
