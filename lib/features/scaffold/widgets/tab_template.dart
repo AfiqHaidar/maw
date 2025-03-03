@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mb/core/theme/colors.dart';
-import 'package:mb/data/enums/drawer_identifier.dart';
-import 'package:mb/features/scaffold/drawer_1.dart';
-import 'package:mb/features/scaffold/drawer_2.dart';
 import 'dart:io';
 import 'package:mb/widgets/confirmation_dialog.dart';
 
@@ -41,21 +38,6 @@ class _TabTemplateState extends State<TabTemplate> {
         );
       },
     );
-  }
-
-  void _onSelectScreen(DrawerIdentifier identifier) {
-    switch (identifier) {
-      case DrawerIdentifier.week1:
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => const MyScreen()),
-        );
-        break;
-      case DrawerIdentifier.week2:
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => const MyScreen2()),
-        );
-        break;
-    }
   }
 
   @override
