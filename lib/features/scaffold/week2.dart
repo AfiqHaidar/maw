@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:mb/features/color/color_poppin_screen.dart';
 import 'package:mb/features/home/home.dart';
 import 'package:mb/features/scaffold/widgets/tab_template.dart';
 
-class MyScreen extends StatelessWidget {
-  const MyScreen({super.key});
+class Week2 extends StatelessWidget {
+  const Week2({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const TabTemplate(
       screens: [
-        HomeScreen(),
+        ColorPoppinScreen(),
         HomeScreen(),
       ],
       tabs: [
         NavigationDestination(
-          selectedIcon: Icon(Icons.home),
-          icon: Icon(Icons.home_outlined),
-          label: 'Home',
+          selectedIcon: Icon(Icons.color_lens),
+          icon: Icon(Icons.color_lens_outlined),
+          label: 'Pop',
         ),
         NavigationDestination(
           selectedIcon: Icon(Icons.people_alt),
