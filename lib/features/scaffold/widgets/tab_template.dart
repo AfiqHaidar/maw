@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mb/core/theme/colors.dart';
 import 'dart:io';
 import 'package:mb/widgets/confirmation_dialog.dart';
 
@@ -34,7 +33,6 @@ class _TabTemplateState extends State<TabTemplate> {
           confirmButtonText: "Keluar",
           cancelButtonText: "Batal",
           onConfirm: _exitApp,
-          confirmButtonColor: AppColors.red,
         );
       },
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/core/theme/app_theme.dart';
-import 'package:mb/features/scaffold/drawer_1.dart';
+import 'package:mb/features/home/home.dart';
 
 void main() {
   runApp(
@@ -18,7 +18,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: appTheme,
-      home: const MyScreen(),
+      home: const HomeScreen(),
     );
   }
 }

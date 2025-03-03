@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mb/data/enums/drawer_identifier.dart';
+import 'package:mb/features/home/home.dart';
 import 'package:mb/features/scaffold/drawer_1.dart';
-import 'package:mb/features/scaffold/drawer_2.dart';
 import 'package:mb/features/scaffold/widgets/drawer_item.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -9,6 +9,11 @@ class MainDrawer extends StatelessWidget {
 
   void _onSelectScreen(BuildContext context, DrawerIdentifier identifier) {
     switch (identifier) {
+      case DrawerIdentifier.home:
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (ctx) => const HomeScreen()),
+        );
+        break;
       case DrawerIdentifier.week1:
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (ctx) => const MyScreen()),
@@ -16,7 +21,7 @@ class MainDrawer extends StatelessWidget {
         break;
       case DrawerIdentifier.week2:
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => const MyScreen2()),
+          MaterialPageRoute(builder: (ctx) => const MyScreen()),
         );
         break;
     }
@@ -60,15 +65,21 @@ class MainDrawer extends StatelessWidget {
             ),
           ),
           DrawerItem(
-            icon: Icons.restaurant,
-            title: 'Week 1',
+            icon: Icons.home,
+            title: 'Home',
+            identifier: DrawerIdentifier.home,
+            onTap: _onSelectScreen,
+          ),
+          DrawerItem(
+            icon: Icons.flutter_dash,
+            title: 'Intro to Flutter',
             identifier: DrawerIdentifier.week1,
             onTap: _onSelectScreen,
           ),
           DrawerItem(
-            icon: Icons.settings,
-            title: 'Week 2',
-            identifier: DrawerIdentifier.week2,
+            icon: Icons.color_lens,
+            title: 'Button-Color-Font',
+            identifier: DrawerIdentifier.week1,
             onTap: _onSelectScreen,
           ),
         ],
