@@ -35,7 +35,6 @@ class _ColorPoppinScreenState extends State<ColorPoppinScreen> {
     "Lobster",
     "Pacifico",
     "Bungee",
-    "Fredoka One",
     "Concert One",
     "Chewy",
     "Baloo Bhai 2",
@@ -133,7 +132,21 @@ class _ColorPoppinScreenState extends State<ColorPoppinScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 500),
+          color: _backgroundColor, // ✅ Smooth color transition
+          child: AppBar(
+            backgroundColor: Colors
+                .transparent, // ✅ Keep transparent to inherit AnimatedContainer color
+            elevation: 0,
+            iconTheme: IconThemeData(
+              color: ContrastColorUtil.getContrastColor(_backgroundColor),
+            ),
+          ),
+        ),
+      ),
       drawer: const MainDrawer(),
       body: AnimatedContainer(
         duration: const Duration(milliseconds: 500),

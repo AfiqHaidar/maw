@@ -1,8 +1,6 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:mb/core/theme/colors.dart';
-import 'package:mb/features/home/widgets/lets_start_box.dart';
+import 'package:mb/features/home/widgets/home_buttom_sheet.dart';
 import 'package:mb/features/scaffold/widgets/main_drawer.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mb/widgets/confirmation_dialog.dart';
@@ -74,14 +72,26 @@ class _HomeScreenState extends State<HomeScreen>
         _showExitConfirmationDialog();
       },
       child: Scaffold(
+        appBar: AppBar(),
         drawer: const MainDrawer(),
-        body: Column(
+        body: Stack(
           children: [
-            Expanded(child: _buildAnimatedLottie()),
-            const StartedBox(
-              title: "Mobile Development Course Using Flutter <3.",
-              subtitle: "Mari menguli 💀",
-              backgroundColor: AppColors.primary,
+            Column(
+              children: [
+                Expanded(child: _buildAnimatedLottie()),
+              ],
+            ),
+            Positioned.fill(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: HomeBottomSheet(
+                  title: "Meow meow meow meow Flutter meow meow.",
+                  subtitle: "Meow meow nya meow 💀",
+                  onButtonPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
+              ),
             ),
           ],
         ),
@@ -94,9 +104,35 @@ class _HomeScreenState extends State<HomeScreen>
       opacity: _fadeAnimation,
       child: Center(
         child: Lottie.asset(
-          'assets/animations/hanging_cat.json',
+          'assets/animations/stare_cat.json',
         ),
       ),
     );
   }
 }
+
+
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return PopScope(
+  //     canPop: false,
+  //     onPopInvoked: (bool didPop) async {
+  //       if (didPop) return;
+  //       _showExitConfirmationDialog();
+  //     },
+  //     child: Scaffold(
+  //       drawer: const MainDrawer(),
+  //       body: Column(
+  //         children: [
+  //           Expanded(child: _buildAnimatedLottie()),
+  //           const StartedBox(
+  //             title: "Meow  Flutter meow meow.",
+  //             subtitle: "Meow meow nya meow 💀",
+  //             backgroundColor: AppColors.primary,
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }

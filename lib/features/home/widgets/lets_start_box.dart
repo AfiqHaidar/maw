@@ -95,6 +95,7 @@ class _StartedBoxState extends State<StartedBox>
                       Theme.of(context).textTheme.titleLarge!.copyWith(
                             fontWeight: FontWeight.bold,
                             color: AppColors.white,
+                            letterSpacing: 2.0,
                           ),
                 ),
               ),
@@ -113,6 +114,7 @@ class _StartedBoxState extends State<StartedBox>
                       Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: AppColors.white70,
                             fontSize: 14,
+                            letterSpacing: 2.0,
                           ),
                 ),
               ),

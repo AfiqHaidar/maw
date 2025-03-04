@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mb/data/enums/drawer_identifier.dart';
+import 'package:mb/features/color/color_poppin_screen.dart';
 import 'package:mb/features/home/home.dart';
-import 'package:mb/features/scaffold/week2.dart';
+import 'package:mb/features/scaffold/week1.dart';
 import 'package:mb/features/scaffold/widgets/drawer_item.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -16,12 +17,12 @@ class MainDrawer extends StatelessWidget {
         break;
       case DrawerIdentifier.week1:
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => const Week2()),
+          MaterialPageRoute(builder: (ctx) => const Week1()),
         );
         break;
       case DrawerIdentifier.week2:
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => const Week2()),
+          MaterialPageRoute(builder: (ctx) => const ColorPoppinScreen()),
         );
         break;
     }

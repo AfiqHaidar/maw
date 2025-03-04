@@ -3,8 +3,8 @@ import 'package:mb/features/color/color_poppin_screen.dart';
 import 'package:mb/features/home/home.dart';
 import 'package:mb/features/scaffold/widgets/tab_template.dart';
 
-class Week2 extends StatelessWidget {
-  const Week2({super.key});
+class Week1 extends StatelessWidget {
+  const Week1({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,14 +15,14 @@ class Week2 extends StatelessWidget {
       ],
       tabs: [
         NavigationDestination(
-          selectedIcon: Icon(Icons.color_lens),
-          icon: Icon(Icons.color_lens_outlined),
-          label: 'Pop',
+          selectedIcon: Icon(Icons.flutter_dash),
+          icon: Icon(Icons.flutter_dash_outlined),
+          label: 'Flutter',
         ),
         NavigationDestination(
-          selectedIcon: Icon(Icons.people_alt),
-          icon: Icon(Icons.people_alt_outlined),
-          label: 'People',
+          selectedIcon: Icon(Icons.code),
+          icon: Icon(Icons.code_off_outlined),
+          label: 'Dart',
         ),
       ],
     );
