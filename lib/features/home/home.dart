@@ -1,9 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:mb/core/utils/sound_handler.dart';
+import 'package:mb/data/enums/sound_identifier.dart';
 import 'package:mb/features/home/widgets/home_buttom_sheet.dart';
+import 'package:mb/core/utils/exit_handler.dart';
 import 'package:mb/features/scaffold/widgets/main_drawer.dart';
 import 'package:lottie/lottie.dart';
-import 'package:mb/widgets/confirmation_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -44,32 +45,13 @@ class _HomeScreenState extends State<HomeScreen>
     super.dispose();
   }
 
-  Future<void> _exitApp() async {
-    exit(0);
-  }
-
-  void _showExitConfirmationDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ConfirmationDialog(
-          header: "Konfirmasi Keluar",
-          subheader: "Apakah Anda yakin ingin keluar dari aplikasi?",
-          confirmButtonText: "Keluar",
-          cancelButtonText: "Batal",
-          onConfirm: _exitApp,
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
         if (didPop) return;
-        _showExitConfirmationDialog();
+        ExitHandler.showExitConfirmationDialog(context);
       },
       child: Scaffold(
         appBar: AppBar(),
@@ -78,7 +60,21 @@ class _HomeScreenState extends State<HomeScreen>
           children: [
             Column(
               children: [
-                Expanded(child: _buildAnimatedLottie()),
+                Expanded(
+                    child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Center(
+                    child: InkWell(
+                      onTap: () =>
+                          SoundService().playSound(SoundIdentifier.MEOW),
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      child: Lottie.asset(
+                        'assets/animations/stare_cat.json',
+                      ),
+                    ),
+                  ),
+                )),
               ],
             ),
             Positioned.fill(
@@ -94,17 +90,6 @@ class _HomeScreenState extends State<HomeScreen>
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAnimatedLottie() {
-    return FadeTransition(
-      opacity: _fadeAnimation,
-      child: Center(
-        child: Lottie.asset(
-          'assets/animations/stare_cat.json',
         ),
       ),
     );

@@ -42,6 +42,8 @@ dependencies:
   cached_network_image: ^3.4.0
   google_fonts: ^6.2.1
   lottie: ^3.1.3
+  audioplayers: ^6.3.0
+  path_provider: ^2.1.4
 
 dev_dependencies:
   flutter_test:
@@ -70,6 +72,16 @@ flutter:
     - assets/animations/mobile_dev.json
     - assets/animations/hanging_cat.json
     - assets/animations/stare_cat.json
+    - assets/sounds/meow_1.mp3
+    - assets/sounds/meow_2.mp3
+    - assets/sounds/meow_3.mp3
+    - assets/sounds/meow_4.mp3
+    - assets/sounds/meow_5.mp3
+    - assets/sounds/pop_1.mp3
+    - assets/sounds/pop_2.mp3
+    - assets/sounds/pop_3.mp3
+    - assets/sounds/pop_4.mp3
+    - assets/sounds/pop_5.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

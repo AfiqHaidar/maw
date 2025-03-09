@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:mb/widgets/confirmation_dialog.dart';
+import 'package:mb/core/utils/exit_handler.dart';
 
 class TabTemplate extends StatefulWidget {
   final List<Widget> screens;
@@ -19,32 +18,13 @@ class TabTemplate extends StatefulWidget {
 class _TabTemplateState extends State<TabTemplate> {
   int selectedPageIndex = 0;
 
-  Future<void> _exitApp() async {
-    exit(0);
-  }
-
-  void _showExitConfirmationDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return ConfirmationDialog(
-          header: "Konfirmasi Keluar",
-          subheader: "Apakah Anda yakin ingin keluar dari aplikasi?",
-          confirmButtonText: "Keluar",
-          cancelButtonText: "Batal",
-          onConfirm: _exitApp,
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
         if (didPop) return;
-        _showExitConfirmationDialog();
+        ExitHandler.showExitConfirmationDialog(context);
       },
       child: Scaffold(
         bottomNavigationBar: NavigationBar(

@@ -1,0 +1,1 @@
+enum SoundIdentifier { MEOW, POP }
