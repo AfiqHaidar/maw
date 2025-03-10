@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mb/features/color/color_poppin_screen.dart';
-import 'package:mb/features/home/home.dart';
+import 'package:mb/features/home/home_screen.dart';
 import 'package:mb/features/scaffold/widgets/tab_template.dart';
 
 class Week1 extends StatelessWidget {

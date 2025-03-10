@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mb/data/enums/drawer_identifier.dart';
 import 'package:mb/features/color/color_poppin_screen.dart';
-import 'package:mb/features/home/home.dart';
+import 'package:mb/features/home/home_screen.dart';
 import 'package:mb/features/scaffold/week1.dart';
+import 'package:mb/features/scaffold/week3.dart';
 import 'package:mb/features/scaffold/widgets/drawer_item.dart';
 
 class MainDrawer extends StatelessWidget {
@@ -23,6 +24,11 @@ class MainDrawer extends StatelessWidget {
       case DrawerIdentifier.week2:
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (ctx) => const ColorPoppinScreen()),
+        );
+        break;
+      case DrawerIdentifier.week3:
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (ctx) => const Week3()),
         );
         break;
     }
@@ -81,6 +87,12 @@ class MainDrawer extends StatelessWidget {
             icon: Icons.color_lens,
             title: 'Button-Color-Font',
             identifier: DrawerIdentifier.week2,
+            onTap: _onSelectScreen,
+          ),
+          DrawerItem(
+            icon: Icons.image,
+            title: 'Images',
+            identifier: DrawerIdentifier.week3,
             onTap: _onSelectScreen,
           ),
         ],

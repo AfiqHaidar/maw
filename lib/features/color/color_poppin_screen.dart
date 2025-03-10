@@ -72,7 +72,7 @@ class _ColorPoppinScreenState extends State<ColorPoppinScreen>
           duration: const Duration(milliseconds: 500),
           color: _backgroundColor,
           child: AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: AppColors.transparent,
             elevation: 0,
             iconTheme: IconThemeData(
               color: ContrastColorUtil.getContrastColor(_backgroundColor),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mb/core/theme/colors.dart';
 import 'package:mb/core/utils/sound_handler.dart';
 import 'package:mb/data/enums/sound_identifier.dart';
 import 'package:mb/features/home/widgets/home_buttom_sheet.dart';
@@ -67,8 +68,8 @@ class _HomeScreenState extends State<HomeScreen>
                     child: InkWell(
                       onTap: () =>
                           SoundService().playSound(SoundIdentifier.MEOW),
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
+                      splashColor: AppColors.transparent,
+                      highlightColor: AppColors.transparent,
                       child: Lottie.asset(
                         'assets/animations/stare_cat.json',
                       ),
