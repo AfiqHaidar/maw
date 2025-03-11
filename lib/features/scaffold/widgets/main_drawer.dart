@@ -36,19 +36,18 @@ class MainDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Drawer(
       child: Column(
         children: [
           DrawerHeader(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Theme.of(context).colorScheme.primaryContainer,
-                  Theme.of(context)
-                      .colorScheme
-                      .primaryContainer
-                      .withOpacity(0.8),
+                  colorScheme.primaryContainer,
+                  colorScheme.primaryContainer.withOpacity(0.8),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomLeft,
@@ -59,15 +58,16 @@ class MainDrawer extends StatelessWidget {
                 Icon(
                   Icons.phone_android,
                   size: 48,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: colorScheme.primary,
                 ),
                 const SizedBox(width: 18),
                 Text(
                   'Mobile Dev Course',
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
+                  style: Theme.of(context).textTheme.headline6!.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.bold,
                       ),
-                )
+                ),
               ],
             ),
           ),

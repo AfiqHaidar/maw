@@ -17,16 +17,27 @@ class DrawerItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return ListTile(
       leading: Icon(
         icon,
-        size: 20,
-        color: Theme.of(context).colorScheme.onBackground,
+        size: 24,
+        color: colorScheme
+            .onBackground, // Icon color using 'onBackground' from ColorScheme
       ),
       title: Text(
         title,
+        style: TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16,
+          color: colorScheme
+              .onBackground, // Text color using 'onBackground' from ColorScheme
+        ),
       ),
       onTap: () => onTap(context, identifier),
+      contentPadding: EdgeInsets.symmetric(
+          vertical: 10, horizontal: 15), // Consistent padding
     );
   }
 }
