@@ -45,6 +45,11 @@ dependencies:
   audioplayers: ^6.3.0
   path_provider: ^2.1.4
   vertical_card_pager: ^1.6.3
+  flutter_advanced_drawer: ^1.4.0
+  font_awesome_flutter: ^10.8.0
+  loading_indicator: ^3.1.1
+  flutter_launcher_icons: ^0.14.3
+  expandable: ^5.0.1
 
 dev_dependencies:
   flutter_test:
@@ -56,6 +61,11 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logo.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
