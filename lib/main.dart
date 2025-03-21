@@ -1,9 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mb/core/theme/app_theme.dart';
-import 'package:mb/features/home/home_screen.dart';
+import 'package:mb/core/theme/colors.dart';
+import 'package:mb/features/auth/screens/auth_screen.dart';
+import 'package:mb/features/auth/screens/splash_screen.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
     const ProviderScope(
       child: App(),
@@ -11,56 +20,31 @@ void main() {
   );
 }
 
-class App extends StatelessWidget {
+class App extends ConsumerWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
-      theme: appTheme,
-      home: const HomeScreen(),
+      title: 'Maw',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
+      ),
+      home: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.idTokenChanges(),
+        builder: (context, authSnapshot) {
+          print('triggered x');
+          if (authSnapshot.connectionState == ConnectionState.waiting) {
+            return AuthScreen();
+          }
+
+          if (authSnapshot.hasData) {
+            return SplashScreen();
+          }
+
+          return AuthScreen();
+        },
+      ),
     );
   }
 }
-
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await Firebase.initializeApp(
-//     options: DefaultFirebaseOptions.currentPlatform,
-//   );
-
-//   runApp(
-//     const ProviderScope(
-//       child: App(),
-//     ),
-//   );
-// }
-
-// class App extends ConsumerWidget {
-//   const App({super.key});
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     return MaterialApp(
-//       title: 'MB Course',
-//       theme: ThemeData(
-//         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
-//       ),
-//       home: StreamBuilder<User?>(
-//         stream: FirebaseAuth.instance.authStateChanges(),
-//         builder: (context, authSnapshot) {
-//           if (authSnapshot.connectionState == ConnectionState.waiting) {
-//             return const SplashScreen();
-//           }
-
-//           if (authSnapshot.hasData) {
-//             return SplashRedirectorScreen(userId: authSnapshot.data!.uid);
-//           }
-
-//           return const AuthScreen();
-//         },
-//       ),
-//     );
-//   }
-// }
