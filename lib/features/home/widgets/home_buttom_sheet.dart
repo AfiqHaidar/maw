@@ -16,14 +16,13 @@ class HomeBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.1,
-      minChildSize: 0.1,
-      maxChildSize: 0.3,
+      initialChildSize: 0.12,
+      minChildSize: 0.12,
+      maxChildSize: 0.35,
       snap: true,
       builder: (context, scrollController) {
         return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
           decoration: const BoxDecoration(
             color: AppColors.primary,
             borderRadius: BorderRadius.only(
@@ -41,45 +40,69 @@ class HomeBottomSheet extends StatelessWidget {
           child: SingleChildScrollView(
             controller: scrollController,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 24),
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 5,
-                    margin: const EdgeInsets.only(bottom: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.white54,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                // Drag handle
+                Container(
+                  width: 40,
+                  height: 5,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white54,
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                Text(
-                  title,
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.white,
-                        letterSpacing: 2.0,
-                      ),
+
+                // Glassy card section
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _buildGlowIcon(
+                      icon: Icons.menu_open_rounded,
+                      onPressed: onButtonPressed,
+                      tooltip: "Open Drawer",
+                    ),
+                    const SizedBox(width: 24),
+                    _buildGlowIcon(
+                      icon: Icons.favorite_outline,
+                      onPressed: () {},
+                      tooltip: "Meow Power",
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                Text(
-                  subtitle,
-                  textAlign: TextAlign.left,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: AppColors.white70,
-                        fontSize: 14,
-                        letterSpacing: 2.0,
-                      ),
-                ),
-                const SizedBox(height: 24),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+// Add this helper method inside the same class
+  Widget _buildGlowIcon({
+    required IconData icon,
+    required VoidCallback onPressed,
+    String? tooltip,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white.withOpacity(0.3),
+            blurRadius: 20,
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: IconButton(
+        onPressed: onPressed,
+        icon: Icon(icon),
+        iconSize: 28,
+        tooltip: tooltip,
+        color: Colors.white,
+      ),
     );
   }
 }
