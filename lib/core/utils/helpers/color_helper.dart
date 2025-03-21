@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ContrastColorUtil {
+class ColorHelper {
   static Color getContrastColor(Color backgroundColor) {
     return backgroundColor.computeLuminance() > 0.5
         ? Colors.black

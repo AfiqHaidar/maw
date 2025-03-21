@@ -72,7 +72,7 @@ final List<String> _fontList = [
   "Press Start 2P"
 ];
 
-class RandomHandler {
+class RandomHelper {
   static Offset generateRandomPosition(Size screenSize, double buttonSize) {
     final random = Random();
 
