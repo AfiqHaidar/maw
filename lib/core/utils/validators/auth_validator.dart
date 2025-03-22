@@ -1,14 +1,15 @@
 class AuthValidator {
   static String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Tolong masukkan alamat email';
+      return 'Please enter your email address.';
     }
 
     final emailRegex = RegExp(
-        r"^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$");
+      r"^[a-zA-Z0-9]+([._%+-]?[a-zA-Z0-9]+)*@[a-zA-Z0-9]+([.-]?[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}$",
+    );
 
     if (!emailRegex.hasMatch(value)) {
-      return 'Tolong masukkan alamat email yang valid';
+      return 'Please enter a valid email address.';
     }
 
     final emailParts = value.split('@');
@@ -16,13 +17,13 @@ class AuthValidator {
     final domainPart = emailParts[1];
 
     if (localPart.length > 64 || domainPart.length > 255) {
-      return 'Tolong masukkan alamat email yang valid';
+      return 'Please enter a valid email address.';
     }
 
     if (!domainPart.contains('.') ||
         domainPart.startsWith('-') ||
         domainPart.endsWith('-')) {
-      return 'Tolong masukkan alamat email yang valid';
+      return 'Please enter a valid email address.';
     }
 
     return null;
@@ -30,7 +31,7 @@ class AuthValidator {
 
   static String? validatePassword(String? value) {
     if (value == null || value.trim().length < 6) {
-      return 'Password harus terdiri dari minimal 6 karakter';
+      return 'Password must be at least 6 characters long.';
     }
     return null;
   }

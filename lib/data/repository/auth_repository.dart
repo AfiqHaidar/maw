@@ -11,10 +11,17 @@ class AuthRepository {
     return userCredential.user;
   }
 
+  Future<User?> register(String email, String password) async {
+    final userCredential = await _auth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return userCredential.user;
+  }
+
   Future<void> logout() async {
     await _auth.signOut();
     await _auth.currentUser?.reload();
-    print("🔥 User has been logged out!");
   }
 
   User? getCurrentUser() {

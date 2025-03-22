@@ -15,6 +15,15 @@ class AuthController extends StateNotifier<bool> {
     }
   }
 
+  Future<void> register(String email, String password) async {
+    state = true;
+    try {
+      await _authRepository.register(email, password);
+    } finally {
+      state = false;
+    }
+  }
+
   Future<void> logout() async {
     state = true;
     try {
