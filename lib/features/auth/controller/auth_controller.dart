@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/data/repository/auth_repository.dart';
 
@@ -15,10 +16,10 @@ class AuthController extends StateNotifier<bool> {
     }
   }
 
-  Future<void> register(String email, String password) async {
+  Future<UserCredential> register(String email, String password) async {
     state = true;
     try {
-      await _authRepository.register(email, password);
+      return await _authRepository.register(email, password);
     } finally {
       state = false;
     }

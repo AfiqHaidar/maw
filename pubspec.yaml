@@ -50,6 +50,7 @@ dependencies:
   loading_indicator: ^3.1.1
   flutter_launcher_icons: ^0.14.3
   expandable: ^5.0.1
+  firebase_storage: ^12.2.0
 
 dev_dependencies:
   flutter_test:
@@ -79,6 +80,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/images/logo.png
     - assets/animations/homescreen.json
     - assets/animations/mobile_dev.json
     - assets/animations/hanging_cat.json

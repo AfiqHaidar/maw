@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/data/enums/drawer_identifier.dart';
 import 'package:mb/data/providers/selected_drawer_provider.dart';
-import 'package:mb/features/color_pop/color_poppin_screen.dart';
+import 'package:mb/widgets/color_pop/color_poppin_screen.dart';
 import 'package:mb/features/home/screens/home_screen.dart';
 import 'package:mb/widgets/confirmation_dialog.dart';
 import 'package:mb/widgets/drawer/drawer_header.dart';

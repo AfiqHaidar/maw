@@ -31,17 +31,9 @@ class App extends ConsumerWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
       ),
       home: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.idTokenChanges(),
+        stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, authSnapshot) {
-          print('triggered x');
-          if (authSnapshot.connectionState == ConnectionState.waiting) {
-            return AuthScreen();
-          }
-
-          if (authSnapshot.hasData) {
-            return SplashScreen();
-          }
-
+          if (authSnapshot.hasData) return SplashScreen();
           return AuthScreen();
         },
       ),
