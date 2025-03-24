@@ -14,6 +14,7 @@ import 'package:mb/features/auth/widgets/auth_text_field.dart';
 import 'package:mb/features/auth/widgets/auth_button.dart';
 import 'package:mb/features/auth/widgets/password_visibility_toggle.dart';
 import 'package:mb/features/auth/widgets/profile_picture_picker.dart';
+import 'package:mb/features/auth/widgets/username_info_icon.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -30,6 +31,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
   var _enteredEmail = '';
   var _enteredPassword = '';
   var _enteredName = '';
+  var _enteredUsername = '';
   var _selectedProfilePictureAsset = 'assets/animations/hanging_cat.json';
   bool _obscureTextPassword = true;
   // bool _obscureTextPasswordConfirmed = true;
@@ -54,6 +56,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
           id: firebaseUser.uid,
           email: _enteredEmail,
           name: _enteredName,
+          username: _enteredUsername,
           profilePicture: _selectedProfilePictureAsset,
         );
 
@@ -98,8 +101,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(authProvider);
+    final isAuthLoading = ref.watch(authProvider);
+    final usernamesAsync = ref.watch(usernamesStreamProvider);
+    final isLoading = isAuthLoading ||
+        usernamesAsync.isLoading ||
+        usernamesAsync.maybeWhen(
+            data: (list) => list.isEmpty, orElse: () => true);
+
     final color = Theme.of(context).colorScheme;
+    print(usernamesAsync);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -155,8 +165,30 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
                                         children: [
                                           AuthTextField(
                                             label: "Username",
+                                            validator: (value) {
+                                              final usernames =
+                                                  usernamesAsync.maybeWhen(
+                                                data: (list) => list.toSet(),
+                                                orElse: () => <String>{},
+                                              );
+                                              return AuthValidator
+                                                  .validateUsername(
+                                                      value, usernames);
+                                            },
+                                            onSaved: (value) =>
+                                                _enteredUsername = value!,
+                                            prefixIcon: const Icon(
+                                              Icons.alternate_email,
+                                              color: AppColors.white70,
+                                            ),
+                                            suffixIcon:
+                                                const UsernameInfoIcon(),
+                                            textInputType: TextInputType.name,
+                                          ),
+                                          AuthTextField(
+                                            label: "Name",
                                             validator:
-                                                AuthValidator.validateUsername,
+                                                AuthValidator.validateName,
                                             onSaved: (value) =>
                                                 _enteredName = value!,
                                             prefixIcon: const Icon(

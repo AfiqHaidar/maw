@@ -1,5 +1,5 @@
 class AuthValidator {
-  static String? validateUsername(String? value) {
+  static String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Please enter your name.';
     }
@@ -8,6 +8,22 @@ class AuthValidator {
 
     if (!nameRegex.hasMatch(value.trim())) {
       return 'Name can only contain letters, spaces, apostrophes, and dashes.';
+    }
+
+    return null;
+  }
+
+  static String? validateUsername(String? value, Set<String> usernames) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter a username.';
+    }
+
+    if (value.trim().length < 4) {
+      return 'Username must be at least 4 characters long.';
+    }
+
+    if (usernames.contains(value.trim())) {
+      return 'Username is already taken.';
     }
 
     return null;

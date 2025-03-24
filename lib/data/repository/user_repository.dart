@@ -36,4 +36,21 @@ class UserRepository {
       throw Exception("Failed to delete user: $e");
     }
   }
+
+  Stream<UserModel> watchUser(String userId) {
+    return _firestore.collection(collectionPath).doc(userId).snapshots().map(
+          (doc) =>
+              UserModel.fromMap(doc.id, doc.data() as Map<String, dynamic>),
+        );
+  }
+
+  Stream<List<String>> watchAllUsernames() {
+    return _firestore.collection(collectionPath).snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) =>
+              (doc.data() as Map<String, dynamic>)['username'] as String?)
+          .whereType<String>()
+          .toList();
+    });
+  }
 }

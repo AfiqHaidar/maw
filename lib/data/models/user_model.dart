@@ -2,12 +2,14 @@ class UserModel {
   final String id;
   final String email;
   final String name;
+  final String username;
   final String profilePicture;
 
   UserModel({
     required this.id,
     required this.email,
     required this.name,
+    required this.username,
     required this.profilePicture,
   });
 
@@ -17,6 +19,7 @@ class UserModel {
       id: id,
       email: map['email'] ?? '',
       name: map['name'] ?? '',
+      username: map['username'] ?? '',
       profilePicture: map['profilePicture'] ?? '',
     );
   }
@@ -26,6 +29,7 @@ class UserModel {
     return {
       'email': email,
       'name': name,
+      'username': username,
       'profilePicture': profilePicture,
     };
   }
