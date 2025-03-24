@@ -1,25 +1,31 @@
 // lib/features/portfolio/widgets/portfolio_header.dart
 import 'package:flutter/material.dart';
-import 'package:mb/core/theme/colors.dart';
-import 'package:mb/features/portofolio/screens/add_project_screen.dart';
 
-class PortfolioHeader extends StatelessWidget {
-  const PortfolioHeader({Key? key}) : super(key: key);
+class PortofolioHeader extends StatelessWidget {
+  final Color themeColor;
+  final VoidCallback onAddProject;
+  final VoidCallback onMenuPressed;
+
+  const PortofolioHeader({
+    Key? key,
+    required this.themeColor,
+    required this.onAddProject,
+    required this.onMenuPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 30),
+      padding: const EdgeInsets.fromLTRB(24, 50, 24, 30),
       decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+        color: themeColor.withOpacity(0.05),
+        border: Border(
+          bottom: BorderSide(
+            color: themeColor.withOpacity(0.1),
+            width: 1,
           ),
-        ],
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,60 +38,63 @@ class PortfolioHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.darkGrey,
+                  color: Colors.grey[800],
                 ),
               ),
-              _buildAddButton(context),
+              // Drawer menu button
+              IconButton(
+                icon: Icon(Icons.menu, color: Colors.grey[800]),
+                onPressed: onMenuPressed,
+              ),
             ],
           ),
           const SizedBox(height: 8),
-          Text(
-            "A collection of my recent work and personal projects.",
+          const Text(
+            "A collection of your recent work and personal projects.",
             style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
+              fontSize: 14,
+              color: Colors.black87,
               height: 1.4,
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAddButton(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).colorScheme.primary.withOpacity(0.8),
-            Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(0.9),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: ElevatedButton.icon(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const AddProjectScreen(),
+          const SizedBox(height: 20),
+          InkWell(
+            onTap: onAddProject,
+            borderRadius: BorderRadius.circular(12),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: themeColor,
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: [
+                  BoxShadow(
+                    color: themeColor.withOpacity(0.3),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(
+                    Icons.add_circle_outline,
+                    color: Colors.white,
+                    size: 18,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    "Add New Project",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          );
-        },
-        icon: const Icon(Icons.add_circle_outline),
-        label: const Text("New Project"),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.white,
-          shadowColor: Colors.transparent,
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
           ),
-        ),
+        ],
       ),
     );
   }

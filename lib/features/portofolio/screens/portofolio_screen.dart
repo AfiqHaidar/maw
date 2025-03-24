@@ -11,6 +11,7 @@ import 'package:mb/features/portofolio/screens/add_project_screen.dart';
 import 'package:mb/features/portofolio/utils/position_utils.dart';
 import 'package:mb/features/portofolio/widgets/expandable_circle_overlay.dart';
 import 'package:mb/features/portofolio/widgets/portofolio_category_section.dart';
+import 'package:mb/features/portofolio/widgets/portofolio_header.dart';
 import 'package:mb/features/portofolio/widgets/project_sheet.dart';
 import 'package:mb/widgets/drawer/main_drawer.dart';
 
@@ -147,24 +148,18 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
     final projects = ref.watch(projectsProvider);
 
     return Scaffold(
-      drawer: const MainDrawer(),
-      backgroundColor: Colors.white,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          _buildMainContent(categories, projectsByCategory, projects),
-          if (_expandedIndex != null && _expandOrigin != null)
-            _buildExpandedCircleOverlay(projects, size),
-          if (_expandedIndex != null)
-            _buildProjectSheet(projects, bottomSheetHeight),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _navigateToAddProject,
-        backgroundColor: _selectedColor,
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
-    );
+        drawer: const MainDrawer(),
+        backgroundColor: Colors.white,
+        body: Stack(
+          fit: StackFit.expand,
+          children: [
+            _buildMainContent(categories, projectsByCategory, projects),
+            if (_expandedIndex != null && _expandOrigin != null)
+              _buildExpandedCircleOverlay(projects, size),
+            if (_expandedIndex != null)
+              _buildProjectSheet(projects, bottomSheetHeight),
+          ],
+        ));
   }
 
   Widget _buildMainContent(
@@ -176,7 +171,15 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(),
+          Builder(
+            builder: (context) => PortofolioHeader(
+              themeColor: _selectedColor,
+              onAddProject: _navigateToAddProject,
+              onMenuPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+          ),
           const SizedBox(height: 20),
           ...categories
               .map((category) => CategorySection(
@@ -189,95 +192,6 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
                   ))
               .toList(),
           const SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(24, 50, 24, 30),
-      decoration: BoxDecoration(
-        color: _selectedColor.withOpacity(0.05),
-        border: Border(
-          bottom: BorderSide(
-            color: _selectedColor.withOpacity(0.1),
-            width: 1,
-          ),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "My Projects",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey[800],
-                ),
-              ),
-              // Drawer menu button
-              Builder(
-                builder: (context) => IconButton(
-                  icon: Icon(Icons.menu, color: Colors.grey[800]),
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            "A collection of your recent work and personal projects.",
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.black87,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 20),
-          InkWell(
-            onTap: _navigateToAddProject,
-            borderRadius: BorderRadius.circular(12),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(
-                color: _selectedColor,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: _selectedColor.withOpacity(0.3),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  Icon(
-                    Icons.add_circle_outline,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                  SizedBox(width: 8),
-                  Text(
-                    "Add New Project",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
     );
