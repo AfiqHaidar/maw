@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mb/data/enums/banner_identifier.dart';
-import 'package:mb/data/enums/circle_identifier.dart';
 import 'package:mb/data/models/project_model.dart';
 
 class ExpandableCircle extends StatelessWidget {
@@ -31,9 +30,7 @@ class ExpandableCircle extends StatelessWidget {
           width: size,
           height: size,
           decoration: BoxDecoration(
-            color: item.bannerType == CircleIdentifier.picture
-                ? Colors.transparent
-                : item.bannerBgColor,
+            color: item.bannerBgColor,
             shape: BoxShape.circle,
             boxShadow: shadow != null ? [shadow!] : null,
           ),

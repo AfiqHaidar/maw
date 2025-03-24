@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mb/core/theme/colors.dart';
 import 'package:mb/core/services/sound_service.dart';
 import 'package:mb/data/enums/sound_identifier.dart';
 import 'package:mb/data/providers/auth_provider.dart';
-import 'package:mb/features/home/widgets/home_buttom_sheet.dart';
+import 'package:mb/data/providers/user_provider.dart';
 import 'package:mb/core/handlers/exit_handler.dart';
 import 'package:mb/widgets/drawer/main_drawer.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mb/data/models/user_model.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -50,6 +50,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final userAsyncValue = ref.watch(userStreamProvider);
+
+    return userAsyncValue.when(
+      data: (user) => _buildProfileContent(context, user),
+      loading: () => const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, stackTrace) => Scaffold(
+        body: Center(child: Text('Error loading profile: $error')),
+      ),
+    );
+  }
+
+  Widget _buildProfileContent(BuildContext context, UserModel user) {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
@@ -57,43 +71,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         ExitHandler.showExitConfirmationDialog(context);
       },
       child: Scaffold(
+        appBar: AppBar(),
         drawer: const MainDrawer(),
         body: Stack(
           children: [
             Column(
               children: [
                 Expanded(
-                    child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Center(
-                    child: InkWell(
-                      onTap: () async {
-                        SoundService().playSound(SoundIdentifier.MEOW);
-                        await ref.read(authProvider.notifier).logout();
-                      },
-                      splashColor: AppColors.transparent,
-                      highlightColor: AppColors.transparent,
-                      child: Lottie.asset(
-                        'assets/animations/stare_cat.json',
+                  child: FadeTransition(
+                    opacity: _fadeAnimation,
+                    child: Center(
+                      child: InkWell(
+                        onTap: () async {
+                          SoundService().playSound(SoundIdentifier.MEOW);
+                          await ref.read(authProvider.notifier).logout();
+                        },
+                        splashColor: Colors.transparent,
+                        highlightColor: Colors.transparent,
+                        child: Lottie.asset(
+                          user.profilePicture.isNotEmpty
+                              ? user.profilePicture
+                              : 'assets/animations/hanging_cat.json',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                   ),
-                )),
-              ],
-            ),
-            Positioned.fill(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Builder(
-                  builder: (context) => HomeBottomSheet(
-                    title: "Meow meow meow meow Flutter meow meow.",
-                    subtitle: "Meow meow nya meow 💀",
-                    onButtonPressed: () {
-                      Scaffold.of(context).openDrawer();
-                    },
-                  ),
                 ),
-              ),
+              ],
             ),
           ],
         ),

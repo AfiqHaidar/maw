@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mb/data/enums/banner_identifier.dart';
-import 'package:mb/data/enums/circle_identifier.dart';
 import 'package:mb/data/models/project_model.dart';
 
 class ExpandedCircleOverlay extends StatelessWidget {
@@ -26,7 +25,6 @@ class ExpandedCircleOverlay extends StatelessWidget {
   Widget build(BuildContext context) {
     // Initial circle radius
     final initialRadius = circleSize / 2;
-    final contentSize = circleSize * 0.75;
 
     // Calculate final width and height
     final finalWidth = screenSize.width;
@@ -53,6 +51,12 @@ class ExpandedCircleOverlay extends StatelessWidget {
     // Calculate border radius (from circle to rectangle)
     final borderRadius = initialRadius * (1 - animation);
 
+    // Content size transition
+    final initialContentSize = circleSize * 0.75;
+    final expandedContentSize = screenSize.width * 0.5;
+    final currentContentSize = initialContentSize +
+        (expandedContentSize - initialContentSize) * animation;
+
     return Positioned(
       left: left,
       top: top,
@@ -62,9 +66,7 @@ class ExpandedCircleOverlay extends StatelessWidget {
         onTap: onClose,
         child: Container(
           decoration: BoxDecoration(
-            color: item.bannerType == CircleIdentifier.picture
-                ? Colors.transparent
-                : item.bannerBgColor,
+            color: item.bannerBgColor,
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(animation > 0.8 ? 0 : borderRadius),
               topRight: Radius.circular(animation > 0.8 ? 0 : borderRadius),
@@ -76,20 +78,17 @@ class ExpandedCircleOverlay extends StatelessWidget {
           child: Stack(
             alignment: Alignment.center,
             children: [
-              // Background container that fills the entire space
               Container(
                 width: currentWidth,
                 height: currentHeight,
-                color: item.bannerType == CircleIdentifier.picture
+                color: item.bannerType == BannerIdentifier.picture
                     ? Colors.transparent
                     : item.bannerBgColor,
               ),
-
-              // Content container limited to 1/3 of screen width
               Center(
                 child: Container(
-                  width: contentSize,
-                  height: contentSize,
+                  width: currentContentSize,
+                  height: currentContentSize,
                   child: _buildContent(),
                 ),
               ),
@@ -101,12 +100,8 @@ class ExpandedCircleOverlay extends StatelessWidget {
   }
 
   Widget _buildContent() {
-    final contentSize = screenSize.width / 3;
-
     if (item.bannerType == BannerIdentifier.picture) {
       return Container(
-        width: contentSize,
-        height: contentSize,
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(item.bannerImagePath),
@@ -115,16 +110,10 @@ class ExpandedCircleOverlay extends StatelessWidget {
         ),
       );
     } else {
-      return Container(
-        width: contentSize,
-        height: contentSize,
-        child: Lottie.asset(
-          item.bannerLottiePath,
-          width: contentSize,
-          height: contentSize,
-          fit: BoxFit.contain,
-          repeat: true,
-        ),
+      return Lottie.asset(
+        item.bannerLottiePath,
+        fit: BoxFit.contain,
+        repeat: true,
       );
     }
   }

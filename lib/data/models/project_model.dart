@@ -15,6 +15,7 @@ class ProjectModel {
   final List<String>? techStack;
   final List<String>? tags;
   final DateTime? releaseDate;
+  final String category;
 
   // Added fields for enhanced project details
   final String? shortDescription;
@@ -27,7 +28,7 @@ class ProjectModel {
   final List<String>? additionalLinks;
   final List<Testimonial>? testimonials;
   final ProjectStats? stats;
-  final List<Future>? futureEnhancements;
+  final List<FutureEnhancement>? futureEnhancements;
 
   ProjectModel({
     required this.id,
@@ -54,6 +55,7 @@ class ProjectModel {
     this.testimonials,
     this.stats,
     this.futureEnhancements,
+    required this.category,
   });
 
   factory ProjectModel.fromMap(String id, Map<String, dynamic> map) {
@@ -104,9 +106,10 @@ class ProjectModel {
       stats: map['stats'] != null ? ProjectStats.fromMap(map['stats']) : null,
       futureEnhancements: map['futureEnhancements'] != null
           ? (map['futureEnhancements'] as List)
-              .map((f) => Future.fromMap(f))
+              .map((f) => FutureEnhancement.fromMap(f))
               .toList()
           : null,
+      category: map['category'] ?? '',
     );
   }
 
@@ -135,6 +138,7 @@ class ProjectModel {
       'testimonials': testimonials?.map((t) => t.toMap()).toList(),
       'stats': stats?.toMap(),
       'futureEnhancements': futureEnhancements?.map((f) => f.toMap()).toList(),
+      'category': category,
     };
   }
 }
@@ -295,19 +299,19 @@ class ProjectStats {
   }
 }
 
-class Future {
+class FutureEnhancement {
   final String title;
   final String description;
   final String? status;
 
-  Future({
+  FutureEnhancement({
     required this.title,
     required this.description,
     this.status,
   });
 
-  factory Future.fromMap(Map<String, dynamic> map) {
-    return Future(
+  factory FutureEnhancement.fromMap(Map<String, dynamic> map) {
+    return FutureEnhancement(
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       status: map['status'],

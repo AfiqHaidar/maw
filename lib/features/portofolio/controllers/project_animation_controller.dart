@@ -13,7 +13,6 @@ class ExpansionAnimationController {
       vsync: vsync,
     );
 
-    // Main expansion animation
     expansionAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: controller,
@@ -29,7 +28,6 @@ class ExpansionAnimationController {
       ),
     );
 
-    // Bottom sheet fade animation
     fadingAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: controller,

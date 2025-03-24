@@ -84,7 +84,6 @@ class _ProjectSheetState extends State<ProjectSheet> {
       height: screenHeight,
       child: Stack(
         children: [
-          // Bottom sheet
           AnimatedSlide(
             offset: Offset(0, 1 - widget.sheetAnimation),
             duration: const Duration(milliseconds: 150),
@@ -842,7 +841,8 @@ class _ProjectSheetState extends State<ProjectSheet> {
     );
   }
 
-  Widget _buildEnhancementItem(Future enhancement, Color themeColor) {
+  Widget _buildEnhancementItem(
+      FutureEnhancement enhancement, Color themeColor) {
     String statusText = enhancement.status ?? "Planned";
     Color statusColor = _getStatusColor(statusText, themeColor);
 
