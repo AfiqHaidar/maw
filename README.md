@@ -12,13 +12,13 @@ Maw helps developers display their projects in a beautiful and structured format
 
 ## 🎥 Demo
 
-(coming soon, gagal record mulu)
+https://github.com/user-attachments/assets/2cfbcd0d-2109-4c2d-8bec-dce7142cdcf8
+
+(00.10 - 00.50 freeze 🙏)
 
 ---
 
-## 📖 Overview
-
-### ✅ Current Features
+## 📖 Overview Current Features
 
 - **Authentication Flow**  
   Secure login and registration system for users.
