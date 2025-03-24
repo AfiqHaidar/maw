@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/data/enums/drawer_identifier.dart';
 import 'package:mb/data/providers/selected_drawer_provider.dart';
-import 'package:mb/widgets/color_pop/color_poppin_screen.dart';
+import 'package:mb/features/portofolio/screens/portofolio_screen.dart';
 import 'package:mb/features/home/screens/home_screen.dart';
+import 'package:mb/features/profile/screens/profile_screen.dart';
 import 'package:mb/widgets/confirmation_dialog.dart';
 import 'package:mb/widgets/drawer/drawer_header.dart';
 import 'package:mb/widgets/drawer/drawer_item.dart';
@@ -27,9 +28,14 @@ class MainDrawer extends ConsumerWidget {
           MaterialPageRoute(builder: (ctx) => HomeScreen()),
         );
         break;
-      case DrawerIdentifier.colorPoppin:
+      case DrawerIdentifier.person:
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => ColorPoppinScreen()),
+          MaterialPageRoute(builder: (ctx) => ProfileScreen()),
+        );
+        break;
+      case DrawerIdentifier.portofolio:
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (ctx) => PortofolioScreen()),
         );
         break;
     }
@@ -77,14 +83,21 @@ class MainDrawer extends ConsumerWidget {
               identifier: DrawerIdentifier.home,
               onTap: () => _onSelectScreen(context, ref, DrawerIdentifier.home),
             ),
-            const SizedBox(height: 16),
-            const DrawerSectionHeader(title: 'FEATURES'),
             DrawerItem(
-              icon: Icons.color_lens_rounded,
-              title: 'Color Pop',
-              identifier: DrawerIdentifier.colorPoppin,
+              icon: Icons.person_rounded,
+              title: 'Profile',
+              identifier: DrawerIdentifier.person,
               onTap: () =>
-                  _onSelectScreen(context, ref, DrawerIdentifier.colorPoppin),
+                  _onSelectScreen(context, ref, DrawerIdentifier.person),
+            ),
+            const SizedBox(height: 16),
+            const DrawerSectionHeader(title: 'PORTOFOLIO'),
+            DrawerItem(
+              icon: Icons.folder_copy_rounded,
+              title: 'Portofolio',
+              identifier: DrawerIdentifier.portofolio,
+              onTap: () =>
+                  _onSelectScreen(context, ref, DrawerIdentifier.portofolio),
             ),
             const Spacer(),
             DrawerBottomActions(

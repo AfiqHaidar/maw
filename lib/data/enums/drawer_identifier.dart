@@ -1,4 +1,5 @@
 enum DrawerIdentifier {
   home,
-  colorPoppin,
+  person,
+  portofolio,
 }
