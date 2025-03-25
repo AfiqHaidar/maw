@@ -12,9 +12,7 @@ Maw helps developers display their projects in a beautiful and structured format
 
 ## 🎥 Demo
 
-https://github.com/user-attachments/assets/2cfbcd0d-2109-4c2d-8bec-dce7142cdcf8
-
-(00.10 - 00.50 freeze 🙏)
+https://youtube.com/shorts/HalqDkYXgLQ?feature=share
 
 ---
 
