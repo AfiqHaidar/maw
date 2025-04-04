@@ -70,7 +70,10 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/logo.png"
+  image_path: "assets/images/maw_adaptive_black_512.png"
+  adaptive_icon: true
+  adaptive_icon_background: "#1F4D97"
+  adaptive_icon_foreground: "assets/images/maw_adaptive_black_512.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -85,25 +88,33 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/logo.png
-    - assets/images/games/tetris.jpg
-    - assets/images/games/flap.jpg
-    - assets/images/games/mine.jpg
-    - assets/images/games/sudoku.jpg
-    - assets/images/games/dino.jpg
-    - assets/animations/homescreen.json
-    - assets/animations/mobile_dev.json
     - assets/animations/hanging_cat.json
     - assets/animations/stare_cat.json
+    - assets/animations/bosze.json
+    - assets/animations/cable_car.json
+    - assets/animations/dancing_dog.json
+    - assets/animations/just_cat.json
+    - assets/animations/no_sheep.json
+    - assets/animations/nyan.json
+    - assets/animations/pixel_boi.json
+    - assets/animations/repo_android.json
+    - assets/animations/smile.json
+    - assets/animations/type_shi.json
+    - assets/animations/blue_bos.json
+    - assets/animations/blue_hang.json
+    - assets/animations/blue_lappy.json
+    - assets/animations/blue_load.json
+    - assets/animations/blue_moc.json
+    - assets/animations/blue_nyan.json
+    - assets/animations/blue_pix.json
+    - assets/animations/blue_pump.json
+    - assets/animations/blue_sat.json
+    - assets/animations/blue_stare.json
     - assets/sounds/meow_1.mp3
     - assets/sounds/meow_2.mp3
     - assets/sounds/meow_3.mp3
     - assets/sounds/meow_4.mp3
     - assets/sounds/meow_5.mp3
-    - assets/sounds/pop_1.mp3
-    - assets/sounds/pop_2.mp3
-    - assets/sounds/pop_3.mp3
-    - assets/sounds/pop_4.mp3
-    - assets/sounds/pop_5.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
