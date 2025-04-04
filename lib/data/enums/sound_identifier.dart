@@ -1,1 +1,1 @@
-enum SoundIdentifier { MEOW, POP }
+enum SoundIdentifier { meow }
