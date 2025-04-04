@@ -11,11 +11,8 @@ class SoundService {
       String assetPath = '';
 
       switch (type) {
-        case SoundIdentifier.MEOW:
-          assetPath = SoundService.getRandomSoundPath(SoundIdentifier.MEOW);
-          break;
-        case SoundIdentifier.POP:
-          assetPath = SoundService.getRandomSoundPath(SoundIdentifier.POP);
+        case SoundIdentifier.meow:
+          assetPath = SoundService.getRandomSoundPath(SoundIdentifier.meow);
           break;
       }
 
@@ -34,13 +31,9 @@ class SoundService {
     String basePath = 'sounds/';
 
     switch (type) {
-      case SoundIdentifier.MEOW:
+      case SoundIdentifier.meow:
         randomNumber = Random().nextInt(5) + 1;
         return '${basePath}meow_$randomNumber.mp3';
-
-      case SoundIdentifier.POP:
-        randomNumber = Random().nextInt(5) + 1;
-        return '${basePath}pop_$randomNumber.mp3';
     }
   }
 }
