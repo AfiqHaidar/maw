@@ -1,21 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mb/data/models/user_model.dart';
+import 'package:mb/data/entities/user_entity.dart';
 import 'package:mb/data/repository/user_repository.dart';
-import 'package:mb/features/auth/controller/user_controller.dart';
+import 'package:mb/data/controller.dart/user_controller.dart';
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {
   return UserRepository();
 });
 
-final userProvider = StateNotifierProvider<UserController, UserModel?>((ref) {
-  return UserController(ref.read(userRepositoryProvider));
+final userProvider = StateNotifierProvider<UserController, UserEntity?>((ref) {
+  return UserController(ref.watch(userRepositoryProvider));
 });
 
-final userStreamProvider = StreamProvider<UserModel>((ref) {
+final userStreamProvider = StreamProvider<UserEntity>((ref) {
   final user = FirebaseAuth.instance.currentUser;
   if (user == null) throw Exception('User not logged in');
 
-  final repo = ref.read(userRepositoryProvider);
+  final repo = ref.watch(userRepositoryProvider);
   return repo.watchUser(user.uid);
 });
