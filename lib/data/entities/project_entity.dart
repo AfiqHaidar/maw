@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mb/data/enums/banner_identifier.dart';
+import 'package:mb/data/models/challenge_model.dart';
+import 'package:mb/data/models/feature_model.dart';
+import 'package:mb/data/models/future_enhancement_model.dart';
+import 'package:mb/data/models/project_stats_model.dart';
+import 'package:mb/data/models/team_member_model.dart';
+import 'package:mb/data/models/testimonial_model.dart';
 
-class ProjectModel {
+class ProjectEntity {
   final String id;
   final String userId;
   final String name;
@@ -11,26 +17,24 @@ class ProjectModel {
   final String bannerLottiePath;
   final List<String> carouselImagePaths;
   final String details;
-  final String link;
-  final List<String>? techStack;
-  final List<String>? tags;
-  final DateTime? releaseDate;
-  final String category;
-
-  // Added fields for enhanced project details
   final String? shortDescription;
   final String? role;
+  final List<String>? techStack;
+  final List<String>? tags;
+  final String link;
+  final String? githubLink;
+  final List<String>? additionalLinks;
+  final DateTime? releaseDate;
+  final String category;
   final Duration? developmentTime;
+  final ProjectStats? stats;
   final List<TeamMember>? teamMembers;
   final List<Feature>? keyFeatures;
   final List<Challenge>? challenges;
-  final String? githubLink;
-  final List<String>? additionalLinks;
-  final List<Testimonial>? testimonials;
-  final ProjectStats? stats;
   final List<FutureEnhancement>? futureEnhancements;
+  final List<Testimonial>? testimonials;
 
-  ProjectModel({
+  ProjectEntity({
     required this.id,
     required this.userId,
     required this.name,
@@ -58,8 +62,8 @@ class ProjectModel {
     required this.category,
   });
 
-  factory ProjectModel.fromMap(String id, Map<String, dynamic> map) {
-    return ProjectModel(
+  factory ProjectEntity.fromMap(String id, Map<String, dynamic> map) {
+    return ProjectEntity(
       id: id,
       userId: map['userId'] ?? '',
       name: map['name'] ?? '',
@@ -139,190 +143,6 @@ class ProjectModel {
       'stats': stats?.toMap(),
       'futureEnhancements': futureEnhancements?.map((f) => f.toMap()).toList(),
       'category': category,
-    };
-  }
-}
-
-class TeamMember {
-  final String name;
-  final String? role;
-  final String? avatarPath;
-  final String? linkedinUrl;
-
-  TeamMember({
-    required this.name,
-    this.role,
-    this.avatarPath,
-    this.linkedinUrl,
-  });
-
-  factory TeamMember.fromMap(Map<String, dynamic> map) {
-    return TeamMember(
-      name: map['name'] ?? '',
-      role: map['role'],
-      avatarPath: map['avatarPath'],
-      linkedinUrl: map['linkedinUrl'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'role': role,
-      'avatarPath': avatarPath,
-      'linkedinUrl': linkedinUrl,
-    };
-  }
-}
-
-class Feature {
-  final String title;
-  final String description;
-  final String? iconName;
-
-  Feature({
-    required this.title,
-    required this.description,
-    this.iconName,
-  });
-
-  factory Feature.fromMap(Map<String, dynamic> map) {
-    return Feature(
-      title: map['title'] ?? '',
-      description: map['description'] ?? '',
-      iconName: map['iconName'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'description': description,
-      'iconName': iconName,
-    };
-  }
-}
-
-class Challenge {
-  final String title;
-  final String description;
-  final String? solution;
-
-  Challenge({
-    required this.title,
-    required this.description,
-    this.solution,
-  });
-
-  factory Challenge.fromMap(Map<String, dynamic> map) {
-    return Challenge(
-      title: map['title'] ?? '',
-      description: map['description'] ?? '',
-      solution: map['solution'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'description': description,
-      'solution': solution,
-    };
-  }
-}
-
-class Testimonial {
-  final String quote;
-  final String author;
-  final String? role;
-  final String? avatarPath;
-
-  Testimonial({
-    required this.quote,
-    required this.author,
-    this.role,
-    this.avatarPath,
-  });
-
-  factory Testimonial.fromMap(Map<String, dynamic> map) {
-    return Testimonial(
-      quote: map['quote'] ?? '',
-      author: map['author'] ?? '',
-      role: map['role'],
-      avatarPath: map['avatarPath'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'quote': quote,
-      'author': author,
-      'role': role,
-      'avatarPath': avatarPath,
-    };
-  }
-}
-
-class ProjectStats {
-  final int? users;
-  final int? stars;
-  final int? forks;
-  final int? downloads;
-  final int? contributions;
-
-  ProjectStats({
-    this.users,
-    this.stars,
-    this.forks,
-    this.downloads,
-    this.contributions,
-  });
-
-  factory ProjectStats.fromMap(Map<String, dynamic> map) {
-    return ProjectStats(
-      users: map['users'],
-      stars: map['stars'],
-      forks: map['forks'],
-      downloads: map['downloads'],
-      contributions: map['contributions'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'users': users,
-      'stars': stars,
-      'forks': forks,
-      'downloads': downloads,
-      'contributions': contributions,
-    };
-  }
-}
-
-class FutureEnhancement {
-  final String title;
-  final String description;
-  final String? status;
-
-  FutureEnhancement({
-    required this.title,
-    required this.description,
-    this.status,
-  });
-
-  factory FutureEnhancement.fromMap(Map<String, dynamic> map) {
-    return FutureEnhancement(
-      title: map['title'] ?? '',
-      description: map['description'] ?? '',
-      status: map['status'],
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'description': description,
-      'status': status,
     };
   }
 }
