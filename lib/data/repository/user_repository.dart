@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/user_model.dart';
+import '../entities/user_entity.dart';
 
 class UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String collectionPath = "users";
 
-  Future<UserModel?> getUser(String userId) async {
+  Future<UserEntity?> getUser(String userId) async {
     try {
       DocumentSnapshot doc =
           await _firestore.collection(collectionPath).doc(userId).get();
       if (doc.exists) {
-        return UserModel.fromMap(doc.id, doc.data() as Map<String, dynamic>);
+        return UserEntity.fromMap(doc.id, doc.data() as Map<String, dynamic>);
       }
       return null;
     } catch (e) {
@@ -18,7 +18,7 @@ class UserRepository {
     }
   }
 
-  Future<void> saveUser(UserModel user) async {
+  Future<void> saveUser(UserEntity user) async {
     try {
       await _firestore
           .collection(collectionPath)
@@ -37,18 +37,17 @@ class UserRepository {
     }
   }
 
-  Stream<UserModel> watchUser(String userId) {
+  Stream<UserEntity> watchUser(String userId) {
     return _firestore.collection(collectionPath).doc(userId).snapshots().map(
           (doc) =>
-              UserModel.fromMap(doc.id, doc.data() as Map<String, dynamic>),
+              UserEntity.fromMap(doc.id, doc.data() as Map<String, dynamic>),
         );
   }
 
   Stream<List<String>> watchAllUsernames() {
     return _firestore.collection(collectionPath).snapshots().map((snapshot) {
       return snapshot.docs
-          .map((doc) =>
-              (doc.data() as Map<String, dynamic>)['username'] as String?)
+          .map((doc) => (doc.data())['username'] as String?)
           .whereType<String>()
           .toList();
     });
