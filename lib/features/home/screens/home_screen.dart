@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:mb/core/services/sound_service.dart';
 import 'package:mb/data/enums/sound_identifier.dart';
-import 'package:mb/data/providers/auth_provider.dart';
 import 'package:mb/data/providers/user_provider.dart';
 import 'package:mb/core/handlers/exit_handler.dart';
 import 'package:mb/widgets/drawer/main_drawer.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mb/data/models/user_model.dart';
+import 'package:mb/data/entities/user_entity.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -63,7 +62,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  Widget _buildProfileContent(BuildContext context, UserModel user) {
+  Widget _buildProfileContent(BuildContext context, UserEntity user) {
     return PopScope(
       canPop: false,
       onPopInvoked: (bool didPop) async {
@@ -83,8 +82,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     child: Center(
                       child: InkWell(
                         onTap: () async {
-                          SoundService().playSound(SoundIdentifier.MEOW);
-                          await ref.read(authProvider.notifier).logout();
+                          SoundService().playSound(SoundIdentifier.meow);
                         },
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,
