@@ -13,7 +13,7 @@ class ProfilePicturePicker extends StatefulWidget {
 }
 
 class _ProfilePicturePickerState extends State<ProfilePicturePicker> {
-  String _selectedAsset = 'assets/animations/hanging_cat.json';
+  String _selectedAsset = 'assets/animations/blue_stare.json';
 
   void _openSelector() async {
     final selected = await showModalBottomSheet<String>(

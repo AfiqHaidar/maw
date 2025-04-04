@@ -6,16 +6,14 @@ class ProfilePictureSelectorDialog extends StatelessWidget {
   const ProfilePictureSelectorDialog({super.key});
 
   static const List<String> assets = [
-    'assets/animations/hanging_cat.json',
-    'assets/animations/stare_cat.json',
-    'assets/animations/stare_cat.json',
-    'assets/animations/stare_cat.json',
-    'assets/animations/stare_cat.json',
-    'assets/animations/stare_cat.json',
-    'assets/animations/stare_cat.json',
-    'assets/animations/hanging_cat.json',
-    'assets/animations/stare_cat.json',
-    'assets/animations/stare_cat.json',
+    'assets/animations/blue_hang.json',
+    'assets/animations/blue_lappy.json',
+    'assets/animations/blue_moc.json',
+    'assets/animations/blue_nyan.json',
+    'assets/animations/blue_pix.json',
+    'assets/animations/blue_pump.json',
+    'assets/animations/blue_sat.json',
+    'assets/animations/blue_stare.json'
   ];
 
   @override

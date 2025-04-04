@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:mb/core/theme/colors.dart';
+import 'package:mb/data/providers/project_provider.dart';
 import 'package:mb/features/auth/controller/auth_animation_controller.dart';
 import 'package:mb/features/home/screens/home_screen.dart';
 
@@ -30,6 +31,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     super.initState();
     _anim = AuthAnimatedOpacityController(vsync: this);
     _startNavigationTimer();
+
+    ref.read(projectProvider.notifier).fetch();
   }
 
   @override
@@ -63,11 +66,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             child: Stack(
               alignment: Alignment.center,
               children: [
-                FaIcon(
-                  FontAwesomeIcons.shieldCat,
-                  size: 50,
-                  color:
-                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.7),
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: 70,
+                  height: 70,
+                  color: AppColors.white70,
                 ),
                 SizedBox(
                   width: 100,

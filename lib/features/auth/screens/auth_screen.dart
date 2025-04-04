@@ -1,11 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mb/core/handlers/error_handler.dart';
 import 'package:mb/core/mappers/auth_error_mapper.dart';
 import 'package:mb/core/theme/colors.dart';
-import 'package:mb/core/utils/validators/auth_validator.dart';
+import 'package:mb/features/auth/validators/auth_validator.dart';
 import 'package:mb/data/providers/auth_provider.dart';
 import 'package:mb/features/auth/controller/auth_animation_controller.dart';
 import 'package:mb/features/auth/screens/register_screen.dart';
@@ -48,7 +47,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   @override
   void initState() {
     super.initState();
-
     _anim = AuthAnimatedOpacityController(vsync: this);
   }
 
@@ -96,9 +94,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       const SizedBox(height: 40),
-                                      FaIcon(
-                                        FontAwesomeIcons.shieldCat,
-                                        size: 80,
+                                      Image.asset(
+                                        'assets/images/logo.png',
+                                        width: 150,
+                                        height: 150,
                                         color: AppColors.white70,
                                       ),
                                       const SizedBox(height: 50),
