@@ -5,8 +5,8 @@ import 'package:mb/core/handlers/error_handler.dart';
 import 'package:mb/core/mappers/auth_error_mapper.dart';
 import 'package:mb/core/mappers/firestore_error_mapper.dart';
 import 'package:mb/core/theme/colors.dart';
-import 'package:mb/core/utils/validators/auth_validator.dart';
-import 'package:mb/data/models/user_model.dart';
+import 'package:mb/features/auth/validators/auth_validator.dart';
+import 'package:mb/data/entities/user_entity.dart';
 import 'package:mb/data/providers/auth_provider.dart';
 import 'package:mb/data/providers/user_provider.dart';
 import 'package:mb/features/auth/controller/auth_animation_controller.dart';
@@ -32,7 +32,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
   var _enteredPassword = '';
   var _enteredName = '';
   var _enteredUsername = '';
-  var _selectedProfilePictureAsset = 'assets/animations/hanging_cat.json';
+  var _selectedProfilePictureAsset = 'assets/animations/blue_stare.json';
   bool _obscureTextPassword = true;
   // bool _obscureTextPasswordConfirmed = true;
 
@@ -52,7 +52,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
           );
         }
 
-        final newUser = UserModel(
+        final newUser = UserEntity(
           id: firebaseUser.uid,
           email: _enteredEmail,
           name: _enteredName,
@@ -61,6 +61,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
         );
 
         await ref.read(userProvider.notifier).upsertUser(newUser);
+        Navigator.of(context).pop();
       } on FirebaseAuthException catch (e) {
         ErrorHandler.showError(
           context,
@@ -74,15 +75,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
           useDialog: false,
         );
       } catch (e) {
-        print(e);
         ErrorHandler.showError(
           context,
           "An unexpected error occurred.",
         );
-      } finally {
-        if (context.mounted) {
-          Navigator.of(context).pop();
-        }
       }
     }
   }
@@ -109,7 +105,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen>
             data: (list) => list.isEmpty, orElse: () => true);
 
     final color = Theme.of(context).colorScheme;
-    print(usernamesAsync);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
