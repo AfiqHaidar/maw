@@ -1,13 +1,13 @@
 // lib/features/portfolio/widgets/category_section.dart
 import 'package:flutter/material.dart';
-import 'package:mb/data/models/project_model.dart';
+import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/features/portofolio/widgets/portofolio_project_item.dart';
-import 'package:mb/features/portofolio/widgets/project_section_header.dart';
+import 'package:mb/features/project/widgets/project_section_header.dart';
 
 class CategorySection extends StatelessWidget {
   final String category;
-  final List<ProjectModel> projects;
-  final List<ProjectModel> allProjects;
+  final List<ProjectEntity> projects;
+  final List<ProjectEntity> allProjects;
   final List<GlobalKey> circleKeys;
   final double circleSize;
   final Function(int) onProjectTap;
@@ -25,8 +25,6 @@ class CategorySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Default theme color - use one from the first project if available
-    Color themeColor =
-        projects.isNotEmpty ? projects.first.bannerBgColor : Colors.blue;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -36,7 +34,7 @@ class CategorySection extends StatelessWidget {
           child: ProjectSectionHeader(
             icon: _getCategoryIcon(),
             title: category,
-            themeColor: themeColor,
+            themeColor: Theme.of(context).colorScheme.primary,
           ),
         ),
         _buildProjectsList(),
@@ -45,7 +43,6 @@ class CategorySection extends StatelessWidget {
   }
 
   IconData _getCategoryIcon() {
-    // Return different icons based on category name
     switch (category.toLowerCase()) {
       case 'arcade games':
         return Icons.sports_esports;

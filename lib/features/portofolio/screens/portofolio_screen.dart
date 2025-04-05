@@ -1,18 +1,17 @@
 // lib/features/portfolio/screens/portfolio_screen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/core/theme/colors.dart';
-import 'package:mb/data/models/project_model.dart';
-import 'package:mb/features/Portofolio/screens/project_screen.dart';
+import 'package:mb/data/entities/project_entity.dart';
+import 'package:mb/data/providers/project_provider.dart';
+import 'package:mb/features/project/screens/project_screen.dart';
 import 'package:mb/features/portofolio/controllers/project_animation_controller.dart';
-import 'package:mb/features/portofolio/data/project_item.dart';
-import 'package:mb/features/portofolio/screens/add_project_screen.dart';
 import 'package:mb/features/portofolio/utils/position_utils.dart';
 import 'package:mb/features/portofolio/widgets/expandable_circle_overlay.dart';
 import 'package:mb/features/portofolio/widgets/portofolio_category_section.dart';
 import 'package:mb/features/portofolio/widgets/portofolio_header.dart';
-import 'package:mb/features/portofolio/widgets/project_sheet.dart';
+import 'package:mb/features/portofolio/widgets/portofolio_project_preview_sheet.dart';
+import 'package:mb/features/upsert_project/screens/add_project_screen.dart';
 import 'package:mb/widgets/drawer/main_drawer.dart';
 
 class PortofolioScreen extends ConsumerStatefulWidget {
@@ -29,8 +28,12 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
   final List<GlobalKey> _circleKeys = [];
   Offset? _expandOrigin;
   final double _circleSize = 150.0;
+  bool _isRefreshing = false;
 
-  final Color _selectedColor = AppColors.primary;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -46,8 +49,33 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
     super.dispose();
   }
 
+  // Function to handle refresh
+  Future<void> _onRefresh() async {
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    try {
+      await ref.read(projectProvider.notifier).fetch();
+      _initializeAnimationControllers();
+    } catch (e) {
+      // Handle any errors that occur during refresh
+      debugPrint('Error refreshing projects: $e');
+    } finally {
+      setState(() {
+        _isRefreshing = false;
+      });
+    }
+  }
+
   void _initializeAnimationControllers() {
-    final projects = ref.read(projectsProvider);
+    final projects = ref.read(projectProvider);
+
+    if (projects == null) {
+      // Initial fetch if projects is null
+      ref.read(projectProvider.notifier).fetch();
+      return;
+    }
 
     if (_animationControllers.length != projects.length) {
       for (var controller in _animationControllers) {
@@ -65,9 +93,10 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
   }
 
   void _toggleExpand(int index) {
-    final projects = ref.read(projectsProvider);
+    final projects = ref.read(projectProvider);
 
-    if (index < 0 ||
+    if (projects == null ||
+        index < 0 ||
         index >= projects.length ||
         index >= _animationControllers.length ||
         index >= _circleKeys.length) {
@@ -106,7 +135,7 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
     }
   }
 
-  void _navigateToProjectDetails(ProjectModel project) {
+  void _navigateToProjectDetails(ProjectEntity project) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -121,12 +150,17 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
       MaterialPageRoute(
         builder: (context) => const AddProjectScreen(),
       ),
-    );
+    ).then((_) {
+      // Refresh the project list when returning from add project screen
+      ref.read(projectProvider.notifier).fetch();
+    });
   }
 
-  Map<String, List<ProjectModel>> _getProjectsByCategory() {
-    final projects = ref.watch(projectsProvider);
-    final Map<String, List<ProjectModel>> projectsByCategory = {};
+  Map<String, List<ProjectEntity>> _getProjectsByCategory() {
+    final projects = ref.watch(projectProvider);
+    final Map<String, List<ProjectEntity>> projectsByCategory = {};
+
+    if (projects == null || projects.isEmpty) return projectsByCategory;
 
     for (var project in projects) {
       if (!projectsByCategory.containsKey(project.category)) {
@@ -143,9 +177,10 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
     final size = MediaQuery.of(context).size;
     final screenHeight = size.height;
     final bottomSheetHeight = screenHeight * 5 / 7;
+    final projects = ref.watch(projectProvider);
     final projectsByCategory = _getProjectsByCategory();
     final categories = projectsByCategory.keys.toList()..sort();
-    final projects = ref.watch(projectsProvider);
+    final hasProjects = projects != null && projects.isNotEmpty;
 
     return Scaffold(
         drawer: const MainDrawer(),
@@ -153,27 +188,103 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
         body: Stack(
           fit: StackFit.expand,
           children: [
-            _buildMainContent(categories, projectsByCategory, projects),
-            if (_expandedIndex != null && _expandOrigin != null)
+            RefreshIndicator(
+              onRefresh: _onRefresh,
+              color: Theme.of(context).colorScheme.primary,
+              backgroundColor: Colors.white,
+              displacement: 40,
+              strokeWidth: 3,
+              child: hasProjects
+                  ? _buildMainContent(categories, projectsByCategory, projects)
+                  : _buildEmptyState(),
+            ),
+            if (_isRefreshing)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  height: 3,
+                  width: double.infinity,
+                  child: LinearProgressIndicator(
+                    backgroundColor: Colors.transparent,
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+              ),
+            if (hasProjects && _expandedIndex != null && _expandOrigin != null)
               _buildExpandedCircleOverlay(projects, size),
-            if (_expandedIndex != null)
+            if (hasProjects && _expandedIndex != null)
               _buildProjectSheet(projects, bottomSheetHeight),
           ],
         ));
   }
 
-  Widget _buildMainContent(
-      List<String> categories,
-      Map<String, List<ProjectModel>> projectsByCategory,
-      List<ProjectModel> projects) {
+  Widget _buildEmptyState() {
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
+      physics:
+          const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Builder(
             builder: (context) => PortofolioHeader(
-              themeColor: _selectedColor,
+              themeColor: Theme.of(context).colorScheme.primary,
+              onAddProject: _navigateToAddProject,
+              onMenuPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.5,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Logo
+                  Image.asset(
+                    'assets/images/logo.png',
+                    width: 120,
+                    height: 120,
+                    color: AppColors.lightgrey,
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Text(
+                      'Start adding your projects to build your portfolio',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.lightgrey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMainContent(
+      List<String> categories,
+      Map<String, List<ProjectEntity>> projectsByCategory,
+      List<ProjectEntity> projects) {
+    return SingleChildScrollView(
+      physics:
+          const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Builder(
+            builder: (context) => PortofolioHeader(
+              themeColor: Theme.of(context).colorScheme.primary,
               onAddProject: _navigateToAddProject,
               onMenuPressed: () {
                 Scaffold.of(context).openDrawer();
@@ -197,7 +308,7 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
     );
   }
 
-  Widget _buildExpandedCircleOverlay(List<ProjectModel> projects, Size size) {
+  Widget _buildExpandedCircleOverlay(List<ProjectEntity> projects, Size size) {
     // Safety check
     if (_expandedIndex! < 0 ||
         _expandedIndex! >= projects.length ||
@@ -231,7 +342,7 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
   }
 
   Widget _buildProjectSheet(
-      List<ProjectModel> projects, double bottomSheetHeight) {
+      List<ProjectEntity> projects, double bottomSheetHeight) {
     // Safety check
     if (_expandedIndex! < 0 ||
         _expandedIndex! >= projects.length ||
@@ -247,7 +358,7 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
         final fadeAnimation =
             _animationControllers[_expandedIndex!].fadingAnimation.value;
 
-        return ProjectSheet(
+        return ProjectPreviewSheet(
           sheetAnimation: sheetAnimation,
           fadeAnimation: fadeAnimation,
           sheetHeight: bottomSheetHeight,

@@ -1,11 +1,11 @@
 // lib/features/portfolio/widgets/project_item.dart
 import 'package:flutter/material.dart';
 import 'package:mb/core/theme/colors.dart';
-import 'package:mb/data/models/project_model.dart';
+import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/features/Portofolio/widgets/expandable_circle.dart';
 
 class ProjectItem extends StatelessWidget {
-  final ProjectModel project;
+  final ProjectEntity project;
   final int index;
   final GlobalKey circleKey;
   final double circleSize;

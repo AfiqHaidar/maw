@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/data/enums/banner_identifier.dart';
-import 'package:mb/data/models/project_model.dart';
 
 class ExpandedCircleOverlay extends StatelessWidget {
   final Offset origin;
   final double animation;
   final double circleSize;
-  final ProjectModel item;
+  final ProjectEntity item;
   final Size screenSize;
   final VoidCallback? onClose;
 

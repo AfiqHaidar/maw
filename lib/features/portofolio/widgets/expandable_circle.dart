@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/data/enums/banner_identifier.dart';
-import 'package:mb/data/models/project_model.dart';
 
 class ExpandableCircle extends StatelessWidget {
-  final ProjectModel item;
+  final ProjectEntity item;
   final double size;
   final VoidCallback onTap;
   final GlobalKey circleKey;

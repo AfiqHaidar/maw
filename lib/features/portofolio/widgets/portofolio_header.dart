@@ -76,17 +76,17 @@ class PortofolioHeader extends StatelessWidget {
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
-                children: const [
+                children: [
                   Icon(
                     Icons.add_circle_outline,
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     size: 18,
                   ),
                   SizedBox(width: 8),
                   Text(
                     "Add New Project",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

@@ -1,20 +1,20 @@
 // lib/features/portofolio/widgets/project_sheet.dart
 import 'package:flutter/material.dart';
-import 'package:mb/data/models/project_model.dart';
-import 'package:mb/features/portofolio/widgets/project_sheet_header.dart';
-import 'package:mb/features/portofolio/widgets/project_image_carousel.dart';
-import 'package:mb/features/portofolio/widgets/project_info_chip.dart';
+import 'package:mb/data/entities/project_entity.dart';
+import 'package:mb/features/project/widgets/project_image_carousel.dart';
+import 'package:mb/features/project/widgets/project_info_chip.dart';
+import 'package:mb/features/project/widgets/project_sheet_header.dart';
 
-class ProjectSheet extends StatefulWidget {
+class ProjectPreviewSheet extends StatefulWidget {
   final double sheetAnimation;
   final double fadeAnimation;
   final double sheetHeight;
-  final ProjectModel project;
+  final ProjectEntity project;
   final int itemIndex;
   final VoidCallback onClose;
   final VoidCallback onViewDetails;
 
-  const ProjectSheet({
+  const ProjectPreviewSheet({
     Key? key,
     required this.sheetAnimation,
     required this.fadeAnimation,
@@ -26,10 +26,10 @@ class ProjectSheet extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ProjectSheet> createState() => _ProjectSheetState();
+  State<ProjectPreviewSheet> createState() => _ProjectPreviewSheetState();
 }
 
-class _ProjectSheetState extends State<ProjectSheet> {
+class _ProjectPreviewSheetState extends State<ProjectPreviewSheet> {
   late DraggableScrollableController _dragController;
 
   @override
@@ -52,7 +52,7 @@ class _ProjectSheetState extends State<ProjectSheet> {
 
     final minFraction = 0.55;
     final maxFraction = widget.sheetHeight / screenHeight;
-    final initialFraction = maxFraction;
+    final initialFraction = minFraction;
 
     return Positioned(
       left: 0,
