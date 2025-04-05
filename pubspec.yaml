@@ -73,7 +73,7 @@ flutter_icons:
   image_path: "assets/images/maw_adaptive_black_512.png"
   adaptive_icon: true
   adaptive_icon_background: "#1F4D97"
-  adaptive_icon_foreground: "assets/images/maw_adaptive_black_512.png"
+  adaptive_icon_foreground: "assets/images/maw_adaptive_white_512.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
