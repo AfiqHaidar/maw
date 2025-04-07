@@ -1,4 +1,4 @@
-// lib/features/portofolio/widgets/project_team_member_card.dart
+// lib/features/project/widgets/project_team_member_card.dart
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mb/data/models/team_member_model.dart';

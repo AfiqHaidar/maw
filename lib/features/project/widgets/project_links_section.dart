@@ -1,4 +1,4 @@
-// lib/features/portofolio/widgets/project_links_section.dart
+// lib/features/project/widgets/project_links_section.dart
 import 'package:flutter/material.dart';
 import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/features/project/widgets/project_section_header.dart';

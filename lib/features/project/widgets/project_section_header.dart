@@ -1,4 +1,4 @@
-// lib/features/portofolio/widgets/project_section_header.dart
+// lib/features/project/widgets/project_section_header.dart
 import 'package:flutter/material.dart';
 
 class ProjectSectionHeader extends StatelessWidget {

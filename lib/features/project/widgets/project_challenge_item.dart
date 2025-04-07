@@ -1,4 +1,4 @@
-// lib/features/portofolio/widgets/project_challenge_item.dart
+// lib/features/project/widgets/project_challenge_item.dart
 import 'package:flutter/material.dart';
 import 'package:mb/data/models/challenge_model.dart';
 

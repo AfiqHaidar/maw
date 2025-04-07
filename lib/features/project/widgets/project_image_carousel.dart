@@ -1,4 +1,4 @@
-// lib/features/portofolio/widgets/project_image_carousel.dart
+// lib/features/project/widgets/project_image_carousel.dart
 import 'package:flutter/material.dart';
 
 class ProjectImageCarousel extends StatefulWidget {

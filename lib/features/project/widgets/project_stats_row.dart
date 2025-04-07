@@ -1,4 +1,4 @@
-// lib/features/portofolio/widgets/project_stats_row.dart
+// lib/features/project/widgets/project_stats_row.dart
 import 'package:flutter/material.dart';
 import 'package:mb/data/models/project_stats_model.dart';
 

@@ -1,4 +1,4 @@
-// lib/features/portofolio/widgets/project_info_chip.dart
+// lib/features/project/widgets/project_info_chip.dart
 import 'package:flutter/material.dart';
 
 class ProjectInfoChip extends StatelessWidget {

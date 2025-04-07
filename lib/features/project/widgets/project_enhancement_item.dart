@@ -1,4 +1,4 @@
-// lib/features/portofolio/widgets/project_enhancement_item.dart
+// lib/features/project/widgets/project_enhancement_item.dart
 import 'package:flutter/material.dart';
 import 'package:mb/data/models/future_enhancement_model.dart';
 
