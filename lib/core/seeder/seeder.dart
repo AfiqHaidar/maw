@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 
+import 'package:mb/widgets/drawer/main_drawer.dart';
+
 class AdminSeederScreen extends StatefulWidget {
   const AdminSeederScreen({Key? key}) : super(key: key);
 
@@ -21,7 +23,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
     "project1": {
       "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
       "name": "Tetris Game",
-      "bannerBgColor": "#FF0000",
+      "bannerBgColor": 4294901760,
       "bannerType": "lottie",
       "bannerImagePath": "seeder/logo.png",
       "bannerLottiePath": "assets/animations/stare_cat.json",
@@ -121,7 +123,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
     "project2": {
       "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
       "name": "Dino Runner",
-      "bannerBgColor": "#0000FF",
+      "bannerBgColor": 4294901760,
       "bannerType": "picture",
       "bannerImagePath": "seeder/logo.png",
       "bannerLottiePath": "assets/animations/stare_cat.json",
@@ -211,7 +213,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
     "project3": {
       "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
       "name": "Minesweeper Clone",
-      "bannerBgColor": "#008000",
+      "bannerBgColor": 4294901760,
       "bannerType": "picture",
       "bannerImagePath": "seeder/logo.png",
       "bannerLottiePath": "assets/animations/stare_cat.json",
@@ -301,7 +303,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
     "project4": {
       "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
       "name": "Sudoku Solver App",
-      "bannerBgColor": "#FFA500",
+      "bannerBgColor": 4294901760,
       "bannerType": "picture",
       "bannerImagePath": "seeder/logo.png",
       "bannerLottiePath": "assets/animations/stare_cat.json",
@@ -412,7 +414,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
     "project5": {
       "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
       "name": "Flappy Clone",
-      "bannerBgColor": "#800080",
+      "bannerBgColor":4294901760,
       "bannerType": "lottie",
       "bannerImagePath": "seeder/logo.png",
       "bannerLottiePath": "assets/animations/hanging_cat.json",
@@ -501,7 +503,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
     "project6": {
       "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
       "name": "Weather App",
-      "bannerBgColor": "#87CEEB",
+      "bannerBgColor":4294901760,
       "bannerType": "picture",
       "bannerImagePath": "seeder/logo.png",
       "bannerLottiePath": "assets/animations/stare_cat.json",
@@ -693,6 +695,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
       appBar: AppBar(
         title: const Text('Database Seeder'),
       ),
+      drawer: MainDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
