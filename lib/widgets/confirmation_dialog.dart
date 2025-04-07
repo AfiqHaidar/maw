@@ -24,41 +24,89 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(
-        header,
-        style: const TextStyle(fontWeight: FontWeight.bold),
+    final color = Theme.of(context).colorScheme;
+
+    return Dialog(
+      // backgroundColor: Color(0xFF121212),
+      backgroundColor: color.onBackground,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
       ),
-      content: Text(
-        subheader,
-        style: const TextStyle(fontSize: 16),
-      ),
-      actions: [
-        OutlinedButton(
-          onPressed: onCancel ?? () => Navigator.of(context).pop(),
-          style: OutlinedButton.styleFrom(
-            side: const BorderSide(color: AppColors.primary),
-          ),
-          child: Text(
-            cancelButtonText ?? 'Batalkan',
-            style: const TextStyle(
-              color: AppColors.primary,
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              header,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                color: AppColors.white,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
+            const SizedBox(height: 12),
+            Text(
+              subheader,
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.gray,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: onCancel ?? () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.gray,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                    ),
+                    child: Text(
+                      cancelButtonText ?? 'Cancel',
+                      style: const TextStyle(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await onConfirm();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: confirmButtonColor ?? color.primary,
+                      foregroundColor: AppColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                    ),
+                    child: Text(
+                      confirmButtonText,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
-        ElevatedButton(
-          onPressed: () async {
-            await onConfirm();
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: confirmButtonColor ?? AppColors.primary,
-            foregroundColor: AppColors.white,
-          ),
-          child: Text(
-            confirmButtonText,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
