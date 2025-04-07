@@ -5,6 +5,7 @@ import 'package:mb/data/providers/selected_drawer_provider.dart';
 import 'package:mb/features/portofolio/screens/portofolio_screen.dart';
 import 'package:mb/features/home/screens/home_screen.dart';
 import 'package:mb/features/profile/screens/profile_screen.dart';
+import 'package:mb/core/seeder/seeder.dart';
 import 'package:mb/widgets/confirmation_dialog.dart';
 import 'package:mb/widgets/drawer/drawer_header.dart';
 import 'package:mb/widgets/drawer/drawer_item.dart';
@@ -36,6 +37,11 @@ class MainDrawer extends ConsumerWidget {
       case DrawerIdentifier.portofolio:
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (ctx) => PortofolioScreen()),
+        );
+        break;
+      case DrawerIdentifier.seeder:
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (ctx) => AdminSeederScreen()),
         );
         break;
     }
@@ -89,6 +95,13 @@ class MainDrawer extends ConsumerWidget {
               identifier: DrawerIdentifier.person,
               onTap: () =>
                   _onSelectScreen(context, ref, DrawerIdentifier.person),
+            ),
+            DrawerItem(
+              icon: Icons.data_object,
+              title: 'Seeder',
+              identifier: DrawerIdentifier.seeder,
+              onTap: () =>
+                  _onSelectScreen(context, ref, DrawerIdentifier.seeder),
             ),
             const SizedBox(height: 16),
             const DrawerSectionHeader(title: 'PORTOFOLIO'),
