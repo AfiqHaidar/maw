@@ -19,3 +19,8 @@ final userStreamProvider = StreamProvider<UserEntity>((ref) {
   final repo = ref.watch(userRepositoryProvider);
   return repo.watchUser(user.uid);
 });
+
+final allUsersProvider = StreamProvider<List<UserEntity>>((ref) {
+  final repo = ref.watch(userRepositoryProvider);
+  return repo.watchAllUsers();
+});
