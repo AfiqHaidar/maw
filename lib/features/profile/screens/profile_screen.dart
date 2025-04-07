@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mb/data/entities/user_entity.dart';
 import 'dart:ui';
-
 import 'package:mb/data/providers/user_provider.dart';
-import 'package:mb/data/models/user_model.dart';
 import 'package:mb/widgets/drawer/main_drawer.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -32,7 +31,7 @@ class ProfileScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildProfileContent(BuildContext context, UserModel user,
+  Widget _buildProfileContent(BuildContext context, UserEntity user,
       ColorScheme colorScheme, TextTheme textTheme) {
     return Scaffold(
       drawer: MainDrawer(),
