@@ -25,13 +25,13 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
       "name": "Tetris Game",
       "bannerBgColor": 4294901760,
       "bannerType": "lottie",
-      "bannerImagePath": "seeder/logo.png",
-      "bannerLottiePath": "assets/animations/stare_cat.json",
+      "bannerImagePath": "assets/images/logo.png",
+      "bannerLottiePath": "assets/animations/blue_pump.json",
       "carouselImagePaths": [
-        "seeder/logo.png",
-        "seeder/logo.png",
-        "seeder/logo.png",
-        "seeder/logo.png"
+        "assets/images/logo.png",
+        "assets/images/logo.png",
+        "assets/images/logo.png",
+        "assets/images/logo.png"
       ],
       "details": "A block-stacking puzzle game built with Flutter. Features classic mechanics and responsive design.",
       "shortDescription": "Modern implementation of the classic Tetris puzzle game for mobile devices",
@@ -59,14 +59,14 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
           "name": "Jane Doe",
           "role": "UI/UX Designer",
-          "avatarPath": "assets/animations/stare_cat.json",
+          "avatarPath": "assets/animations/blue_pump.json",
           "linkedinUrl": "https://linkedin.com/in/janedoe"
         },
         {
           "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
           "name": "John Smith",
           "role": "Backend Developer",
-          "avatarPath": "assets/animations/stare_cat.json",
+          "avatarPath": "assets/animations/blue_pump.json",
           "linkedinUrl": "https://linkedin.com/in/johnsmith"
         }
       ],
@@ -116,7 +116,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "quote": "The best Tetris implementation I've seen on mobile!",
           "author": "Mobile Gaming Weekly",
           "role": "Publication",
-          "avatarPath": "seeder/logo.png"
+          "avatarPath": "assets/images/logo.png"
         }
       ]
     },
@@ -124,14 +124,14 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
       "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
       "name": "Dino Runner",
       "bannerBgColor": 4294901760,
-      "bannerType": "picture",
-      "bannerImagePath": "seeder/logo.png",
-      "bannerLottiePath": "assets/animations/stare_cat.json",
+      "bannerType": "lottie",
+      "bannerImagePath": "assets/images/logo.png",
+      "bannerLottiePath": "assets/animations/blue_pump.json",
       "carouselImagePaths": [
-        "seeder/logo.png",
-        "seeder/logo.png",
-        "seeder/logo.png",
-        "seeder/logo.png"
+        "assets/images/logo.png",
+        "assets/images/logo.png",
+        "assets/images/logo.png",
+        "assets/images/logo.png"
       ],
       "details": "An offline-style endless runner game inspired by the Chrome Dino game. Built for mobile.",
       "shortDescription": "Endless runner inspired by the Chrome offline dinosaur game",
@@ -156,7 +156,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
           "name": "Alex Chen",
           "role": "Art Designer",
-          "avatarPath": "assets/animations/stare_cat.json",
+          "avatarPath": "assets/animations/blue_pump.json",
           "linkedinUrl": "https://linkedin.com/in/alexchen"
         }
       ],
@@ -206,7 +206,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "quote": "Addictive gameplay with charming pixel art style!",
           "author": "Sarah Johnson",
           "role": "Game Reviewer",
-          "avatarPath": "seeder/logo.png"
+          "avatarPath": "assets/images/logo.png"
         }
       ]
     },
@@ -214,14 +214,14 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
       "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
       "name": "Minesweeper Clone",
       "bannerBgColor": 4294901760,
-      "bannerType": "picture",
-      "bannerImagePath": "seeder/logo.png",
-      "bannerLottiePath": "assets/animations/stare_cat.json",
+      "bannerType": "lottie",
+      "bannerImagePath": "assets/images/logo.png",
+      "bannerLottiePath": "assets/animations/blue_pump.json",
       "carouselImagePaths": [
-        "seeder/logo.png",
-        "seeder/logo.png",
-        "seeder/logo.png",
-        "seeder/logo.png"
+        "assets/images/logo.png",
+        "assets/images/logo.png",
+        "assets/images/logo.png",
+        "assets/images/logo.png"
       ],
       "details": "A modern take on the classic minesweeper game, complete with animations and difficulty levels.",
       "shortDescription": "Modern redesign of the classic Minesweeper puzzle game",
@@ -246,7 +246,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
           "name": "Maria Rodriguez",
           "role": "UI Designer",
-          "avatarPath": "assets/animations/stare_cat.json",
+          "avatarPath": "assets/animations/blue_pump.json",
           "linkedinUrl": "https://linkedin.com/in/mariarodriguez"
         }
       ],
@@ -296,7 +296,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "quote": "The interface is so clean, and the game runs perfectly!",
           "author": "Tech Games Today",
           "role": "Game Blog",
-          "avatarPath": "seeder/logo.png"
+          "avatarPath": "assets/images/logo.png"
         }
       ]
     },
@@ -304,14 +304,14 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
       "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
       "name": "Sudoku Solver App",
       "bannerBgColor": 4294901760,
-      "bannerType": "picture",
-      "bannerImagePath": "seeder/logo.png",
-      "bannerLottiePath": "assets/animations/stare_cat.json",
+      "bannerType": "lottie",
+      "bannerImagePath": "assets/images/logo.png",
+      "bannerLottiePath": "assets/animations/blue_pump.json",
       "carouselImagePaths": [
-        "seeder/logo.png",
-        "seeder/logo.png",
-        "seeder/logo.png",
-        "seeder/logo.png"
+        "assets/images/logo.png",
+        "assets/images/logo.png",
+        "assets/images/logo.png",
+        "assets/images/logo.png"
       ],
       "details": "A clean Sudoku game with solving assistant and multiple difficulty levels. Built for learning algorithms.",
       "shortDescription": "Sudoku game and solver using backtracking algorithms",
@@ -339,14 +339,14 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
           "name": "David Park",
           "role": "Frontend Developer",
-          "avatarPath": "assets/animations/stare_cat.json",
+          "avatarPath": "assets/animations/blue_pump.json",
           "linkedinUrl": "https://linkedin.com/in/davidpark"
         },
         {
           "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
           "name": "Lisa Wang",
           "role": "UX Researcher",
-          "avatarPath": "assets/animations/stare_cat.json",
+          "avatarPath": "assets/animations/blue_pump.json",
           "linkedinUrl": "https://linkedin.com/in/lisawang"
         }
       ],
@@ -401,13 +401,13 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "quote": "The step-by-step solution feature helped me understand Sudoku strategies I never knew about!",
           "author": "Miguel Torres",
           "role": "User",
-          "avatarPath": "seeder/logo.png"
+          "avatarPath": "assets/images/logo.png"
         },
         {
           "quote": "Best Sudoku app I've tried, with excellent puzzle generation",
           "author": "Puzzle Enthusiast Magazine",
           "role": "Publication",
-          "avatarPath": "seeder/logo.png"
+          "avatarPath": "assets/images/logo.png"
         }
       ]
     },
@@ -416,12 +416,12 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
       "name": "Flappy Clone",
       "bannerBgColor":4294901760,
       "bannerType": "lottie",
-      "bannerImagePath": "seeder/logo.png",
+      "bannerImagePath": "assets/images/logo.png",
       "bannerLottiePath": "assets/animations/hanging_cat.json",
       "carouselImagePaths": [
-        "seeder/logo.png",
-        "seeder/logo.png",
-        "seeder/logo.png"
+        "assets/images/logo.png",
+        "assets/images/logo.png",
+        "assets/images/logo.png"
       ],
       "details": "A flappy bird style mobile game using Flutter and custom animations.",
       "shortDescription": "Fast-paced arcade game inspired by Flappy Bird",
@@ -446,7 +446,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
           "name": "Zoe Thompson",
           "role": "Artist",
-          "avatarPath": "assets/animations/stare_cat.json",
+          "avatarPath": "assets/animations/blue_pump.json",
           "linkedinUrl": "https://linkedin.com/in/zoethompson"
         }
       ],
@@ -496,7 +496,7 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "quote": "Just as addictive as the original, but with better graphics!",
           "author": "James Wilson",
           "role": "Mobile Gamer",
-          "avatarPath": "seeder/logo.png"
+          "avatarPath": "assets/images/logo.png"
         }
       ]
     },
@@ -504,13 +504,13 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
       "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
       "name": "Weather App",
       "bannerBgColor":4294901760,
-      "bannerType": "picture",
-      "bannerImagePath": "seeder/logo.png",
-      "bannerLottiePath": "assets/animations/stare_cat.json",
+      "bannerType": "lottie",
+      "bannerImagePath": "assets/images/logo.png",
+      "bannerLottiePath": "assets/animations/blue_pump.json",
       "carouselImagePaths": [
-        "seeder/logo.png",
-        "seeder/logo.png",
-        "seeder/logo.png"
+        "assets/images/logo.png",
+        "assets/images/logo.png",
+        "assets/images/logo.png"
       ],
       "details": "A sleek, minimalist weather application that provides accurate forecasts and beautiful visualizations.",
       "shortDescription": "Modern weather app with beautiful UI and accurate forecasts",
@@ -538,14 +538,14 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
           "name": "Sam Johnson",
           "role": "UI/UX Designer",
-          "avatarPath": "assets/animations/stare_cat.json",
+          "avatarPath": "assets/animations/blue_pump.json",
           "linkedinUrl": "https://linkedin.com/in/samjohnson"
         },
         {
           "userId": "Agq6REuMEBWae3BQcNOcdAJuOI32",
           "name": "Emily Liu",
           "role": "Backend Developer",
-          "avatarPath": "assets/animations/stare_cat.json",
+          "avatarPath": "assets/animations/blue_pump.json",
           "linkedinUrl": "https://linkedin.com/in/emilyliu"
         }
       ],
@@ -595,13 +595,13 @@ class _AdminSeederScreenState extends State<AdminSeederScreen> {
           "quote": "The most accurate weather app I've used, with a beautiful interface!",
           "author": "Tech Review Weekly",
           "role": "Publication",
-          "avatarPath": "seeder/logo.png"
+          "avatarPath": "assets/images/logo.png"
         },
         {
           "quote": "I love how the app adapts its theme to match current weather conditions",
           "author": "Olivia Parker",
           "role": "User",
-          "avatarPath": "seeder/logo.png"
+          "avatarPath": "assets/images/logo.png"
         }
       ]
     }

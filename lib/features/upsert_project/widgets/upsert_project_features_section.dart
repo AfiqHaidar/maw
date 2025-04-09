@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:mb/data/models/feature_model.dart';
 import 'package:mb/features/project/widgets/project_section_header.dart';
+import 'package:mb/features/upsert_project/validators/project_features_validator.dart';
 
 class ProjectFeaturesSection extends StatefulWidget {
   final List<Feature> initialFeatures;
@@ -80,6 +81,18 @@ class _ProjectFeaturesSectionState extends State<ProjectFeaturesSection> {
         ),
         const SizedBox(height: 16),
 
+        // Description text
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Text(
+            "Add the standout features of your project to showcase what makes it special.",
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 14,
+            ),
+          ),
+        ),
+
         // Add Feature button
         SizedBox(
           width: double.infinity,
@@ -111,9 +124,9 @@ class _ProjectFeaturesSectionState extends State<ProjectFeaturesSection> {
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: widget.themeColor.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color: widget.themeColor.withOpacity(0.1)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.03),
@@ -122,40 +135,47 @@ class _ProjectFeaturesSectionState extends State<ProjectFeaturesSection> {
                     ),
                   ],
                 ),
-                child: ExpansionTile(
-                  leading: Icon(
-                    IconData(
-                      int.tryParse(feature.iconName) ?? 0xe000,
-                      fontFamily: 'MaterialIcons',
-                    ),
-                    color: widget.themeColor,
-                  ),
-                  title: Text(
-                    feature.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    dividerColor: Colors.transparent,
+                    colorScheme: ColorScheme.light(
+                      primary: widget.themeColor,
                     ),
                   ),
-                  subtitle: Text(
-                    feature.description.length > 60
-                        ? '${feature.description.substring(0, 60)}...'
-                        : feature.description,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey.shade600,
+                  child: ExpansionTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: widget.themeColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        IconData(
+                          int.tryParse(feature.iconName) ?? 0xe000,
+                          fontFamily: 'MaterialIcons',
+                        ),
+                        color: widget.themeColor,
+                        size: 20,
+                      ),
                     ),
-                  ),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                      child: Column(
+                    title: Text(
+                      feature.title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    childrenPadding: const EdgeInsets.all(16),
+                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             feature.description,
                             style: TextStyle(
                               color: Colors.grey.shade800,
+                              fontSize: 14,
+                              height: 1.5,
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -163,31 +183,47 @@ class _ProjectFeaturesSectionState extends State<ProjectFeaturesSection> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               // Edit button
-                              TextButton.icon(
+                              OutlinedButton.icon(
                                 onPressed: () => _openEditFeatureDialog(index),
                                 icon: const Icon(Icons.edit, size: 18),
                                 label: const Text("Edit"),
-                                style: TextButton.styleFrom(
+                                style: OutlinedButton.styleFrom(
                                   foregroundColor: widget.themeColor,
+                                  side: BorderSide(color: widget.themeColor),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 8),
                               // Delete button
-                              TextButton.icon(
+                              OutlinedButton.icon(
                                 onPressed: () => _removeFeature(index),
                                 icon:
                                     const Icon(Icons.delete_outline, size: 18),
                                 label: const Text("Delete"),
-                                style: TextButton.styleFrom(
+                                style: OutlinedButton.styleFrom(
                                   foregroundColor: Colors.red.shade400,
+                                  side: BorderSide(color: Colors.red.shade200),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
                         ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
@@ -198,9 +234,9 @@ class _ProjectFeaturesSectionState extends State<ProjectFeaturesSection> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 32),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50,
+              color: widget.themeColor.withOpacity(0.05),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200),
+              border: Border.all(color: widget.themeColor.withOpacity(0.1)),
             ),
             child: Column(
               children: [
@@ -296,8 +332,8 @@ class _FeatureFormDialogState extends State<FeatureFormDialog> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       final feature = Feature(
-        title: _titleController.text,
-        description: _descriptionController.text,
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
         iconName: _selectedIconName,
       );
       Navigator.of(context).pop(feature);
@@ -322,10 +358,17 @@ class _FeatureFormDialogState extends State<FeatureFormDialog> {
                 // Dialog header
                 Row(
                   children: [
-                    Icon(
-                      Icons.stars_rounded,
-                      color: widget.themeColor,
-                      size: 24,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: widget.themeColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.stars_rounded,
+                        color: widget.themeColor,
+                        size: 24,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Text(
@@ -351,13 +394,18 @@ class _FeatureFormDialogState extends State<FeatureFormDialog> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    helperText: "Enter a concise title for this feature",
+                    helperStyle: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                    ),
+                    errorStyle: TextStyle(
+                      color: Colors.red.shade700,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a title';
-                    }
-                    return null;
-                  },
+                  validator: ProjectFeaturesValidator.validateTitle,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
 
                 const SizedBox(height: 16),
@@ -373,72 +421,111 @@ class _FeatureFormDialogState extends State<FeatureFormDialog> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     alignLabelWithHint: true,
+                    helperText: "Provide a detailed explanation of the feature",
+                    helperStyle: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                    ),
+                    errorStyle: TextStyle(
+                      color: Colors.red.shade700,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   minLines: 3,
                   maxLines: 5,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a description';
-                    }
-                    return null;
-                  },
+                  validator: ProjectFeaturesValidator.validateDescription,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
 
                 const SizedBox(height: 24),
 
                 // Icon selector
-                Text(
-                  "Choose an Icon",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey.shade800,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 6,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                  ),
-                  itemCount: _commonIcons.length,
-                  itemBuilder: (context, index) {
-                    final iconName = _commonIcons[index];
-                    final isSelected = iconName == _selectedIconName;
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _selectedIconName = iconName;
-                        });
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? widget.themeColor
-                              : Colors.grey.shade100,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                            color: isSelected
-                                ? widget.themeColor
-                                : Colors.grey.shade300,
-                            width: isSelected ? 2 : 1,
-                          ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Choose an Icon",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey.shade800,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "Select an icon that represents this feature",
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade200),
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 6,
+                          crossAxisSpacing: 12,
+                          mainAxisSpacing: 12,
+                          childAspectRatio: 1,
                         ),
-                        child: Icon(
-                          IconData(
-                            int.parse(iconName),
-                            fontFamily: 'MaterialIcons',
-                          ),
-                          color:
-                              isSelected ? Colors.white : Colors.grey.shade700,
-                          size: 24,
+                        itemCount: _commonIcons.length,
+                        itemBuilder: (context, index) {
+                          final iconName = _commonIcons[index];
+                          final isSelected = iconName == _selectedIconName;
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _selectedIconName = iconName;
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: isSelected
+                                    ? widget.themeColor
+                                    : widget.themeColor.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: isSelected
+                                      ? widget.themeColor
+                                      : Colors.transparent,
+                                  width: isSelected ? 2 : 0,
+                                ),
+                              ),
+                              child: Icon(
+                                IconData(
+                                  int.parse(iconName),
+                                  fontFamily: 'MaterialIcons',
+                                ),
+                                color: isSelected
+                                    ? Colors.white
+                                    : widget.themeColor,
+                                size: 24,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12, top: 8),
+                      child: Text(
+                        "Selected: ${ProjectFeaturesValidator.getIconName(_selectedIconName)}",
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 12,
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 32),

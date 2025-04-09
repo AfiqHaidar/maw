@@ -61,6 +61,17 @@ class _ProjectImagesSectionState extends State<ProjectImagesSection> {
           themeColor: widget.themeColor,
         ),
         const SizedBox(height: 16),
+        // Description text
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Text(
+            "Add images of your project to showcase its appearance and features. You'll need at least one image.",
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 14,
+            ),
+          ),
+        ),
         SizedBox(
           height: 100,
           child: ListView(

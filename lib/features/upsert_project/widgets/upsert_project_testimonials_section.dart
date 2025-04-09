@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mb/data/models/testimonial_model.dart';
 import 'package:mb/features/project/widgets/project_section_header.dart';
+import 'package:mb/features/upsert_project/validators/project_testimonials_validator.dart';
 
 class ProjectTestimonialsSection extends StatefulWidget {
   final List<Testimonial> initialTestimonials;
@@ -84,6 +85,18 @@ class _ProjectTestimonialsSectionState
         ),
         const SizedBox(height: 16),
 
+        // Description text
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Text(
+            "Add user feedback and testimonials about your project.",
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 14,
+            ),
+          ),
+        ),
+
         // Add Testimonial button
         SizedBox(
           width: double.infinity,
@@ -113,12 +126,11 @@ class _ProjectTestimonialsSectionState
             itemBuilder: (context, index) {
               final testimonial = _testimonials[index];
               return Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.all(16),
+                margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey.shade200),
+                  color: widget.themeColor.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: widget.themeColor.withOpacity(0.1)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.03),
@@ -127,117 +139,179 @@ class _ProjectTestimonialsSectionState
                     ),
                   ],
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    dividerColor: Colors.transparent,
+                    colorScheme: ColorScheme.light(
+                      primary: widget.themeColor,
+                    ),
+                  ),
+                  child: ExpansionTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: widget.themeColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.format_quote,
+                        color: widget.themeColor,
+                        size: 20,
+                      ),
+                    ),
+                    title: Text(
+                      testimonial.author,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    subtitle: Row(
                       children: [
-                        // Quote icon
                         Container(
-                          width: 30,
-                          height: 30,
-                          alignment: Alignment.center,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          margin: const EdgeInsets.only(right: 8, top: 4),
                           decoration: BoxDecoration(
                             color: widget.themeColor.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: widget.themeColor.withOpacity(0.2),
+                              width: 1,
+                            ),
                           ),
-                          child: Icon(
-                            Icons.format_quote,
-                            color: widget.themeColor,
-                            size: 16,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        // Quote text
-                        Expanded(
                           child: Text(
-                            testimonial.quote,
+                            testimonial.role,
                             style: TextStyle(
-                              fontSize: 15,
-                              fontStyle: FontStyle.italic,
-                              color: Colors.grey.shade800,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: widget.themeColor,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    // Author info
-                    Row(
-                      children: [
-                        // Avatar
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            shape: BoxShape.circle,
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: testimonial.avatarPath.isNotEmpty
-                              ? testimonial.avatarPath.startsWith('assets/')
-                                  ? Image.asset(
-                                      testimonial.avatarPath,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File(testimonial.avatarPath),
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return const Icon(Icons.person);
-                                      },
-                                    )
-                              : const Icon(Icons.person),
-                        ),
-                        const SizedBox(width: 12),
-                        // Author name and role
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                    childrenPadding: const EdgeInsets.all(16),
+                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                testimonial.author,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
+                              // Avatar
+                              Container(
+                                width: 60,
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  color: widget.themeColor.withOpacity(0.1),
+                                  shape: BoxShape.circle,
                                 ),
+                                clipBehavior: Clip.antiAlias,
+                                child: testimonial.avatarPath.isNotEmpty
+                                    ? testimonial.avatarPath
+                                            .startsWith('assets/')
+                                        ? Image.asset(
+                                            testimonial.avatarPath,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.file(
+                                            File(testimonial.avatarPath),
+                                            fit: BoxFit.cover,
+                                            errorBuilder:
+                                                (context, error, stackTrace) {
+                                              return Icon(
+                                                Icons.person,
+                                                color: widget.themeColor,
+                                                size: 30,
+                                              );
+                                            },
+                                          )
+                                    : Icon(
+                                        Icons.person,
+                                        color: widget.themeColor,
+                                        size: 30,
+                                      ),
                               ),
-                              Text(
-                                testimonial.role,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
+                              const SizedBox(width: 12),
+                              // Quote
+                              Expanded(
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                    border:
+                                        Border.all(color: Colors.grey.shade200),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '"${testimonial.quote}"',
+                                        style: TextStyle(
+                                          color: Colors.grey.shade800,
+                                          fontSize: 14,
+                                          height: 1.5,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        // Action buttons
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.edit,
-                                color: widget.themeColor,
-                                size: 20,
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              // Edit button
+                              OutlinedButton.icon(
+                                onPressed: () =>
+                                    _openEditTestimonialDialog(index),
+                                icon: const Icon(Icons.edit, size: 18),
+                                label: const Text("Edit"),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: widget.themeColor,
+                                  side: BorderSide(color: widget.themeColor),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
                               ),
-                              onPressed: () =>
-                                  _openEditTestimonialDialog(index),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.delete_outline,
-                                color: Colors.red.shade400,
-                                size: 20,
+                              const SizedBox(width: 8),
+                              // Delete button
+                              OutlinedButton.icon(
+                                onPressed: () => _removeTestimonial(index),
+                                icon:
+                                    const Icon(Icons.delete_outline, size: 18),
+                                label: const Text("Delete"),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.red.shade400,
+                                  side: BorderSide(color: Colors.red.shade200),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
                               ),
-                              onPressed: () => _removeTestimonial(index),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -248,9 +322,9 @@ class _ProjectTestimonialsSectionState
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 32),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50,
+              color: widget.themeColor.withOpacity(0.05),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200),
+              border: Border.all(color: widget.themeColor.withOpacity(0.1)),
             ),
             child: Column(
               children: [
@@ -340,9 +414,9 @@ class _TestimonialFormDialogState extends State<TestimonialFormDialog> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       final testimonial = Testimonial(
-        quote: _quoteController.text,
-        author: _authorController.text,
-        role: _roleController.text,
+        quote: _quoteController.text.trim(),
+        author: _authorController.text.trim(),
+        role: _roleController.text.trim(),
         avatarPath: _avatarPath,
       );
       Navigator.of(context).pop(testimonial);
@@ -367,10 +441,17 @@ class _TestimonialFormDialogState extends State<TestimonialFormDialog> {
                 // Dialog header
                 Row(
                   children: [
-                    Icon(
-                      Icons.format_quote,
-                      color: widget.themeColor,
-                      size: 24,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: widget.themeColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.format_quote,
+                        color: widget.themeColor,
+                        size: 24,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Text(
@@ -387,20 +468,101 @@ class _TestimonialFormDialogState extends State<TestimonialFormDialog> {
 
                 const SizedBox(height: 24),
 
-                // Center avatar picker
-                Center(
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: _pickAvatar,
+                // Author name field
+                TextFormField(
+                  controller: _authorController,
+                  decoration: InputDecoration(
+                    labelText: "Author Name",
+                    hintText: "Who provided this testimonial",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    helperText: "Name of the person who gave this feedback",
+                    helperStyle: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                    ),
+                    errorStyle: TextStyle(
+                      color: Colors.red.shade700,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  validator: ProjectTestimonialsValidator.validateAuthor,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+
+                const SizedBox(height: 16),
+
+                // Role field
+                TextFormField(
+                  controller: _roleController,
+                  decoration: InputDecoration(
+                    labelText: "Author Role",
+                    hintText: "e.g., Product Manager, User, Client",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    helperText:
+                        "The author's position or relationship to the project",
+                    helperStyle: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                    ),
+                    errorStyle: TextStyle(
+                      color: Colors.red.shade700,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  validator: ProjectTestimonialsValidator.validateRole,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+
+                const SizedBox(height: 16),
+
+                // Quote field
+                TextFormField(
+                  controller: _quoteController,
+                  decoration: InputDecoration(
+                    labelText: "Testimonial Quote",
+                    hintText: "What they said about your project",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    alignLabelWithHint: true,
+                    helperText:
+                        "The feedback or testimonial in their own words",
+                    helperStyle: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                    ),
+                    errorStyle: TextStyle(
+                      color: Colors.red.shade700,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  minLines: 3,
+                  maxLines: 5,
+                  validator: ProjectTestimonialsValidator.validateQuote,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                ),
+
+                const SizedBox(height: 24),
+
+                // Avatar picker
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: _pickAvatar,
+                      child: Center(
                         child: Container(
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
+                            color: widget.themeColor.withOpacity(0.1),
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: widget.themeColor.withOpacity(0.5),
+                              color: widget.themeColor.withOpacity(0.2),
                               width: 2,
                             ),
                           ),
@@ -421,16 +583,9 @@ class _TestimonialFormDialogState extends State<TestimonialFormDialog> {
                                               MainAxisAlignment.center,
                                           children: [
                                             Icon(
-                                              Icons.person_add,
+                                              Icons.add_a_photo,
                                               color: widget.themeColor,
-                                              size: 32,
-                                            ),
-                                            const SizedBox(height: 4),
-                                            const Text(
-                                              "Add Photo",
-                                              style: TextStyle(
-                                                fontSize: 10,
-                                              ),
+                                              size: 24,
                                             ),
                                           ],
                                         );
@@ -440,97 +595,16 @@ class _TestimonialFormDialogState extends State<TestimonialFormDialog> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
-                                      Icons.person_add,
+                                      Icons.add_a_photo,
                                       color: widget.themeColor,
-                                      size: 32,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    const Text(
-                                      "Add Photo",
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                      ),
+                                      size: 24,
                                     ),
                                   ],
                                 ),
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        "Tap to change",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Quote field
-                TextFormField(
-                  controller: _quoteController,
-                  decoration: InputDecoration(
-                    labelText: "Testimonial Quote",
-                    hintText: "What the user said about your project",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
                     ),
-                    alignLabelWithHint: true,
-                    prefixIcon: const Icon(Icons.format_quote),
-                  ),
-                  minLines: 3,
-                  maxLines: 5,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a quote';
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 16),
-
-                // Author name field
-                TextFormField(
-                  controller: _authorController,
-                  decoration: InputDecoration(
-                    labelText: "Author Name",
-                    hintText: "Who provided this testimonial",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.person),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter an author name';
-                    }
-                    return null;
-                  },
-                ),
-
-                const SizedBox(height: 16),
-
-                // Role field
-                TextFormField(
-                  controller: _roleController,
-                  decoration: InputDecoration(
-                    labelText: "Author Role",
-                    hintText: "e.g., Product Manager, User, Client",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    prefixIcon: const Icon(Icons.work_outline),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter an author role';
-                    }
-                    return null;
-                  },
+                  ],
                 ),
 
                 const SizedBox(height: 32),

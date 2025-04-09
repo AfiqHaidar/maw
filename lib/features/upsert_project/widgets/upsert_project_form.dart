@@ -21,7 +21,7 @@ import 'package:mb/features/upsert_project/widgets/upsert_project_images_section
 import 'package:mb/features/upsert_project/widgets/upsert_project_info_section.dart';
 import 'package:mb/features/upsert_project/widgets/upsert_project_links_section.dart';
 import 'package:mb/features/upsert_project/widgets/upsert_project_tags_section.dart';
-import 'package:mb/features/upsert_project/widgets/upsert_project_tech_stack_section,.dart';
+import 'package:mb/features/upsert_project/widgets/upsert_project_tech_stack_section.dart';
 import 'package:mb/features/upsert_project/widgets/upsert_project_testimonials_section.dart';
 import 'package:mb/features/upsert_project/widgets/upsert_project_stats_section.dart';
 import 'package:mb/features/upsert_project/widgets/upsert_team_member_section.dart';
@@ -106,8 +106,6 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
     _tags = project?.tags?.toList() ?? [];
     _developmentDays = project?.developmentTime?.inDays ?? 0;
     _teamMembers = project?.teamMembers?.toList() ?? [];
-
-    // Initialize the new sections
     _keyFeatures = project?.keyFeatures?.toList() ?? [];
     _challenges = project?.challenges?.toList() ?? [];
     _futureEnhancements = project?.futureEnhancements?.toList() ?? [];
@@ -137,6 +135,7 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       final user = ref.read(userProvider)!;
+      print("debug: ${user.id}");
       final ProjectEntity formData = widget.project == null
           ? ProjectEntity(
               id: const Uuid().v4(),
@@ -353,11 +352,12 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
 
                   const SizedBox(height: 24),
 
-                  // Project Statistics section
-                  ProjectStatsSection(
-                    initialStats: widget.project?.stats,
+                  // Category section
+                  ProjectCategorySection(
+                    selectedCategory: _selectedCategory,
                     themeColor: _selectedColor,
-                    onStatsChanged: _updateStats,
+                    categories: _categories,
+                    onCategoryChanged: _updateSelectedCategory,
                   ),
 
                   const SizedBox(height: 24),
@@ -371,12 +371,11 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
 
                   const SizedBox(height: 24),
 
-                  // Category section
-                  ProjectCategorySection(
-                    selectedCategory: _selectedCategory,
+                  // Project Statistics section
+                  ProjectStatsSection(
+                    initialStats: widget.project?.stats,
                     themeColor: _selectedColor,
-                    categories: _categories,
-                    onCategoryChanged: _updateSelectedCategory,
+                    onStatsChanged: _updateStats,
                   ),
 
                   const SizedBox(height: 24),
@@ -431,15 +430,6 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
 
                   const SizedBox(height: 24),
 
-                  // Tech stack section
-                  ProjectTechStackSection(
-                    techStack: _techStack,
-                    themeColor: _selectedColor,
-                    onTechStackChanged: _updateTechStack,
-                  ),
-
-                  const SizedBox(height: 24),
-
                   // Team Members section
                   ProjectTeamMemberSection(
                     themeColor: _selectedColor,
@@ -454,6 +444,13 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
                     initialTestimonials: _testimonials,
                     themeColor: _selectedColor,
                     onTestimonialsChanged: _updateTestimonials,
+                  ),
+                  const SizedBox(height: 24),
+                  // Tech stack section
+                  ProjectTechStackSection(
+                    techStack: _techStack,
+                    themeColor: _selectedColor,
+                    onTechStackChanged: _updateTechStack,
                   ),
 
                   const SizedBox(height: 24),

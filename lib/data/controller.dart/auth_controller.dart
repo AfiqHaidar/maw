@@ -14,7 +14,7 @@ class AuthController extends StateNotifier<bool> {
     try {
       final user = await _authRepository.login(email, password);
       if (user != null) {
-        await _userController.fetchUser(user.uid);
+        await _userController.fetchUser();
       }
     } finally {
       state = false;
@@ -26,7 +26,7 @@ class AuthController extends StateNotifier<bool> {
     try {
       final userCredential = await _authRepository.register(email, password);
       if (userCredential.user != null) {
-        await _userController.fetchUser(userCredential.user!.uid);
+        await _userController.fetchUser();
       }
       return userCredential;
     } finally {

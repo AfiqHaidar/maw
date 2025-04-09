@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:mb/data/models/future_enhancement_model.dart';
 import 'package:mb/features/project/widgets/project_section_header.dart';
+import 'package:mb/features/upsert_project/validators/project_enhancements_validator.dart';
 
 class ProjectEnhancementsSection extends StatefulWidget {
   final List<FutureEnhancement> initialEnhancements;
@@ -73,16 +74,7 @@ class _ProjectEnhancementsSectionState
   }
 
   Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'planned':
-        return Colors.blue;
-      case 'in progress':
-        return Colors.amber;
-      case 'completed':
-        return Colors.green;
-      default:
-        return Colors.grey;
-    }
+    return ProjectEnhancementsValidator.getStatusColor(status);
   }
 
   @override
@@ -96,6 +88,18 @@ class _ProjectEnhancementsSectionState
           themeColor: widget.themeColor,
         ),
         const SizedBox(height: 16),
+
+        // Description text
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Text(
+            "Add planned improvements and future features for your project.",
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 14,
+            ),
+          ),
+        ),
 
         // Add Enhancement button
         SizedBox(
@@ -130,9 +134,9 @@ class _ProjectEnhancementsSectionState
               return Container(
                 margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: widget.themeColor.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color: widget.themeColor.withOpacity(0.1)),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withOpacity(0.03),
@@ -141,92 +145,117 @@ class _ProjectEnhancementsSectionState
                     ),
                   ],
                 ),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12,
-                    horizontal: 16,
-                  ),
-                  leading: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: statusColor.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.lightbulb_outline,
-                      color: statusColor,
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    dividerColor: Colors.transparent,
+                    colorScheme: ColorScheme.light(
+                      primary: widget.themeColor,
                     ),
                   ),
-                  title: Text(
-                    enhancement.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 4),
-                      Text(
-                        enhancement.description,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                        ),
+                  child: ExpansionTile(
+                    leading: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: widget.themeColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: statusColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Text(
-                          enhancement.status,
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: statusColor,
+                      child: Icon(
+                        Icons.lightbulb_outline,
+                        color: widget.themeColor,
+                        size: 20,
+                      ),
+                    ),
+                    title: Text(
+                      enhancement.title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    subtitle: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          margin: const EdgeInsets.only(right: 8, top: 4),
+                          decoration: BoxDecoration(
+                            color: statusColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: statusColor.withOpacity(0.2),
+                              width: 1,
+                            ),
+                          ),
+                          child: Text(
+                            enhancement.status,
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                              color: statusColor,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  trailing: PopupMenuButton<String>(
-                    icon: const Icon(Icons.more_vert),
-                    onSelected: (value) {
-                      if (value == 'edit') {
-                        _openEditEnhancementDialog(index);
-                      } else if (value == 'delete') {
-                        _removeEnhancement(index);
-                      }
-                    },
-                    itemBuilder: (context) => [
-                      const PopupMenuItem(
-                        value: 'edit',
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit, size: 18),
-                            SizedBox(width: 8),
-                            Text('Edit'),
-                          ],
-                        ),
-                      ),
-                      const PopupMenuItem(
-                        value: 'delete',
-                        child: Row(
-                          children: [
-                            Icon(Icons.delete_outline,
-                                size: 18, color: Colors.red),
-                            SizedBox(width: 8),
-                            Text('Delete', style: TextStyle(color: Colors.red)),
-                          ],
-                        ),
+                      ],
+                    ),
+                    childrenPadding: const EdgeInsets.all(16),
+                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            enhancement.description,
+                            style: TextStyle(
+                              color: Colors.grey.shade800,
+                              fontSize: 14,
+                              height: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              // Edit button
+                              OutlinedButton.icon(
+                                onPressed: () =>
+                                    _openEditEnhancementDialog(index),
+                                icon: const Icon(Icons.edit, size: 18),
+                                label: const Text("Edit"),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: widget.themeColor,
+                                  side: BorderSide(color: widget.themeColor),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              // Delete button
+                              OutlinedButton.icon(
+                                onPressed: () => _removeEnhancement(index),
+                                icon:
+                                    const Icon(Icons.delete_outline, size: 18),
+                                label: const Text("Delete"),
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.red.shade400,
+                                  side: BorderSide(color: Colors.red.shade200),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -240,9 +269,9 @@ class _ProjectEnhancementsSectionState
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 32),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50,
+              color: widget.themeColor.withOpacity(0.05),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200),
+              border: Border.all(color: widget.themeColor.withOpacity(0.1)),
             ),
             child: Column(
               children: [
@@ -326,12 +355,16 @@ class _EnhancementFormDialogState extends State<EnhancementFormDialog> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       final enhancement = FutureEnhancement(
-        title: _titleController.text,
-        description: _descriptionController.text,
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
         status: _selectedStatus,
       );
       Navigator.of(context).pop(enhancement);
     }
+  }
+
+  Color _getStatusColor(String status) {
+    return ProjectEnhancementsValidator.getStatusColor(status);
   }
 
   @override
@@ -352,10 +385,17 @@ class _EnhancementFormDialogState extends State<EnhancementFormDialog> {
                 // Dialog header
                 Row(
                   children: [
-                    Icon(
-                      Icons.update_rounded,
-                      color: widget.themeColor,
-                      size: 24,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: widget.themeColor.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(
+                        Icons.update_rounded,
+                        color: widget.themeColor,
+                        size: 24,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Text(
@@ -381,13 +421,18 @@ class _EnhancementFormDialogState extends State<EnhancementFormDialog> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    helperText: "Enter a concise title for this enhancement",
+                    helperStyle: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                    ),
+                    errorStyle: TextStyle(
+                      color: Colors.red.shade700,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a title';
-                    }
-                    return null;
-                  },
+                  validator: ProjectEnhancementsValidator.validateTitle,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
 
                 const SizedBox(height: 16),
@@ -402,47 +447,108 @@ class _EnhancementFormDialogState extends State<EnhancementFormDialog> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     alignLabelWithHint: true,
+                    helperText:
+                        "Explain what this enhancement will add to your project",
+                    helperStyle: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 12,
+                    ),
+                    errorStyle: TextStyle(
+                      color: Colors.red.shade700,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                   minLines: 3,
                   maxLines: 5,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please describe the enhancement';
-                    }
-                    return null;
-                  },
+                  validator: ProjectEnhancementsValidator.validateDescription,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                 ),
 
                 const SizedBox(height: 16),
 
                 // Status dropdown
-                DropdownButtonFormField<String>(
-                  value: _selectedStatus,
-                  decoration: InputDecoration(
-                    labelText: "Status",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Status",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey.shade800,
+                      ),
                     ),
-                  ),
-                  items: _statusOptions
-                      .map((status) => DropdownMenuItem(
-                            value: status,
-                            child: Text(status),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    if (value != null) {
-                      setState(() {
-                        _selectedStatus = value;
-                      });
-                    }
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please select a status';
-                    }
-                    return null;
-                  },
+                    const SizedBox(height: 12),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade200),
+                      ),
+                      child: Column(
+                        children: [
+                          ..._statusOptions.map((status) {
+                            final isSelected = status == _selectedStatus;
+                            final statusColor = _getStatusColor(status);
+                            return InkWell(
+                              onTap: () {
+                                setState(() {
+                                  _selectedStatus = status;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 16,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? statusColor.withOpacity(0.1)
+                                      : Colors.transparent,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: statusColor.withOpacity(0.1),
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        _getStatusIcon(status),
+                                        color: statusColor,
+                                        size: 16,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Text(
+                                      status,
+                                      style: TextStyle(
+                                        fontWeight: isSelected
+                                            ? FontWeight.w600
+                                            : FontWeight.normal,
+                                        color: isSelected
+                                            ? statusColor
+                                            : Colors.black87,
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    if (isSelected)
+                                      Icon(
+                                        Icons.check_circle,
+                                        color: statusColor,
+                                        size: 18,
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
 
                 const SizedBox(height: 32),
@@ -485,5 +591,20 @@ class _EnhancementFormDialogState extends State<EnhancementFormDialog> {
         ),
       ),
     );
+  }
+
+  IconData _getStatusIcon(String status) {
+    switch (status.toLowerCase()) {
+      case 'planned':
+        return Icons.schedule;
+      case 'in progress':
+        return Icons.engineering;
+      case 'completed':
+        return Icons.check_circle_outline;
+      case 'on hold':
+        return Icons.pause_circle_outline;
+      default:
+        return Icons.info_outline;
+    }
   }
 }

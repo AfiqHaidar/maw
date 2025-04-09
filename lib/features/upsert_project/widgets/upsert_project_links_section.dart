@@ -1,6 +1,7 @@
-// lib/features/upsert_project/widgets/project_links_section.dart
+// lib/features/upsert_project/widgets/upsert_project_links_section.dart
 import 'package:flutter/material.dart';
 import 'package:mb/features/project/widgets/project_section_header.dart';
+import 'package:mb/features/upsert_project/validators/project_links_validator.dart';
 
 class ProjectLinksSection extends StatefulWidget {
   final TextEditingController linkController;
@@ -26,6 +27,7 @@ class _ProjectLinksSectionState extends State<ProjectLinksSection> {
   final TextEditingController _additionalLinkController =
       TextEditingController();
   late List<String> _additionalLinks;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -40,12 +42,16 @@ class _ProjectLinksSectionState extends State<ProjectLinksSection> {
   }
 
   void _addAdditionalLink() {
-    if (_additionalLinkController.text.isNotEmpty) {
-      setState(() {
-        _additionalLinks.add(_additionalLinkController.text);
-        _additionalLinkController.clear();
-      });
-      widget.onAdditionalLinksChanged(_additionalLinks);
+    if (_formKey.currentState!.validate()) {
+      if (_additionalLinkController.text.isNotEmpty) {
+        final formattedUrl =
+            ProjectLinksValidator.formatUrl(_additionalLinkController.text);
+        setState(() {
+          _additionalLinks.add(formattedUrl);
+          _additionalLinkController.clear();
+        });
+        widget.onAdditionalLinksChanged(_additionalLinks);
+      }
     }
   }
 
@@ -68,7 +74,18 @@ class _ProjectLinksSectionState extends State<ProjectLinksSection> {
         ),
         const SizedBox(height: 16),
 
-        // Link field
+        // Description text
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Text(
+            "Add links to your project to make it accessible to visitors.",
+            style: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 14,
+            ),
+          ),
+        ),
+
         TextFormField(
           controller: widget.linkController,
           decoration: InputDecoration(
@@ -78,129 +95,236 @@ class _ProjectLinksSectionState extends State<ProjectLinksSection> {
               borderRadius: BorderRadius.circular(12),
             ),
             prefixIcon: const Icon(Icons.link),
+            helperText: "Main link to your project",
+            helperStyle: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 12,
+            ),
+            errorStyle: TextStyle(
+              color: Colors.red.shade700,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please enter a project link';
-            }
-            return null;
-          },
+          validator: ProjectLinksValidator.validateMainLink,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
 
         const SizedBox(height: 16),
 
-        // GitHub link field
         TextFormField(
           controller: widget.githubLinkController,
           decoration: InputDecoration(
-            labelText: "GitHub Link (optional)",
+            labelText: "GitHub Link",
             hintText: "https://github.com/...",
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
             prefixIcon: const Icon(Icons.code),
+            helperText:
+                "Optional, link to the project's source code repository",
+            helperStyle: TextStyle(
+              color: Colors.grey.shade600,
+              fontSize: 12,
+            ),
+            errorStyle: TextStyle(
+              color: Colors.red.shade700,
+              fontWeight: FontWeight.w500,
+            ),
           ),
+          validator: ProjectLinksValidator.validateGithubLink,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
 
         const SizedBox(height: 24),
 
-        // Additional links section
-        const Text(
-          "Additional Links",
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        const SizedBox(height: 12),
-
-        // Add additional link
-        Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                controller: _additionalLinkController,
-                decoration: InputDecoration(
-                  hintText: "Add another link",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+        Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Additional links section
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: widget.themeColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.add_link,
+                          color: widget.themeColor,
+                          size: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        "Additional Links",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                  prefixIcon: const Icon(Icons.add_link),
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-            ElevatedButton(
-              onPressed: _addAdditionalLink,
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: widget.themeColor,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text("Add"),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 16),
-
-        // Display additional links
-        if (_additionalLinks.isNotEmpty) ...[
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _additionalLinks.length,
-            itemBuilder: (context, index) {
-              return Container(
-                margin: const EdgeInsets.only(bottom: 8),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: ListTile(
-                  leading: Icon(
-                    Icons.link,
-                    color: widget.themeColor,
-                  ),
-                  title: Text(
-                    _additionalLinks[index],
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(
-                      Icons.close,
+                  const SizedBox(height: 12),
+                  Text(
+                    "Add more links to documentation, demos, or related resources.",
+                    style: TextStyle(
                       color: Colors.grey.shade700,
-                      size: 18,
+                      fontSize: 14,
                     ),
-                    onPressed: () => _removeAdditionalLink(index),
                   ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 4,
-                  ),
-                ),
-              );
-            },
-          ),
-        ] else ...[
-          // Empty state for additional links (optional)
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Text(
-                "No additional links added",
-                style: TextStyle(
-                  color: Colors.grey.shade500,
-                  fontStyle: FontStyle.italic,
-                ),
+                  const SizedBox(height: 12),
+                ],
               ),
-            ),
+
+              // Add additional link
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _additionalLinkController,
+                      decoration: InputDecoration(
+                        hintText: "Add another link",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        prefixIcon: const Icon(Icons.add_link),
+                        errorStyle: TextStyle(
+                          color: Colors.red.shade700,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value != null && value.isNotEmpty) {
+                          return ProjectLinksValidator.validateAdditionalLink(
+                              value);
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  ElevatedButton(
+                    onPressed: _addAdditionalLink,
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: widget.themeColor,
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 14, horizontal: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: const Text("Add"),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Display additional links
+              if (_additionalLinks.isNotEmpty) ...[
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _additionalLinks.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      decoration: BoxDecoration(
+                        color: widget.themeColor.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                            color: widget.themeColor.withOpacity(0.1)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.03),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: ListTile(
+                        leading: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: widget.themeColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.link,
+                            color: widget.themeColor,
+                            size: 18,
+                          ),
+                        ),
+                        title: Text(
+                          _additionalLinks[index],
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(
+                            Icons.close,
+                            color: Colors.grey.shade700,
+                            size: 18,
+                          ),
+                          onPressed: () => _removeAdditionalLink(index),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ] else ...[
+                // Empty state for additional links
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  decoration: BoxDecoration(
+                    color: widget.themeColor.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(12),
+                    border:
+                        Border.all(color: widget.themeColor.withOpacity(0.1)),
+                  ),
+                  child: Column(
+                    children: [
+                      Icon(
+                        Icons.link_off,
+                        size: 48,
+                        color: Colors.grey.shade400,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        "No additional links added",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey.shade600,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "Add links to documentation or related resources",
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ],
           ),
-        ],
+        ),
       ],
     );
   }

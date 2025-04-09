@@ -83,6 +83,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       child: InkWell(
                         onTap: () async {
                           SoundService().playSound(SoundIdentifier.meow);
+
+                          print("debug: ${ref.read(userProvider)!.id}");
                         },
                         splashColor: Colors.transparent,
                         highlightColor: Colors.transparent,

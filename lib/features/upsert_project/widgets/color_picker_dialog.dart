@@ -1,7 +1,8 @@
 // lib/features/upsert_project/widgets/color_picker_dialog.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-class ColorPickerDialog extends StatelessWidget {
+class ColorPickerDialog extends StatefulWidget {
   final Color selectedColor;
   final Function(Color) onColorSelected;
 
@@ -10,6 +11,19 @@ class ColorPickerDialog extends StatelessWidget {
     required this.selectedColor,
     required this.onColorSelected,
   }) : super(key: key);
+
+  @override
+  State<ColorPickerDialog> createState() => _ColorPickerDialogState();
+}
+
+class _ColorPickerDialogState extends State<ColorPickerDialog> {
+  late Color _currentColor;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentColor = widget.selectedColor;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +49,12 @@ class ColorPickerDialog extends StatelessWidget {
                   child: Icon(
                     Icons.color_lens,
                     size: 20,
-                    color: selectedColor,
+                    color: _currentColor,
                   ),
                 ),
                 const SizedBox(width: 12),
                 const Text(
-                  "Select Banner Color",
+                  "Banner Color",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -50,27 +64,23 @@ class ColorPickerDialog extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Color Grid
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                _colorChoice(Colors.blue, context),
-                _colorChoice(Colors.red, context),
-                _colorChoice(Colors.green, context),
-                _colorChoice(Colors.orange, context),
-                _colorChoice(Colors.purple, context),
-                _colorChoice(Colors.teal, context),
-                _colorChoice(Colors.pink, context),
-                _colorChoice(Colors.indigo, context),
-                _colorChoice(Colors.amber, context),
-                _colorChoice(Colors.cyan, context),
-                _colorChoice(Colors.lime, context),
-                _colorChoice(Colors.brown, context),
-              ],
+            // Color Picker
+            SingleChildScrollView(
+              child: ColorPicker(
+                pickerColor: _currentColor,
+                onColorChanged: (color) {
+                  setState(() {
+                    _currentColor = color;
+                  });
+                  widget.onColorSelected(color);
+                },
+                enableAlpha: false,
+                labelTypes: const [],
+                displayThumbColor: true,
+                pickerAreaHeightPercent: 0.8,
+                portraitOnly: true,
+              ),
             ),
-
-            const SizedBox(height: 20),
 
             // Done button
             SizedBox(
@@ -79,47 +89,25 @@ class ColorPickerDialog extends StatelessWidget {
                 onPressed: () => Navigator.of(context).pop(),
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: selectedColor,
+                  backgroundColor: _currentColor,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text("Done"),
+                child: Text(
+                  "Select",
+                  style: TextStyle(
+                    color: useWhiteForeground(_currentColor)
+                        ? Colors.white
+                        : Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _colorChoice(Color color, BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        onColorSelected(color);
-      },
-      child: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: selectedColor == color ? Colors.white : Colors.transparent,
-            width: 3,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.08),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: selectedColor == color
-            ? const Icon(Icons.check, color: Colors.white, size: 26)
-            : null,
       ),
     );
   }

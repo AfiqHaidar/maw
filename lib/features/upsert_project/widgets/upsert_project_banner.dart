@@ -91,13 +91,24 @@ class UpsertProjectBanner extends StatelessWidget {
                 color: Colors.white.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Text(
-                "Change Theme Color",
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.color_lens,
+                    size: 16,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 4),
+                  Text(
+                    "Change Theme Color",
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

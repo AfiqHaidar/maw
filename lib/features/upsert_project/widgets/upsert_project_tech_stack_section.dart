@@ -1,60 +1,77 @@
-// lib/features/upsert_project/widgets/upsert_project_tags_section.dart
+// lib/features/upsert_project/widgets/upsert_project_tech_stack_section.dart
 import 'package:flutter/material.dart';
 import 'package:mb/features/project/widgets/project_section_header.dart';
 
-class ProjectTagsSection extends StatefulWidget {
-  final List<String> tags;
+class ProjectTechStackSection extends StatefulWidget {
+  final List<String> techStack;
   final Color themeColor;
-  final Function(List<String>) onTagsChanged;
+  final Function(List<String>) onTechStackChanged;
 
-  const ProjectTagsSection({
+  const ProjectTechStackSection({
     Key? key,
-    required this.tags,
+    required this.techStack,
     required this.themeColor,
-    required this.onTagsChanged,
+    required this.onTechStackChanged,
   }) : super(key: key);
 
   @override
-  State<ProjectTagsSection> createState() => _ProjectTagsSectionState();
+  State<ProjectTechStackSection> createState() =>
+      _ProjectTechStackSectionState();
 }
 
-class _ProjectTagsSectionState extends State<ProjectTagsSection> {
-  final TextEditingController _tagController = TextEditingController();
-  late List<String> _tags;
+class _ProjectTechStackSectionState extends State<ProjectTechStackSection> {
+  final TextEditingController _techController = TextEditingController();
+  late List<String> _techStack;
   final _formKey = GlobalKey<FormState>();
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _tags = List.from(widget.tags);
+    _techStack = List.from(widget.techStack);
   }
 
   @override
   void dispose() {
-    _tagController.dispose();
+    _techController.dispose();
     super.dispose();
   }
 
-  void _addTag() {
-    if (_tagController.text.trim().isNotEmpty) {
+  void _addTechStack() {
+    final tech = _techController.text.trim();
+    if (tech.isEmpty) {
       setState(() {
-        _tags.add(_tagController.text.trim());
-        _tagController.clear();
+        _errorMessage = "Please enter a technology name";
       });
-      widget.onTagsChanged(_tags);
+      return;
     }
-  }
 
-  void _removeTag(int index) {
+    // Check for duplicates
+    if (_techStack.contains(tech)) {
+      setState(() {
+        _errorMessage = "$tech is already in your tech stack";
+      });
+      return;
+    }
+
     setState(() {
-      _tags.removeAt(index);
+      _techStack.add(tech);
+      _techController.clear();
+      _errorMessage = null;
     });
-    widget.onTagsChanged(_tags);
+    widget.onTechStackChanged(_techStack);
   }
 
-  void _editTag(int index) {
-    final currentTag = _tags[index];
-    _tagController.text = currentTag;
+  void _removeTech(int index) {
+    setState(() {
+      _techStack.removeAt(index);
+    });
+    widget.onTechStackChanged(_techStack);
+  }
+
+  void _editTech(int index) {
+    final currentTech = _techStack[index];
+    _techController.text = currentTech;
 
     showDialog(
       context: context,
@@ -78,7 +95,7 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
             ),
             const SizedBox(width: 12),
             const Text(
-              "Edit Tag",
+              "Edit Technology",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -87,13 +104,13 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
           ],
         ),
         content: TextField(
-          controller: _tagController,
+          controller: _techController,
           decoration: InputDecoration(
-            labelText: "Tag Name",
+            labelText: "Technology Name",
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
             ),
-            hintText: "Edit tag",
+            hintText: "e.g., Flutter, React, Java",
           ),
           autofocus: true,
         ),
@@ -104,12 +121,12 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (_tagController.text.trim().isNotEmpty) {
+              if (_techController.text.trim().isNotEmpty) {
                 setState(() {
-                  _tags[index] = _tagController.text.trim();
-                  _tagController.clear();
+                  _techStack[index] = _techController.text.trim();
+                  _techController.clear();
                 });
-                widget.onTagsChanged(_tags);
+                widget.onTechStackChanged(_techStack);
                 Navigator.of(context).pop();
               }
             },
@@ -137,8 +154,8 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ProjectSectionHeader(
-          icon: Icons.tag_rounded,
-          title: "Tags",
+          icon: Icons.code_rounded,
+          title: "Tech Stack",
           themeColor: widget.themeColor,
         ),
         const SizedBox(height: 16),
@@ -147,7 +164,7 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
         Padding(
           padding: const EdgeInsets.only(bottom: 16),
           child: Text(
-            "Add tags to help users find your project when searching or browsing.",
+            "Add the technologies, frameworks, and languages used in your project.",
             style: TextStyle(
               color: Colors.grey.shade700,
               fontSize: 14,
@@ -155,32 +172,34 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
           ),
         ),
 
-        // Add tag form
+        // Add tech stack form
         Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   Expanded(
                     child: TextFormField(
-                      controller: _tagController,
+                      controller: _techController,
                       decoration: InputDecoration(
-                        hintText: "Add tag",
+                        hintText: "Add technology",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         prefixIcon: Icon(
-                          Icons.add_circle_outline,
+                          Icons.code,
                           color: widget.themeColor,
                         ),
+                        errorText: _errorMessage,
                       ),
-                      onFieldSubmitted: (_) => _addTag(),
+                      onFieldSubmitted: (_) => _addTechStack(),
                     ),
                   ),
                   const SizedBox(width: 12),
                   ElevatedButton(
-                    onPressed: _addTag,
+                    onPressed: _addTechStack,
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
                       backgroundColor: widget.themeColor,
@@ -200,15 +219,15 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
 
         const SizedBox(height: 24),
 
-        // Display tags
-        if (_tags.isNotEmpty) ...[
+        // Display tech stack
+        if (_techStack.isNotEmpty) ...[
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: widget.themeColor.withOpacity(0.05),
+              color: Colors.grey.shade50,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: widget.themeColor.withOpacity(0.1)),
+              border: Border.all(color: Colors.grey.shade200),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.03),
@@ -220,86 +239,113 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: widget.themeColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(
-                                color: widget.themeColor.withOpacity(0.2),
-                              ),
-                            ),
-                            child: Text(
-                              "${_tags.length} ${_tags.length == 1 ? 'tag' : 'tags'}",
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                                color: widget.themeColor,
-                              ),
-                            ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade200,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: Colors.grey.shade300,
                           ),
-                        ],
+                        ),
+                        child: Text(
+                          "${_techStack.length} ${_techStack.length == 1 ? 'technology' : 'technologies'}",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey.shade700,
+                          ),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 16),
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 12,
-                  children: _tags.asMap().entries.map((entry) {
+                  spacing: 12,
+                  runSpacing: 14,
+                  children: _techStack.asMap().entries.map((entry) {
                     final index = entry.key;
-                    final tag = entry.value;
+                    final tech = entry.value;
 
                     return Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
+                        horizontal: 10,
+                        vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: widget.themeColor.withOpacity(0.1),
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: widget.themeColor.withOpacity(0.2),
+                          color: Colors.grey.shade300,
                           width: 1,
                         ),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              Icons.code,
+                              size: 14,
+                              color: Colors.grey.shade700,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
                           Text(
-                            "#$tag",
+                            tech,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
-                              color: widget.themeColor,
+                              color: Colors.grey.shade800,
                             ),
                           ),
-                          const SizedBox(width: 6),
-                          InkWell(
-                            onTap: () => _editTag(index),
-                            child: Icon(
-                              Icons.edit,
-                              size: 16,
-                              color: widget.themeColor,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          InkWell(
-                            onTap: () => _removeTag(index),
-                            child: Icon(
-                              Icons.close,
-                              size: 16,
-                              color: widget.themeColor,
-                            ),
+                          const SizedBox(width: 10),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => _editTech(index),
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Icon(
+                                      Icons.edit,
+                                      size: 16,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 4),
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: () => _removeTech(index),
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Icon(
+                                      Icons.close,
+                                      size: 16,
+                                      color: Colors.grey.shade500,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -315,20 +361,20 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 32),
             decoration: BoxDecoration(
-              color: widget.themeColor.withOpacity(0.05),
+              color: Colors.grey.shade50,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: widget.themeColor.withOpacity(0.1)),
+              border: Border.all(color: Colors.grey.shade200),
             ),
             child: Column(
               children: [
                 Icon(
-                  Icons.tag_rounded,
+                  Icons.code_rounded,
                   size: 48,
                   color: Colors.grey.shade400,
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  "No tags added yet",
+                  "No technologies added yet",
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.grey.shade600,
@@ -337,7 +383,7 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "Add tags to make your project more discoverable",
+                  "Add the programming languages and frameworks used",
                   style: TextStyle(
                     fontSize: 13,
                     color: Colors.grey.shade500,
@@ -352,7 +398,7 @@ class _ProjectTagsSectionState extends State<ProjectTagsSection> {
         Padding(
           padding: const EdgeInsets.only(left: 12),
           child: Text(
-            "Tags help categorize and make your project discoverable",
+            "Highlight technologies to showcase your technical expertise",
             style: TextStyle(
               color: Colors.grey.shade600,
               fontSize: 12,

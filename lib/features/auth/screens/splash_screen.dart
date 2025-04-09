@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/core/theme/colors.dart';
 import 'package:mb/data/providers/project_provider.dart';
+import 'package:mb/data/providers/user_provider.dart';
 import 'package:mb/features/auth/controller/auth_animation_controller.dart';
 import 'package:mb/features/home/screens/home_screen.dart';
 
@@ -32,6 +33,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     _anim = AuthAnimatedOpacityController(vsync: this);
     _startNavigationTimer();
 
+    ref.read(userProvider.notifier).fetchUser();
     ref.read(projectProvider.notifier).fetch();
   }
 
