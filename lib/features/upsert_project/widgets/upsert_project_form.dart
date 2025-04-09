@@ -47,6 +47,7 @@ class ProjectForm extends ConsumerStatefulWidget {
 
 class _ProjectFormState extends ConsumerState<ProjectForm> {
   final _formKey = GlobalKey<FormState>();
+  final _imagesFormFieldKey = GlobalKey<FormFieldState>();
   late TextEditingController _nameController;
   late TextEditingController _detailsController;
   late TextEditingController _shortDescriptionController;
@@ -133,9 +134,11 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
   }
 
   void _submitForm() {
-    if (_formKey.currentState!.validate()) {
+    bool isMainFormValid = _formKey.currentState!.validate();
+    bool isImagesValid = _imagesFormFieldKey.currentState?.validate() ?? false;
+
+    if (isMainFormValid && isImagesValid) {
       final user = ref.read(userProvider)!;
-      print("debug: ${user.id}");
       final ProjectEntity formData = widget.project == null
           ? ProjectEntity(
               id: const Uuid().v4(),
@@ -367,6 +370,7 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
                     carouselImages: _carouselImages,
                     themeColor: _selectedColor,
                     onImagesChanged: _updateCarouselImages,
+                    formFieldKey: _imagesFormFieldKey,
                   ),
 
                   const SizedBox(height: 24),

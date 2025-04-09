@@ -68,7 +68,7 @@ class _ProjectLinksSectionState extends State<ProjectLinksSection> {
       icon: Icons.category_outlined,
       title: "Project Links",
       themeColor: widget.themeColor,
-      initiallyExpanded: false,
+      initiallyExpanded: true,
       headerPadding: const EdgeInsets.only(top: 8),
       contentPadding: const EdgeInsets.only(top: 16, left: 4, right: 4),
       child: Column(
