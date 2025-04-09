@@ -1,8 +1,8 @@
 // lib/features/upsert_project/widgets/upsert_project_features_section.dart
 import 'package:flutter/material.dart';
 import 'package:mb/data/models/feature_model.dart';
-import 'package:mb/features/project/widgets/project_section_header.dart';
 import 'package:mb/features/upsert_project/validators/project_features_validator.dart';
+import 'package:mb/features/upsert_project/widgets/collapsible_section_header.dart';
 
 class ProjectFeaturesSection extends StatefulWidget {
   final List<Feature> initialFeatures;
@@ -71,202 +71,206 @@ class _ProjectFeaturesSectionState extends State<ProjectFeaturesSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ProjectSectionHeader(
-          icon: Icons.stars_rounded,
-          title: "Key Features",
-          themeColor: widget.themeColor,
-        ),
-        const SizedBox(height: 16),
-
-        // Description text
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Text(
-            "Add the standout features of your project to showcase what makes it special.",
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 14,
-            ),
-          ),
-        ),
-
-        // Add Feature button
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: _openAddFeatureDialog,
-            icon: const Icon(Icons.add_circle_outline, size: 20),
-            label: const Text("Add Key Feature"),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: widget.themeColor,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+    return CollapsibleSectionHeader(
+      icon: Icons.start_outlined,
+      title: "Key Features",
+      themeColor: widget.themeColor,
+      initiallyExpanded: false,
+      headerPadding: const EdgeInsets.only(top: 8),
+      contentPadding: const EdgeInsets.only(top: 16, left: 4, right: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Description text
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              "Add the standout features of your project to showcase what makes it special.",
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 14,
               ),
             ),
           ),
-        ),
 
-        const SizedBox(height: 24),
-
-        // Display features
-        if (_features.isNotEmpty) ...[
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _features.length,
-            itemBuilder: (context, index) {
-              final feature = _features[index];
-              return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                decoration: BoxDecoration(
-                  color: widget.themeColor.withOpacity(0.05),
+          // Add Feature button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: _openAddFeatureDialog,
+              icon: const Icon(Icons.add_circle_outline, size: 20),
+              label: const Text("Add Key Feature"),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: widget.themeColor,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: widget.themeColor.withOpacity(0.1)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
                 ),
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    dividerColor: Colors.transparent,
-                    colorScheme: ColorScheme.light(
-                      primary: widget.themeColor,
-                    ),
-                  ),
-                  child: ExpansionTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: widget.themeColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        IconData(
-                          int.tryParse(feature.iconName) ?? 0xe000,
-                          fontFamily: 'MaterialIcons',
-                        ),
-                        color: widget.themeColor,
-                        size: 20,
-                      ),
-                    ),
-                    title: Text(
-                      feature.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    childrenPadding: const EdgeInsets.all(16),
-                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            feature.description,
-                            style: TextStyle(
-                              color: Colors.grey.shade800,
-                              fontSize: 14,
-                              height: 1.5,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              // Edit button
-                              OutlinedButton.icon(
-                                onPressed: () => _openEditFeatureDialog(index),
-                                icon: const Icon(Icons.edit, size: 18),
-                                label: const Text("Edit"),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: widget.themeColor,
-                                  side: BorderSide(color: widget.themeColor),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              // Delete button
-                              OutlinedButton.icon(
-                                onPressed: () => _removeFeature(index),
-                                icon:
-                                    const Icon(Icons.delete_outline, size: 18),
-                                label: const Text("Delete"),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: Colors.red.shade400,
-                                  side: BorderSide(color: Colors.red.shade200),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Display features
+          if (_features.isNotEmpty) ...[
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _features.length,
+              itemBuilder: (context, index) {
+                final feature = _features[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: widget.themeColor.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(12),
+                    border:
+                        Border.all(color: widget.themeColor.withOpacity(0.1)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.03),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
                       ),
                     ],
                   ),
-                ),
-              );
-            },
-          ),
-        ] else ...[
-          // Empty state
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 32),
-            decoration: BoxDecoration(
-              color: widget.themeColor.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: widget.themeColor.withOpacity(0.1)),
-            ),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.lightbulb_outline,
-                  size: 48,
-                  color: Colors.grey.shade400,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  "No key features added yet",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w500,
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      dividerColor: Colors.transparent,
+                      colorScheme: ColorScheme.light(
+                        primary: widget.themeColor,
+                      ),
+                    ),
+                    child: ExpansionTile(
+                      leading: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: widget.themeColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          IconData(
+                            int.tryParse(feature.iconName) ?? 0xe000,
+                            fontFamily: 'MaterialIcons',
+                          ),
+                          color: widget.themeColor,
+                          size: 20,
+                        ),
+                      ),
+                      title: Text(
+                        feature.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      childrenPadding: const EdgeInsets.all(16),
+                      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              feature.description,
+                              style: TextStyle(
+                                color: Colors.grey.shade800,
+                                fontSize: 14,
+                                height: 1.5,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                // Edit button
+                                OutlinedButton.icon(
+                                  onPressed: () =>
+                                      _openEditFeatureDialog(index),
+                                  icon: const Icon(Icons.edit, size: 18),
+                                  label: const Text("Edit"),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: widget.themeColor,
+                                    side: BorderSide(color: widget.themeColor),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                // Delete button
+                                OutlinedButton.icon(
+                                  onPressed: () => _removeFeature(index),
+                                  icon: const Icon(Icons.delete_outline,
+                                      size: 18),
+                                  label: const Text("Delete"),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.red.shade400,
+                                    side:
+                                        BorderSide(color: Colors.red.shade200),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Showcase what makes your project special",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade500,
-                  ),
-                ),
-              ],
+                );
+              },
             ),
-          ),
+          ] else ...[
+            // Empty state
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              decoration: BoxDecoration(
+                color: widget.themeColor.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: widget.themeColor.withOpacity(0.1)),
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.lightbulb_outline,
+                    size: 48,
+                    color: Colors.grey.shade400,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "No key features added yet",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Showcase what makes your project special",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

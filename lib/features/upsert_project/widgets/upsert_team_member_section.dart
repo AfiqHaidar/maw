@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/data/entities/user_entity.dart';
 import 'package:mb/data/models/team_member_model.dart';
 import 'package:mb/data/providers/user_provider.dart';
-import 'package:mb/features/project/widgets/project_section_header.dart';
 import 'package:mb/features/upsert_project/validators/project_team_members_validator.dart';
+import 'package:mb/features/upsert_project/widgets/collapsible_section_header.dart';
 
 class ProjectTeamMemberSection extends ConsumerStatefulWidget {
   final Color themeColor;
@@ -108,369 +108,371 @@ class _ProjectTeamMemberSectionState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ProjectSectionHeader(
-          icon: Icons.groups_rounded,
-          title: "Team Members",
-          themeColor: widget.themeColor,
-        ),
-        const SizedBox(height: 16),
-
-        // Description text
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Text(
-            "Add people who contributed to this project.",
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 14,
+    return CollapsibleSectionHeader(
+      icon: Icons.groups_outlined,
+      title: "Team Members",
+      themeColor: widget.themeColor,
+      initiallyExpanded: false,
+      headerPadding: const EdgeInsets.only(top: 8),
+      contentPadding: const EdgeInsets.only(top: 16, left: 4, right: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Description text
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              "Add people who contributed to this project.",
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 14,
+              ),
             ),
           ),
-        ),
 
-        // User search field
-        TextFormField(
-          controller: _searchController,
-          decoration: InputDecoration(
-            labelText: "Search Team Member",
-            hintText: "Search by name or username",
-            prefixIcon: const Icon(Icons.search),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            helperText: "Find a user to add to the team",
-            helperStyle: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 12,
+          // User search field
+          TextFormField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              labelText: "Search Team Member",
+              hintText: "Search by name or username",
+              prefixIcon: const Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              helperText: "Find a user to add to the team",
+              helperStyle: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 12,
+              ),
             ),
           ),
-        ),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Search results
-        Consumer(
-          builder: (context, ref, child) {
-            final allUsers = ref.watch(allUsersProvider);
+          // Search results
+          Consumer(
+            builder: (context, ref, child) {
+              final allUsers = ref.watch(allUsersProvider);
 
-            return allUsers.when(
-              data: (users) {
-                // Filter users:
-                // 1. Remove users already in the team
-                // 2. Apply search filter
-                final availableUsers = users.where((user) {
-                  final bool isInTeam =
-                      _teamMembers.any((member) => member.userId == user.id);
-                  final bool matchesSearch = _searchQuery.isNotEmpty &&
-                      (user.name.toLowerCase().contains(_searchQuery) ||
-                          user.username.toLowerCase().contains(_searchQuery));
-                  return !isInTeam && matchesSearch;
-                }).toList();
+              return allUsers.when(
+                data: (users) {
+                  // Filter users:
+                  // 1. Remove users already in the team
+                  // 2. Apply search filter
+                  final availableUsers = users.where((user) {
+                    final bool isInTeam =
+                        _teamMembers.any((member) => member.userId == user.id);
+                    final bool matchesSearch = _searchQuery.isNotEmpty &&
+                        (user.name.toLowerCase().contains(_searchQuery) ||
+                            user.username.toLowerCase().contains(_searchQuery));
+                    return !isInTeam && matchesSearch;
+                  }).toList();
 
-                if (_searchQuery.isEmpty) {
-                  return const SizedBox
-                      .shrink(); // Don't show anything if no search query
-                }
+                  if (_searchQuery.isEmpty) {
+                    return const SizedBox
+                        .shrink(); // Don't show anything if no search query
+                  }
 
-                if (availableUsers.isEmpty) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    alignment: Alignment.center,
-                    child: Text(
-                      "No matching users found",
-                      style: TextStyle(
-                        color: Colors.grey.shade600,
-                        fontStyle: FontStyle.italic,
+                  if (availableUsers.isEmpty) {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      alignment: Alignment.center,
+                      child: Text(
+                        "No matching users found",
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
+                    );
+                  }
+
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    constraints: const BoxConstraints(maxHeight: 250),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade200),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: availableUsers.length,
+                      itemBuilder: (context, index) {
+                        final user = availableUsers[index];
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                              vertical: 6,
+                              horizontal: 12,
+                            ),
+                            leading: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: widget.themeColor.withOpacity(0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: user.profilePicture.isNotEmpty
+                                    ? Image.asset(
+                                        user.profilePicture,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Icon(
+                                            Icons.person,
+                                            color: widget.themeColor,
+                                          );
+                                        },
+                                      )
+                                    : Icon(
+                                        Icons.person,
+                                        color: widget.themeColor,
+                                      ),
+                              ),
+                            ),
+                            title: Text(
+                              user.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            subtitle: Text(
+                              "@${user.username}",
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 12,
+                              ),
+                            ),
+                            trailing: ElevatedButton(
+                              onPressed: () => _selectUser(user),
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: Colors.white,
+                                backgroundColor: widget.themeColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                              ),
+                              child: const Text("Add"),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   );
-                }
-
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 20),
-                  constraints: const BoxConstraints(maxHeight: 250),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey.shade200),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: availableUsers.length,
-                    itemBuilder: (context, index) {
-                      final user = availableUsers[index];
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                          vertical: 4,
-                          horizontal: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 6,
-                            horizontal: 12,
-                          ),
-                          leading: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: widget.themeColor.withOpacity(0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: user.profilePicture.isNotEmpty
-                                  ? Image.asset(
-                                      user.profilePicture,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Icon(
-                                          Icons.person,
-                                          color: widget.themeColor,
-                                        );
-                                      },
-                                    )
-                                  : Icon(
-                                      Icons.person,
-                                      color: widget.themeColor,
-                                    ),
-                            ),
-                          ),
-                          title: Text(
-                            user.name,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                          subtitle: Text(
-                            "@${user.username}",
-                            style: TextStyle(
-                              color: Colors.grey.shade600,
-                              fontSize: 12,
-                            ),
-                          ),
-                          trailing: ElevatedButton(
-                            onPressed: () => _selectUser(user),
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              backgroundColor: widget.themeColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 8,
-                              ),
-                            ),
-                            child: const Text("Add"),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
-              loading: () => const SizedBox(
-                height: 100,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-              error: (_, __) => Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                alignment: Alignment.center,
-                child: Text(
-                  "Error loading users",
-                  style: TextStyle(
-                    color: Colors.red.shade600,
+                },
+                loading: () => const SizedBox(
+                  height: 100,
+                  child: Center(
+                    child: CircularProgressIndicator(),
                   ),
                 ),
-              ),
-            );
-          },
-        ),
-
-        const SizedBox(height: 24),
-
-        // Current team members header
-        if (_teamMembers.isNotEmpty) ...[
-          Row(
-            children: [
-              Icon(
-                Icons.people,
-                color: widget.themeColor,
-                size: 18,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                "Current Team Members",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: widget.themeColor,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-        ],
-
-        // Display team members
-        if (_teamMembers.isNotEmpty) ...[
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _teamMembers.length,
-            itemBuilder: (context, index) {
-              final member = _teamMembers[index];
-              return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                decoration: BoxDecoration(
-                  color: widget.themeColor.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: widget.themeColor.withOpacity(0.1)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+                error: (_, __) => Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Error loading users",
+                    style: TextStyle(
+                      color: Colors.red.shade600,
                     ),
-                  ],
-                ),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 8,
-                    horizontal: 16,
-                  ),
-                  leading: Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: widget.themeColor.withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: member.avatarPath.isNotEmpty
-                          ? Image.asset(
-                              member.avatarPath,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(
-                                  Icons.person,
-                                  color: widget.themeColor,
-                                  size: 28,
-                                );
-                              },
-                            )
-                          : Icon(
-                              Icons.person,
-                              color: widget.themeColor,
-                              size: 28,
-                            ),
-                    ),
-                  ),
-                  title: Text(
-                    member.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 4),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: widget.themeColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text(
-                          member.role,
-                          style: TextStyle(
-                            color: widget.themeColor,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Edit button
-                      IconButton(
-                        icon: Icon(
-                          Icons.edit,
-                          color: widget.themeColor,
-                          size: 20,
-                        ),
-                        onPressed: () => _editTeamMember(member),
-                      ),
-                      // Delete button
-                      IconButton(
-                        icon: Icon(
-                          Icons.delete_outline,
-                          color: Colors.red.shade400,
-                          size: 20,
-                        ),
-                        onPressed: () => _removeTeamMember(index),
-                      ),
-                    ],
                   ),
                 ),
               );
             },
           ),
-        ] else ...[
-          // Empty state
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 32),
-            decoration: BoxDecoration(
-              color: widget.themeColor.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: widget.themeColor.withOpacity(0.1)),
-            ),
-            child: Column(
+
+          const SizedBox(height: 24),
+
+          // Current team members header
+          if (_teamMembers.isNotEmpty) ...[
+            Row(
               children: [
                 Icon(
-                  Icons.group_outlined,
-                  size: 48,
-                  color: Colors.grey.shade400,
+                  Icons.people,
+                  color: widget.themeColor,
+                  size: 18,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(width: 8),
                 Text(
-                  "No team members added yet",
+                  "Current Team Members",
                   style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Search above to add people",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade500,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: widget.themeColor,
                   ),
                 ),
               ],
             ),
-          ),
+            const SizedBox(height: 12),
+          ],
+
+          // Display team members
+          if (_teamMembers.isNotEmpty) ...[
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _teamMembers.length,
+              itemBuilder: (context, index) {
+                final member = _teamMembers[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: widget.themeColor.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(12),
+                    border:
+                        Border.all(color: widget.themeColor.withOpacity(0.1)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.03),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 16,
+                    ),
+                    leading: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: widget.themeColor.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(24),
+                        child: member.avatarPath.isNotEmpty
+                            ? Image.asset(
+                                member.avatarPath,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Icon(
+                                    Icons.person,
+                                    color: widget.themeColor,
+                                    size: 28,
+                                  );
+                                },
+                              )
+                            : Icon(
+                                Icons.person,
+                                color: widget.themeColor,
+                                size: 28,
+                              ),
+                      ),
+                    ),
+                    title: Text(
+                      member.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 4),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: widget.themeColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            member.role,
+                            style: TextStyle(
+                              color: widget.themeColor,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Edit button
+                        IconButton(
+                          icon: Icon(
+                            Icons.edit,
+                            color: widget.themeColor,
+                            size: 20,
+                          ),
+                          onPressed: () => _editTeamMember(member),
+                        ),
+                        // Delete button
+                        IconButton(
+                          icon: Icon(
+                            Icons.delete_outline,
+                            color: Colors.red.shade400,
+                            size: 20,
+                          ),
+                          onPressed: () => _removeTeamMember(index),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ] else ...[
+            // Empty state
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              decoration: BoxDecoration(
+                color: widget.themeColor.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: widget.themeColor.withOpacity(0.1)),
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.group_outlined,
+                    size: 48,
+                    color: Colors.grey.shade400,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "No team members added yet",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Search above to add people",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

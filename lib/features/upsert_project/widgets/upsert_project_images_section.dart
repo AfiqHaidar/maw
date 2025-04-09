@@ -2,7 +2,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mb/features/project/widgets/project_section_header.dart';
+import 'package:mb/features/upsert_project/widgets/collapsible_section_header.dart';
 
 class ProjectImagesSection extends StatefulWidget {
   final List<String> carouselImages;
@@ -52,97 +52,99 @@ class _ProjectImagesSectionState extends State<ProjectImagesSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ProjectSectionHeader(
-          icon: Icons.image,
-          title: "Project Images",
-          themeColor: widget.themeColor,
-        ),
-        const SizedBox(height: 16),
-        // Description text
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Text(
-            "Add images of your project to showcase its appearance and features. You'll need at least one image.",
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 14,
+    return CollapsibleSectionHeader(
+      icon: Icons.image_outlined,
+      title: "Project Images",
+      themeColor: widget.themeColor,
+      initiallyExpanded: true,
+      headerPadding: const EdgeInsets.only(top: 8),
+      contentPadding: const EdgeInsets.only(top: 16, left: 4, right: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Description text
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              "Add images of your project to showcase its appearance and features. You'll need at least one image.",
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 14,
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          height: 100,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: [
-              // Add image button
-              InkWell(
-                onTap: _addImage,
-                child: Container(
-                  width: 100,
-                  margin: const EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade200),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add_photo_alternate,
-                          color: Colors.grey.shade600, size: 32),
-                      const SizedBox(height: 4),
-                      Text(
-                        "Add Image",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade600,
+          SizedBox(
+            height: 100,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                // Add image button
+                InkWell(
+                  onTap: _addImage,
+                  child: Container(
+                    width: 100,
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade200),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add_photo_alternate,
+                            color: Colors.grey.shade600, size: 32),
+                        const SizedBox(height: 4),
+                        Text(
+                          "Add Image",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade600,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              // Display selected images
-              ..._images.asMap().entries.map((entry) {
-                final index = entry.key;
-                final path = entry.value;
+                // Display selected images
+                ..._images.asMap().entries.map((entry) {
+                  final index = entry.key;
+                  final path = entry.value;
 
-                return Container(
-                  width: 100,
-                  height: 100,
-                  margin: const EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    image: DecorationImage(
-                      image: path.startsWith('assets/')
-                          ? AssetImage(path) as ImageProvider
-                          : FileImage(File(path)),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  alignment: Alignment.topRight,
-                  child: IconButton(
-                    icon: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
+                  return Container(
+                    width: 100,
+                    height: 100,
+                    margin: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      image: DecorationImage(
+                        image: path.startsWith('assets/')
+                            ? AssetImage(path) as ImageProvider
+                            : FileImage(File(path)),
+                        fit: BoxFit.cover,
                       ),
-                      child:
-                          const Icon(Icons.close, size: 16, color: Colors.red),
                     ),
-                    onPressed: () => _removeImage(index),
-                  ),
-                );
-              }),
-            ],
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      icon: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.close,
+                            size: 16, color: Colors.red),
+                      ),
+                      onPressed: () => _removeImage(index),
+                    ),
+                  );
+                }),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

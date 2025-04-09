@@ -1,6 +1,6 @@
 // lib/features/upsert_project/widgets/upsert_project_tech_stack_section.dart
 import 'package:flutter/material.dart';
-import 'package:mb/features/project/widgets/project_section_header.dart';
+import 'package:mb/features/upsert_project/widgets/collapsible_section_header.dart';
 
 class ProjectTechStackSection extends StatefulWidget {
   final List<String> techStack;
@@ -150,263 +150,264 @@ class _ProjectTechStackSectionState extends State<ProjectTechStackSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ProjectSectionHeader(
-          icon: Icons.code_rounded,
-          title: "Tech Stack",
-          themeColor: widget.themeColor,
-        ),
-        const SizedBox(height: 16),
-
-        // Description text
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Text(
-            "Add the technologies, frameworks, and languages used in your project.",
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 14,
-            ),
-          ),
-        ),
-
-        // Add tech stack form
-        Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _techController,
-                      decoration: InputDecoration(
-                        hintText: "Add technology",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        prefixIcon: Icon(
-                          Icons.code,
-                          color: widget.themeColor,
-                        ),
-                        errorText: _errorMessage,
-                      ),
-                      onFieldSubmitted: (_) => _addTechStack(),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  ElevatedButton(
-                    onPressed: _addTechStack,
-                    style: ElevatedButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: widget.themeColor,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 14, horizontal: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Text("Add"),
-                  ),
-                ],
+    return CollapsibleSectionHeader(
+      icon: Icons.code_outlined,
+      title: "Tech Stack",
+      themeColor: widget.themeColor,
+      initiallyExpanded: false,
+      headerPadding: const EdgeInsets.only(top: 8),
+      contentPadding: const EdgeInsets.only(top: 16, left: 4, right: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Description text
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              "Add the technologies, frameworks, and languages used in your project.",
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 14,
               ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 24),
-
-        // Display tech stack
-        if (_techStack.isNotEmpty) ...[
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ],
             ),
+          ),
+
+          // Add tech stack form
+          Form(
+            key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        controller: _techController,
+                        decoration: InputDecoration(
+                          hintText: "Add technology",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          prefixIcon: Icon(
+                            Icons.code,
+                            color: widget.themeColor,
+                          ),
+                          errorText: _errorMessage,
+                        ),
+                        onFieldSubmitted: (_) => _addTechStack(),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      onPressed: _addTechStack,
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: widget.themeColor,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
+                            vertical: 14, horizontal: 16),
+                        shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                          ),
-                        ),
-                        child: Text(
-                          "${_techStack.length} ${_techStack.length == 1 ? 'technology' : 'technologies'}",
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade700,
-                          ),
                         ),
                       ),
-                    ],
-                  ),
+                      child: const Text("Add"),
+                    ),
+                  ],
                 ),
-                Wrap(
-                  spacing: 12,
-                  runSpacing: 14,
-                  children: _techStack.asMap().entries.map((entry) {
-                    final index = entry.key;
-                    final tech = entry.value;
+              ],
+            ),
+          ),
 
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Colors.grey.shade300,
-                          width: 1,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(8),
+          const SizedBox(height: 24),
+
+          // Display tech stack
+          if (_techStack.isNotEmpty) ...[
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade200),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.03),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.grey.shade300,
                             ),
-                            child: Icon(
-                              Icons.code,
-                              size: 14,
+                          ),
+                          child: Text(
+                            "${_techStack.length} ${_techStack.length == 1 ? 'technology' : 'technologies'}",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
                               color: Colors.grey.shade700,
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            tech,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.grey.shade800,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 14,
+                    children: _techStack.asMap().entries.map((entry) {
+                      final index = entry.key;
+                      final tech = entry.value;
+
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                            width: 1,
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Icon(
+                                Icons.code,
+                                size: 14,
+                                color: Colors.grey.shade700,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 10),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () => _editTech(index),
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 16,
-                                      color: Colors.grey.shade600,
+                            const SizedBox(width: 8),
+                            Text(
+                              tech,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey.shade800,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () => _editTech(index),
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 16,
+                                        color: Colors.grey.shade600,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(width: 4),
-                              Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: () => _removeTech(index),
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Icon(
-                                      Icons.close,
-                                      size: 16,
-                                      color: Colors.grey.shade500,
+                                const SizedBox(width: 4),
+                                Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () => _removeTech(index),
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Icon(
+                                        Icons.close,
+                                        size: 16,
+                                        color: Colors.grey.shade500,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-          ),
-        ] else ...[
-          // Empty state
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 32),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade50,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey.shade200),
-            ),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.code_rounded,
-                  size: 48,
-                  color: Colors.grey.shade400,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  "No technologies added yet",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w500,
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Add the programming languages and frameworks used",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade500,
+                ],
+              ),
+            ),
+          ] else ...[
+            // Empty state
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade200),
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.code_rounded,
+                    size: 48,
+                    color: Colors.grey.shade400,
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  Text(
+                    "No technologies added yet",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Add the programming languages and frameworks used",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.only(left: 12),
+            child: Text(
+              "Highlight technologies to showcase your technical expertise",
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 12,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
         ],
-
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.only(left: 12),
-          child: Text(
-            "Highlight technologies to showcase your technical expertise",
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 12,
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

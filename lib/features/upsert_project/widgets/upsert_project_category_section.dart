@@ -1,7 +1,7 @@
 // lib/features/upsert_project/widgets/project_category_section.dart
 import 'package:flutter/material.dart';
-import 'package:mb/features/project/widgets/project_section_header.dart';
 import 'package:mb/features/upsert_project/validators/project_details_validator.dart';
+import 'package:mb/features/upsert_project/widgets/collapsible_section_header.dart';
 
 class ProjectCategorySection extends StatefulWidget {
   final String? selectedCategory;
@@ -112,300 +112,304 @@ class _ProjectCategorySectionState extends State<ProjectCategorySection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ProjectSectionHeader(
-          icon: Icons.category_outlined,
-          title: "Category",
-          themeColor: widget.themeColor,
-        ),
-        const SizedBox(height: 16),
-
-        // Description text
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Text(
-            "Select a category that best fits your project, or create a custom one if none match your project type.",
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 14,
+    return CollapsibleSectionHeader(
+      icon: Icons.category_outlined,
+      title: "Category",
+      themeColor: widget.themeColor,
+      initiallyExpanded: true,
+      headerPadding: const EdgeInsets.only(top: 8),
+      contentPadding: const EdgeInsets.only(top: 16, left: 4, right: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Description text
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              "Select a category that best fits your project, or create a custom one if none match your project type.",
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 14,
+              ),
             ),
           ),
-        ),
-        FormField<String>(
-          initialValue: _selectedCategory,
-          validator: ProjectDetailsValidator.validateCategory,
-          autovalidateMode: AutovalidateMode.onUserInteraction,
-          builder: (FormFieldState<String> state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Visual Category Selection
-                Container(
-                  key: _categoryKey,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: state.hasError ? Colors.red : Colors.grey.shade300,
-                      width: 1.0,
+          FormField<String>(
+            initialValue: _selectedCategory,
+            validator: ProjectDetailsValidator.validateCategory,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
+            builder: (FormFieldState<String> state) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Visual Category Selection
+                  Container(
+                    key: _categoryKey,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color:
+                            state.hasError ? Colors.red : Colors.grey.shade300,
+                        width: 1.0,
+                      ),
                     ),
-                  ),
-                  child: Column(
-                    children: [
-                      // Selected Category Display
-                      InkWell(
-                        onTap: _toggleDropdown,
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 14,
-                          ),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(11),
-                            color: _selectedCategory != null
-                                ? _getCategoryColor(_selectedCategory!)
-                                    .withOpacity(0.1)
-                                : Colors.grey.shade50,
-                          ),
-                          child: Row(
-                            children: [
-                              if (_selectedCategory != null) ...[
-                                Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: widget.themeColor.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Icon(
-                                    _isCustomCategory
-                                        ? Icons.edit
-                                        : _getCategoryIcon(_selectedCategory!),
-                                    color: widget.themeColor,
-                                    size: 24,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Text(
-                                    _isCustomCategory
-                                        ? _customCategoryController.text
-                                        : _selectedCategory!,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500,
+                    child: Column(
+                      children: [
+                        // Selected Category Display
+                        InkWell(
+                          onTap: _toggleDropdown,
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 14,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(11),
+                              color: _selectedCategory != null
+                                  ? _getCategoryColor(_selectedCategory!)
+                                      .withOpacity(0.1)
+                                  : Colors.grey.shade50,
+                            ),
+                            child: Row(
+                              children: [
+                                if (_selectedCategory != null) ...[
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: widget.themeColor.withOpacity(0.2),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Icon(
+                                      _isCustomCategory
+                                          ? Icons.edit
+                                          : _getCategoryIcon(
+                                              _selectedCategory!),
+                                      color: widget.themeColor,
+                                      size: 24,
                                     ),
                                   ),
-                                ),
-                              ] else ...[
-                                Icon(
-                                  Icons.category_outlined,
-                                  color: Colors.grey.shade600,
-                                ),
-                                const SizedBox(width: 16),
-                                Text(
-                                  "Select a category",
-                                  style: TextStyle(
-                                    fontSize: 16,
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Text(
+                                      _isCustomCategory
+                                          ? _customCategoryController.text
+                                          : _selectedCategory!,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ] else ...[
+                                  Icon(
+                                    Icons.category_outlined,
                                     color: Colors.grey.shade600,
                                   ),
+                                  const SizedBox(width: 16),
+                                  Text(
+                                    "Select a category",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey.shade600,
+                                    ),
+                                  ),
+                                ],
+                                const Spacer(),
+                                Icon(
+                                  _showDropdown
+                                      ? Icons.arrow_drop_up
+                                      : Icons.arrow_drop_down,
+                                  color: Colors.grey.shade700,
                                 ),
                               ],
-                              const Spacer(),
-                              Icon(
-                                _showDropdown
-                                    ? Icons.arrow_drop_up
-                                    : Icons.arrow_drop_down,
-                                color: Colors.grey.shade700,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-
-                      // Dropdown Categories
-                      if (_showDropdown)
-                        Container(
-                          constraints: const BoxConstraints(
-                            maxHeight: 250,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(12),
-                              bottomRight: Radius.circular(12),
                             ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
-                              ),
-                            ],
-                          ),
-                          child: ListView.builder(
-                            shrinkWrap: true,
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                            itemCount: _categoriesList.length,
-                            itemBuilder: (context, index) {
-                              final category = _categoriesList[index];
-                              final isSelected = category ==
-                                      _selectedCategory ||
-                                  (category == 'Custom' && _isCustomCategory);
-
-                              return InkWell(
-                                onTap: () => _selectCategory(category),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: isSelected
-                                        ? widget.themeColor.withOpacity(0.1)
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: widget.themeColor
-                                              .withOpacity(0.2),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        child: Icon(
-                                          _getCategoryIcon(category),
-                                          color: widget.themeColor,
-                                          size: 20,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 16),
-                                      Text(
-                                        category,
-                                        style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: isSelected
-                                              ? FontWeight.w600
-                                              : FontWeight.normal,
-                                          color: isSelected
-                                              ? widget.themeColor
-                                              : Colors.black87,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      if (isSelected)
-                                        Icon(
-                                          Icons.check_circle,
-                                          color: widget.themeColor,
-                                          size: 18,
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
                           ),
                         ),
 
-                      // Custom category input field (shown when "Custom" is selected)
-                      if (_isCustomCategory)
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(12),
-                              bottomRight: Radius.circular(12),
+                        // Dropdown Categories
+                        if (_showDropdown)
+                          Container(
+                            constraints: const BoxConstraints(
+                              maxHeight: 250,
                             ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 5,
-                                offset: const Offset(0, 3),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(12),
+                                bottomRight: Radius.circular(12),
                               ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Enter Custom Category",
-                                style: TextStyle(
-                                  color: widget.themeColor,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
                                 ),
+                              ],
+                            ),
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              itemCount: _categoriesList.length,
+                              itemBuilder: (context, index) {
+                                final category = _categoriesList[index];
+                                final isSelected = category ==
+                                        _selectedCategory ||
+                                    (category == 'Custom' && _isCustomCategory);
+
+                                return InkWell(
+                                  onTap: () => _selectCategory(category),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? widget.themeColor.withOpacity(0.1)
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: widget.themeColor
+                                                .withOpacity(0.2),
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          child: Icon(
+                                            _getCategoryIcon(category),
+                                            color: widget.themeColor,
+                                            size: 20,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        Text(
+                                          category,
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: isSelected
+                                                ? FontWeight.w600
+                                                : FontWeight.normal,
+                                            color: isSelected
+                                                ? widget.themeColor
+                                                : Colors.black87,
+                                          ),
+                                        ),
+                                        const Spacer(),
+                                        if (isSelected)
+                                          Icon(
+                                            Icons.check_circle,
+                                            color: widget.themeColor,
+                                            size: 18,
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+
+                        // Custom category input field (shown when "Custom" is selected)
+                        if (_isCustomCategory)
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(12),
+                                bottomRight: Radius.circular(12),
                               ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: _customCategoryController,
-                                      decoration: InputDecoration(
-                                        hintText:
-                                            "E.g., Educational, Utility, Game",
-                                        border: OutlineInputBorder(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 3),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Enter Custom Category",
+                                  style: TextStyle(
+                                    color: widget.themeColor,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: _customCategoryController,
+                                        decoration: InputDecoration(
+                                          hintText:
+                                              "E.g., Educational, Utility, Game",
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                          ),
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                            horizontal: 16,
+                                            vertical: 12,
+                                          ),
+                                        ),
+                                        onSubmitted: _applyCustomCategory,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    ElevatedButton(
+                                      onPressed: () => _applyCustomCategory(
+                                          _customCategoryController.text),
+                                      style: ElevatedButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: widget.themeColor,
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 12,
+                                          horizontal: 16,
+                                        ),
+                                        shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
                                         ),
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 12,
-                                        ),
                                       ),
-                                      onSubmitted: _applyCustomCategory,
+                                      child: const Text("Apply"),
                                     ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  ElevatedButton(
-                                    onPressed: () => _applyCustomCategory(
-                                        _customCategoryController.text),
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      backgroundColor: widget.themeColor,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 12,
-                                        horizontal: 16,
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                    ),
-                                    child: const Text("Apply"),
-                                  ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                    ],
-                  ),
-                ),
-
-                // Validation Error Message
-                if (state.hasError)
-                  Padding(
-                    padding: const EdgeInsets.only(left: 12, top: 8),
-                    child: Text(
-                      state.errorText!,
-                      style: TextStyle(
-                        color: Colors.red.shade700,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      ],
                     ),
                   ),
-              ],
-            );
-          },
-        ),
-      ],
+
+                  // Validation Error Message
+                  if (state.hasError)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12, top: 8),
+                      child: Text(
+                        state.errorText!,
+                        style: TextStyle(
+                          color: Colors.red.shade700,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }

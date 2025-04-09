@@ -371,15 +371,6 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
 
                   const SizedBox(height: 24),
 
-                  // Project Statistics section
-                  ProjectStatsSection(
-                    initialStats: widget.project?.stats,
-                    themeColor: _selectedColor,
-                    onStatsChanged: _updateStats,
-                  ),
-
-                  const SizedBox(height: 24),
-
                   // Project links section
                   ProjectLinksSection(
                     linkController: _linkController,
@@ -399,6 +390,15 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
                     themeColor: _selectedColor,
                     onReleaseDateChanged: _updateReleaseDate,
                     onDevelopmentDaysChanged: _updateDevelopmentDays,
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Project Statistics section
+                  ProjectStatsSection(
+                    initialStats: widget.project?.stats,
+                    themeColor: _selectedColor,
+                    onStatsChanged: _updateStats,
                   ),
 
                   const SizedBox(height: 24),
@@ -445,8 +445,10 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
                     themeColor: _selectedColor,
                     onTestimonialsChanged: _updateTestimonials,
                   ),
+
                   const SizedBox(height: 24),
                   // Tech stack section
+
                   ProjectTechStackSection(
                     techStack: _techStack,
                     themeColor: _selectedColor,

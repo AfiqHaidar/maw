@@ -1,8 +1,9 @@
 // lib/features/upsert_project/widgets/upsert_project_stats_section.dart
 import 'package:flutter/material.dart';
 import 'package:mb/data/models/project_stats_model.dart';
-import 'package:mb/features/project/widgets/project_section_header.dart';
+
 import 'package:mb/features/upsert_project/validators/project_stats_validator.dart';
+import 'package:mb/features/upsert_project/widgets/collapsible_section_header.dart';
 
 class ProjectStatsSection extends StatefulWidget {
   final ProjectStats? initialStats;
@@ -91,84 +92,83 @@ class _ProjectStatsSectionState extends State<ProjectStatsSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Header
-        ProjectSectionHeader(
-          icon: Icons.analytics_outlined,
-          title: "Project Statistics",
-          themeColor: widget.themeColor,
-        ),
-
-        const SizedBox(height: 16),
-
-        // Description text
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Text(
-            "Add statistics about your project to showcase its impact and popularity.",
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 14,
+    return CollapsibleSectionHeader(
+      icon: Icons.analytics_outlined,
+      title: "Project Statistics",
+      themeColor: widget.themeColor,
+      initiallyExpanded: false,
+      headerPadding: const EdgeInsets.only(top: 8),
+      contentPadding: const EdgeInsets.only(top: 16, left: 4, right: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Description text
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              "Add statistics about your project to showcase its impact and popularity.",
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 14,
+              ),
             ),
           ),
-        ),
 
-        // Stat Items
-        _buildStatItem(
-          label: "Users",
-          icon: Icons.people_outline,
-          controller: _usersController,
-          hint: "Number of users",
-          validator: ProjectStatsValidator.validateUsers,
-        ),
+          // Stat Items
+          _buildStatItem(
+            label: "Users",
+            icon: Icons.people_outline,
+            controller: _usersController,
+            hint: "Number of users",
+            validator: ProjectStatsValidator.validateUsers,
+          ),
 
-        _buildStatItem(
-          label: "Stars",
-          icon: Icons.star_outline,
-          controller: _starsController,
-          hint: "GitHub stars",
-          validator: ProjectStatsValidator.validateStars,
-        ),
+          _buildStatItem(
+            label: "Stars",
+            icon: Icons.star_outline,
+            controller: _starsController,
+            hint: "GitHub stars",
+            validator: ProjectStatsValidator.validateStars,
+          ),
 
-        _buildStatItem(
-          label: "Forks",
-          icon: Icons.call_split_outlined,
-          controller: _forksController,
-          hint: "GitHub forks/clones",
-          validator: ProjectStatsValidator.validateForks,
-        ),
+          _buildStatItem(
+            label: "Forks",
+            icon: Icons.call_split_outlined,
+            controller: _forksController,
+            hint: "GitHub forks/clones",
+            validator: ProjectStatsValidator.validateForks,
+          ),
 
-        _buildStatItem(
-          label: "Downloads",
-          icon: Icons.download_outlined,
-          controller: _downloadsController,
-          hint: "Download count",
-          validator: ProjectStatsValidator.validateDownloads,
-        ),
+          _buildStatItem(
+            label: "Downloads",
+            icon: Icons.download_outlined,
+            controller: _downloadsController,
+            hint: "Download count",
+            validator: ProjectStatsValidator.validateDownloads,
+          ),
 
-        _buildStatItem(
-          label: "Contributions",
-          icon: Icons.groups_outlined,
-          controller: _contributionsController,
-          hint: "Number of contributors",
-          validator: ProjectStatsValidator.validateContributions,
-        ),
+          _buildStatItem(
+            label: "Contributions",
+            icon: Icons.groups_outlined,
+            controller: _contributionsController,
+            hint: "Number of contributors",
+            validator: ProjectStatsValidator.validateContributions,
+          ),
 
-        // Tip text
-        Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 4.0, bottom: 16.0),
-          child: Text(
-            "Tip: You can use shortcuts like 1K for 1,000 or 1.5M for 1,500,000",
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 12,
-              fontStyle: FontStyle.italic,
+          // Tip text
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, top: 4.0, bottom: 16.0),
+            child: Text(
+              "Tip: You can use shortcuts like 1K for 1,000 or 1.5M for 1,500,000",
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 12,
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

@@ -56,8 +56,7 @@ class UserRepository {
   Stream<List<UserEntity>> watchAllUsers() {
     return _firestore.collection(collectionPath).snapshots().map((snapshot) {
       return snapshot.docs
-          .map((doc) =>
-              UserEntity.fromMap(doc.id, doc.data() as Map<String, dynamic>))
+          .map((doc) => UserEntity.fromMap(doc.id, doc.data()))
           .toList();
     });
   }

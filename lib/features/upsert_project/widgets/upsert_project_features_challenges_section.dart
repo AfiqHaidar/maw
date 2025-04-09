@@ -1,8 +1,8 @@
 // lib/features/upsert_project/widgets/upsert_project_challenges_section.dart
 import 'package:flutter/material.dart';
 import 'package:mb/data/models/challenge_model.dart';
-import 'package:mb/features/project/widgets/project_section_header.dart';
 import 'package:mb/features/upsert_project/validators/project_challenges_validator.dart';
+import 'package:mb/features/upsert_project/widgets/collapsible_section_header.dart';
 
 class ProjectChallengesSection extends StatefulWidget {
   final List<Challenge> initialChallenges;
@@ -72,151 +72,117 @@ class _ProjectChallengesSectionState extends State<ProjectChallengesSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ProjectSectionHeader(
-          icon: Icons.warning_amber_rounded,
-          title: "Challenges & Solutions",
-          themeColor: widget.themeColor,
-        ),
-        const SizedBox(height: 16),
-
-        // Description text
-        Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Text(
-            "Share the obstacles you encountered and how you solved them.",
-            style: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 14,
-            ),
-          ),
-        ),
-
-        // Add Challenge button
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: _openAddChallengeDialog,
-            icon: const Icon(Icons.add_circle_outline, size: 20),
-            label: const Text("Add Challenge"),
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: widget.themeColor,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+    return CollapsibleSectionHeader(
+      icon: Icons.warning_amber_outlined,
+      title: "Challenges & Solutions",
+      themeColor: widget.themeColor,
+      initiallyExpanded: false,
+      headerPadding: const EdgeInsets.only(top: 8),
+      contentPadding: const EdgeInsets.only(top: 16, left: 4, right: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Description text
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Text(
+              "Share the obstacles you encountered and how you solved them.",
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 14,
               ),
             ),
           ),
-        ),
 
-        const SizedBox(height: 24),
-
-        // Display challenges
-        if (_challenges.isNotEmpty) ...[
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: _challenges.length,
-            itemBuilder: (context, index) {
-              final challenge = _challenges[index];
-              return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                decoration: BoxDecoration(
-                  color: widget.themeColor.withOpacity(0.05),
+          // Add Challenge button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: _openAddChallengeDialog,
+              icon: const Icon(Icons.add_circle_outline, size: 20),
+              label: const Text("Add Challenge"),
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: widget.themeColor,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: widget.themeColor.withOpacity(0.1)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.03),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
                 ),
-                child: Theme(
-                  data: Theme.of(context).copyWith(
-                    dividerColor: Colors.transparent,
-                    colorScheme: ColorScheme.light(
-                      primary: widget.themeColor,
-                    ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 24),
+
+          // Display challenges
+          if (_challenges.isNotEmpty) ...[
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: _challenges.length,
+              itemBuilder: (context, index) {
+                final challenge = _challenges[index];
+                return Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  decoration: BoxDecoration(
+                    color: widget.themeColor.withOpacity(0.05),
+                    borderRadius: BorderRadius.circular(12),
+                    border:
+                        Border.all(color: widget.themeColor.withOpacity(0.1)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.03),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                  child: ExpansionTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: widget.themeColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        Icons.warning_amber_outlined,
-                        color: widget.themeColor,
-                        size: 20,
+                  child: Theme(
+                    data: Theme.of(context).copyWith(
+                      dividerColor: Colors.transparent,
+                      colorScheme: ColorScheme.light(
+                        primary: widget.themeColor,
                       ),
                     ),
-                    title: Text(
-                      challenge.title,
-                      style: const TextStyle(
-                        fontSize: 16,
+                    child: ExpansionTile(
+                      leading: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: widget.themeColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Icon(
+                          Icons.warning_amber_outlined,
+                          color: widget.themeColor,
+                          size: 20,
+                        ),
                       ),
-                    ),
-                    childrenPadding: const EdgeInsets.all(16),
-                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Challenge:",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: widget.themeColor,
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                challenge.description,
-                                style: TextStyle(
-                                  color: Colors.grey.shade800,
-                                  fontSize: 14,
-                                  height: 1.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                          if (challenge.solution != null &&
-                              challenge.solution!.isNotEmpty) ...[
-                            const SizedBox(height: 16),
+                      title: Text(
+                        challenge.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      childrenPadding: const EdgeInsets.all(16),
+                      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.lightbulb_outline,
-                                      size: 18,
-                                      color: widget.themeColor,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      "Solution:",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 14,
-                                        color: widget.themeColor,
-                                      ),
-                                    ),
-                                  ],
+                                Text(
+                                  "Challenge:",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                    color: widget.themeColor,
+                                  ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  challenge.solution!,
+                                  challenge.description,
                                   style: TextStyle(
                                     color: Colors.grey.shade800,
                                     fontSize: 14,
@@ -225,97 +191,134 @@ class _ProjectChallengesSectionState extends State<ProjectChallengesSection> {
                                 ),
                               ],
                             ),
-                          ],
-                          const SizedBox(height: 16),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              // Edit button
-                              OutlinedButton.icon(
-                                onPressed: () =>
-                                    _openEditChallengeDialog(index),
-                                icon: const Icon(Icons.edit, size: 18),
-                                label: const Text("Edit"),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: widget.themeColor,
-                                  side: BorderSide(color: widget.themeColor),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
+                            if (challenge.solution != null &&
+                                challenge.solution!.isNotEmpty) ...[
+                              const SizedBox(height: 16),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.lightbulb_outline,
+                                        size: 18,
+                                        color: widget.themeColor,
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        "Solution:",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+                                          color: widget.themeColor,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    challenge.solution!,
+                                    style: TextStyle(
+                                      color: Colors.grey.shade800,
+                                      fontSize: 14,
+                                      height: 1.5,
+                                    ),
                                   ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              // Delete button
-                              OutlinedButton.icon(
-                                onPressed: () => _removeChallenge(index),
-                                icon:
-                                    const Icon(Icons.delete_outline, size: 18),
-                                label: const Text("Delete"),
-                                style: OutlinedButton.styleFrom(
-                                  foregroundColor: Colors.red.shade400,
-                                  side: BorderSide(color: Colors.red.shade200),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 8,
-                                  ),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
+                                ],
                               ),
                             ],
-                          ),
-                        ],
-                      ),
-                    ],
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                // Edit button
+                                OutlinedButton.icon(
+                                  onPressed: () =>
+                                      _openEditChallengeDialog(index),
+                                  icon: const Icon(Icons.edit, size: 18),
+                                  label: const Text("Edit"),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: widget.themeColor,
+                                    side: BorderSide(color: widget.themeColor),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                // Delete button
+                                OutlinedButton.icon(
+                                  onPressed: () => _removeChallenge(index),
+                                  icon: const Icon(Icons.delete_outline,
+                                      size: 18),
+                                  label: const Text("Delete"),
+                                  style: OutlinedButton.styleFrom(
+                                    foregroundColor: Colors.red.shade400,
+                                    side:
+                                        BorderSide(color: Colors.red.shade200),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-        ] else ...[
-          // Empty state
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 32),
-            decoration: BoxDecoration(
-              color: widget.themeColor.withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: widget.themeColor.withOpacity(0.1)),
+                );
+              },
             ),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.warning_amber_rounded,
-                  size: 48,
-                  color: Colors.grey.shade400,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  "No challenges added yet",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w500,
+          ] else ...[
+            // Empty state
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 32),
+              decoration: BoxDecoration(
+                color: widget.themeColor.withOpacity(0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: widget.themeColor.withOpacity(0.1)),
+              ),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.warning_amber_rounded,
+                    size: 48,
+                    color: Colors.grey.shade400,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  "Share the obstacles you overcame in this project",
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey.shade500,
+                  const SizedBox(height: 16),
+                  Text(
+                    "No challenges added yet",
+                    style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.grey.shade600,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Text(
+                    "Share the obstacles you overcame in this project",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }
