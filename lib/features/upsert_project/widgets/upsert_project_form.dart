@@ -133,95 +133,105 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
     super.dispose();
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     bool isMainFormValid = _formKey.currentState!.validate();
     bool isImagesValid = _imagesFormFieldKey.currentState?.validate() ?? false;
 
     if (isMainFormValid && isImagesValid) {
-      final user = ref.read(userProvider)!;
-      final ProjectEntity formData = widget.project == null
-          ? ProjectEntity(
-              id: const Uuid().v4(),
-              userId: user.id,
-              name: _nameController.text,
-              bannerBgColor: _selectedColor,
-              bannerType: _selectedLogoPath.isNotEmpty
-                  ? BannerIdentifier.picture
-                  : BannerIdentifier.lottie,
-              bannerImagePath: _selectedLogoPath,
-              bannerLottiePath: user.profilePicture,
-              carouselImagePaths: _carouselImages,
-              details: _detailsController.text,
-              shortDescription: _shortDescriptionController.text.isEmpty
-                  ? null
-                  : _shortDescriptionController.text,
-              role: _roleController.text.isEmpty ? null : _roleController.text,
-              techStack: _techStack.isEmpty ? null : _techStack,
-              tags: _tags.isEmpty ? null : _tags,
-              link: _linkController.text,
-              githubLink: _githubLinkController.text.isEmpty
-                  ? null
-                  : _githubLinkController.text,
-              additionalLinks:
-                  _additionalLinks.isEmpty ? null : _additionalLinks,
-              releaseDate: _releaseDate,
-              category: _selectedCategory ?? _categories.first,
-              developmentTime: _developmentDays > 0
-                  ? Duration(days: _developmentDays)
-                  : null,
-              stats: ProjectStats(
-                users: 0,
-                stars: 0,
-                forks: 0,
-                downloads: 0,
-                contributions: 0,
-              ),
-              teamMembers: _teamMembers.isEmpty ? null : _teamMembers,
-              keyFeatures: _keyFeatures.isEmpty ? null : _keyFeatures,
-              challenges: _challenges.isEmpty ? null : _challenges,
-              futureEnhancements:
-                  _futureEnhancements.isEmpty ? null : _futureEnhancements,
-              testimonials: _testimonials.isEmpty ? null : _testimonials,
-            )
-          : ProjectEntity(
-              id: widget.project!.id,
-              userId: widget.project!.userId,
-              name: _nameController.text,
-              bannerBgColor: _selectedColor,
-              bannerType: _selectedLogoPath.isNotEmpty
-                  ? BannerIdentifier.picture
-                  : BannerIdentifier.lottie,
-              bannerImagePath: _selectedLogoPath,
-              bannerLottiePath: widget.project!.bannerLottiePath,
-              carouselImagePaths: _carouselImages,
-              details: _detailsController.text,
-              shortDescription: _shortDescriptionController.text.isEmpty
-                  ? null
-                  : _shortDescriptionController.text,
-              role: _roleController.text.isEmpty ? null : _roleController.text,
-              techStack: _techStack.isEmpty ? null : _techStack,
-              tags: _tags.isEmpty ? null : _tags,
-              link: _linkController.text,
-              githubLink: _githubLinkController.text.isEmpty
-                  ? null
-                  : _githubLinkController.text,
-              additionalLinks:
-                  _additionalLinks.isEmpty ? null : _additionalLinks,
-              releaseDate: _releaseDate,
-              category: _selectedCategory ?? _categories.first,
-              developmentTime: _developmentDays > 0
-                  ? Duration(days: _developmentDays)
-                  : null,
-              stats: _stats,
-              teamMembers: _teamMembers.isEmpty ? null : _teamMembers,
-              keyFeatures: _keyFeatures.isEmpty ? null : _keyFeatures,
-              challenges: _challenges.isEmpty ? null : _challenges,
-              futureEnhancements:
-                  _futureEnhancements.isEmpty ? null : _futureEnhancements,
-              testimonials: _testimonials.isEmpty ? null : _testimonials,
-            );
+      try {
+        final user = ref.read(userProvider)!;
+        final String projectId = widget.project?.id ?? const Uuid().v4();
 
-      widget.onSave(formData);
+        final ProjectEntity formData = widget.project == null
+            ? ProjectEntity(
+                id: projectId,
+                userId: user.id,
+                name: _nameController.text,
+                bannerBgColor: _selectedColor,
+                bannerType: _selectedLogoPath.isNotEmpty
+                    ? BannerIdentifier.picture
+                    : BannerIdentifier.lottie,
+                bannerImagePath: _selectedLogoPath,
+                bannerLottiePath: user.profilePicture,
+                carouselImagePaths: _carouselImages,
+                details: _detailsController.text,
+                shortDescription: _shortDescriptionController.text.isEmpty
+                    ? null
+                    : _shortDescriptionController.text,
+                role:
+                    _roleController.text.isEmpty ? null : _roleController.text,
+                techStack: _techStack.isEmpty ? null : _techStack,
+                tags: _tags.isEmpty ? null : _tags,
+                link: _linkController.text,
+                githubLink: _githubLinkController.text.isEmpty
+                    ? null
+                    : _githubLinkController.text,
+                additionalLinks:
+                    _additionalLinks.isEmpty ? null : _additionalLinks,
+                releaseDate: _releaseDate,
+                category: _selectedCategory ?? _categories.first,
+                developmentTime: _developmentDays > 0
+                    ? Duration(days: _developmentDays)
+                    : null,
+                stats: _stats,
+                teamMembers: _teamMembers.isEmpty ? null : _teamMembers,
+                keyFeatures: _keyFeatures.isEmpty ? null : _keyFeatures,
+                challenges: _challenges.isEmpty ? null : _challenges,
+                futureEnhancements:
+                    _futureEnhancements.isEmpty ? null : _futureEnhancements,
+                testimonials: _testimonials.isEmpty ? null : _testimonials,
+              )
+            : ProjectEntity(
+                id: projectId,
+                userId: widget.project!.userId,
+                name: _nameController.text,
+                bannerBgColor: _selectedColor,
+                bannerType: _selectedLogoPath.isNotEmpty
+                    ? BannerIdentifier.picture
+                    : BannerIdentifier.lottie,
+                bannerImagePath:
+                    _selectedLogoPath, // Raw local path as picked from device
+                bannerLottiePath: widget.project!.bannerLottiePath,
+                carouselImagePaths:
+                    _carouselImages, // Raw local paths as picked from device
+                details: _detailsController.text,
+                shortDescription: _shortDescriptionController.text.isEmpty
+                    ? null
+                    : _shortDescriptionController.text,
+                role:
+                    _roleController.text.isEmpty ? null : _roleController.text,
+                techStack: _techStack.isEmpty ? null : _techStack,
+                tags: _tags.isEmpty ? null : _tags,
+                link: _linkController.text,
+                githubLink: _githubLinkController.text.isEmpty
+                    ? null
+                    : _githubLinkController.text,
+                additionalLinks:
+                    _additionalLinks.isEmpty ? null : _additionalLinks,
+                releaseDate: _releaseDate,
+                category: _selectedCategory ?? _categories.first,
+                developmentTime: _developmentDays > 0
+                    ? Duration(days: _developmentDays)
+                    : null,
+                stats: _stats,
+                teamMembers: _teamMembers.isEmpty ? null : _teamMembers,
+                keyFeatures: _keyFeatures.isEmpty ? null : _keyFeatures,
+                challenges: _challenges.isEmpty ? null : _challenges,
+                futureEnhancements:
+                    _futureEnhancements.isEmpty ? null : _futureEnhancements,
+                testimonials: _testimonials.isEmpty ? null : _testimonials,
+              );
+
+        await widget.onSave(formData);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving project: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     }
   }
 
@@ -285,7 +295,6 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
     });
   }
 
-  // Update methods for the new sections
   void _updateFeatures(List<Feature> features) {
     setState(() {
       _keyFeatures = features;

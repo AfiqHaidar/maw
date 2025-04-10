@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/data/repository/auth_repository.dart';
 import 'package:mb/data/repository/project_repository.dart';
+import 'package:path/path.dart' as path;
 
 class ProjectController extends StateNotifier<List<ProjectEntity>?> {
   final ProjectRepository _repository;
@@ -31,19 +32,76 @@ class ProjectController extends StateNotifier<List<ProjectEntity>?> {
 
   Future<void> upsertProject(ProjectEntity project) async {
     try {
-      await _repository.saveProject(project);
+      _isLoading = true;
+
+      String bannerImagePath =
+          await _processLogoImage(project.id, project.bannerImagePath);
+      List<String> processedCarouselImages =
+          await _processCarouselImages(project.id, project.carouselImagePaths);
+
+      final updatedProject = project.copyWith(
+        bannerImagePath: bannerImagePath,
+        carouselImagePaths: processedCarouselImages,
+      );
+
+      await _repository.saveProject(updatedProject);
+      await fetch();
+    } catch (e) {
+      print('Error saving project with images: $e');
+      rethrow;
+    } finally {
+      _isLoading = false;
+    }
+  }
+
+  Future<void> deleteProject(String projectId) async {
+    try {
+      await _repository.deleteProjectImages(projectId);
+      await _repository.deleteProject(projectId);
       await fetch();
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<void> deleteProject(String projectId) async {
-    try {
-      await _repository.deleteProject(projectId);
-      await fetch();
-    } catch (e) {
-      rethrow;
+  Future<String> _processLogoImage(String projectId, String imagePath) async {
+    if (imagePath.isNotEmpty &&
+        !imagePath.startsWith('http') &&
+        !imagePath.startsWith('assets/')) {
+      final fileExtension = path.extension(imagePath).toLowerCase();
+      final destinationFileName = 'logo$fileExtension';
+
+      return await _repository.uploadProjectLogo(
+          projectId, imagePath, destinationFileName);
     }
+    return imagePath;
+  }
+
+  Future<List<String>> _processCarouselImages(
+      String projectId, List<String> imagePaths) async {
+    List<String> processedImages = [];
+
+    for (int i = 0; i < imagePaths.length; i++) {
+      String imagePath = imagePaths[i];
+      try {
+        if (imagePath.isNotEmpty &&
+            !imagePath.startsWith('http') &&
+            !imagePath.startsWith('assets/')) {
+          final fileExtension = path.extension(imagePath).toLowerCase();
+          final destinationFileName = 'carousel_${i + 1}$fileExtension';
+
+          String uploadedUrl = await _repository.uploadCarouselImage(
+              projectId, imagePath, destinationFileName);
+          processedImages.add(uploadedUrl);
+        } else {
+          processedImages.add(imagePath);
+        }
+      } catch (e) {
+        print('Error uploading carousel image: $e');
+        processedImages.add(imagePath);
+      }
+    }
+
+    return processedImages;
   }
 }

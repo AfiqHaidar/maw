@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mb/data/entities/project_entity.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class ProjectRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String collectionPath = "projects";
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   Future<ProjectEntity?> getProject(String projectId) async {
     try {
@@ -51,6 +55,61 @@ class ProjectRepository {
       await _firestore.collection(collectionPath).doc(projectId).delete();
     } catch (e) {
       throw Exception("Failed to delete project: $e");
+    }
+  }
+
+  Future<String> uploadProjectLogo(
+      String projectId, String imagePath, String destinationFileName) async {
+    try {
+      final file = File(imagePath);
+      final reference = _storage
+          .ref()
+          .child('projects/$projectId/logo/$destinationFileName')
+          .putFile(file);
+
+      final snapshot = await reference;
+      return await snapshot.ref.getDownloadURL();
+    } catch (e) {
+      throw Exception("Failed to upload project logo: $e");
+    }
+  }
+
+  Future<String> uploadCarouselImage(
+      String projectId, String imagePath, String destinationFileName) async {
+    try {
+      final file = File(imagePath);
+      final reference = _storage
+          .ref()
+          .child('projects/$projectId/carousel/$destinationFileName')
+          .putFile(file);
+
+      final snapshot = await reference;
+      return await snapshot.ref.getDownloadURL();
+    } catch (e) {
+      throw Exception("Failed to upload carousel image: $e");
+    }
+  }
+
+  Future<void> deleteProjectImages(String projectId) async {
+    try {
+      final logoRef = _storage.ref().child('projects/$projectId/logo');
+      final carouselRef = _storage.ref().child('projects/$projectId/carousel');
+
+      try {
+        final logoList = await logoRef.listAll();
+        for (var item in logoList.items) {
+          await item.delete();
+        }
+
+        final carouselList = await carouselRef.listAll();
+        for (var item in carouselList.items) {
+          await item.delete();
+        }
+      } catch (e) {
+        print('Error deleting images: $e');
+      }
+    } catch (e) {
+      print('Error accessing image directories: $e');
     }
   }
 }
