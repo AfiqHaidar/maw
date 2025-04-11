@@ -5,17 +5,21 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mb/data/models/testimonial_model.dart';
 import 'package:mb/features/upsert_project/validators/project_testimonials_validator.dart';
 import 'package:mb/features/upsert_project/widgets/collapsible_section_header.dart';
+import 'package:mb/widgets/cached_image_widget.dart';
 
 class ProjectTestimonialsSection extends StatefulWidget {
   final List<Testimonial> initialTestimonials;
   final Color themeColor;
   final Function(List<Testimonial>) onTestimonialsChanged;
+  // Add projectId parameter for cached images
+  final String projectId;
 
   const ProjectTestimonialsSection({
     Key? key,
     required this.initialTestimonials,
     required this.themeColor,
     required this.onTestimonialsChanged,
+    required this.projectId,
   }) : super(key: key);
 
   @override
@@ -38,6 +42,7 @@ class _ProjectTestimonialsSectionState
       context: context,
       builder: (context) => TestimonialFormDialog(
         themeColor: widget.themeColor,
+        projectId: widget.projectId,
       ),
     );
 
@@ -55,6 +60,7 @@ class _ProjectTestimonialsSectionState
       builder: (context) => TestimonialFormDialog(
         themeColor: widget.themeColor,
         testimonial: _testimonials[index],
+        projectId: widget.projectId,
       ),
     );
 
@@ -202,7 +208,7 @@ class _ProjectTestimonialsSectionState
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                // Avatar
+                                // Avatar with cached image
                                 Container(
                                   width: 60,
                                   height: 60,
@@ -211,30 +217,7 @@ class _ProjectTestimonialsSectionState
                                     shape: BoxShape.circle,
                                   ),
                                   clipBehavior: Clip.antiAlias,
-                                  child: testimonial.avatarPath.isNotEmpty
-                                      ? testimonial.avatarPath
-                                              .startsWith('assets/')
-                                          ? Image.asset(
-                                              testimonial.avatarPath,
-                                              fit: BoxFit.cover,
-                                            )
-                                          : Image.file(
-                                              File(testimonial.avatarPath),
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return Icon(
-                                                  Icons.person,
-                                                  color: widget.themeColor,
-                                                  size: 30,
-                                                );
-                                              },
-                                            )
-                                      : Icon(
-                                          Icons.person,
-                                          color: widget.themeColor,
-                                          size: 30,
-                                        ),
+                                  child: _buildAvatarWidget(testimonial, index),
                                 ),
                                 const SizedBox(width: 12),
                                 // Quote
@@ -360,17 +343,75 @@ class _ProjectTestimonialsSectionState
       ),
     );
   }
+
+  // Helper method to build the appropriate avatar widget based on the path
+  Widget _buildAvatarWidget(Testimonial testimonial, int index) {
+    final avatarPath = testimonial.avatarPath;
+
+    if (avatarPath.isEmpty) {
+      return Icon(
+        Icons.person,
+        color: widget.themeColor,
+        size: 30,
+      );
+    } else if (avatarPath.startsWith('assets/')) {
+      // For asset images
+      return Image.asset(
+        avatarPath,
+        fit: BoxFit.cover,
+      );
+    } else if (!avatarPath.startsWith('http')) {
+      // For local file (from image picker)
+      return Image.file(
+        File(avatarPath),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Icon(
+            Icons.person,
+            color: widget.themeColor,
+            size: 30,
+          );
+        },
+      );
+    } else {
+      // For HTTP URLs, use cached image widget
+      return CachedImageWidget(
+        imageUrl: avatarPath,
+        projectId: widget.projectId,
+        imageType: 'testimonial_avatar_$index',
+        fit: BoxFit.cover,
+        placeholder: Container(
+          color: widget.themeColor.withOpacity(0.1),
+          child: Icon(
+            Icons.person,
+            color: widget.themeColor,
+            size: 30,
+          ),
+        ),
+        errorWidget: Container(
+          color: widget.themeColor.withOpacity(0.1),
+          child: Icon(
+            Icons.person,
+            color: widget.themeColor,
+            size: 30,
+          ),
+        ),
+      );
+    }
+  }
 }
 
 // Dialog for adding/editing testimonials
 class TestimonialFormDialog extends StatefulWidget {
   final Color themeColor;
   final Testimonial? testimonial;
+  final String projectId;
 
   const TestimonialFormDialog({
     Key? key,
     required this.themeColor,
     this.testimonial,
+    required this.projectId,
   }) : super(key: key);
 
   @override
@@ -570,40 +611,7 @@ class _TestimonialFormDialogState extends State<TestimonialFormDialog> {
                             ),
                           ),
                           clipBehavior: Clip.antiAlias,
-                          child: _avatarPath.isNotEmpty
-                              ? _avatarPath.startsWith('assets/')
-                                  ? Image.asset(
-                                      _avatarPath,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File(_avatarPath),
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) {
-                                        return Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.add_a_photo,
-                                              color: widget.themeColor,
-                                              size: 24,
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    )
-                              : Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.add_a_photo,
-                                      color: widget.themeColor,
-                                      size: 24,
-                                    ),
-                                  ],
-                                ),
+                          child: _buildAvatarPreview(),
                         ),
                       ),
                     ),
@@ -650,5 +658,73 @@ class _TestimonialFormDialogState extends State<TestimonialFormDialog> {
         ),
       ),
     );
+  }
+
+  // Helper method to build the avatar preview in the dialog
+  Widget _buildAvatarPreview() {
+    if (_avatarPath.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.add_a_photo,
+            color: widget.themeColor,
+            size: 24,
+          ),
+        ],
+      );
+    } else if (_avatarPath.startsWith('assets/')) {
+      // For asset images
+      return Image.asset(
+        _avatarPath,
+        fit: BoxFit.cover,
+      );
+    } else if (!_avatarPath.startsWith('http')) {
+      // For local file (from image picker)
+      return Image.file(
+        File(_avatarPath),
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.add_a_photo,
+                color: widget.themeColor,
+                size: 24,
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      // For HTTP URLs, use cached image widget
+      return CachedImageWidget(
+        imageUrl: _avatarPath,
+        projectId: widget.projectId,
+        imageType: 'testimonial_avatar_preview',
+        fit: BoxFit.cover,
+        placeholder: Container(
+          color: widget.themeColor.withOpacity(0.1),
+          child: Center(
+            child: Icon(
+              Icons.add_a_photo,
+              color: widget.themeColor,
+              size: 24,
+            ),
+          ),
+        ),
+        errorWidget: Container(
+          color: widget.themeColor.withOpacity(0.1),
+          child: Center(
+            child: Icon(
+              Icons.add_a_photo,
+              color: widget.themeColor,
+              size: 24,
+            ),
+          ),
+        ),
+      );
+    }
   }
 }

@@ -455,6 +455,7 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
                     initialTestimonials: _testimonials,
                     themeColor: _selectedColor,
                     onTestimonialsChanged: _updateTestimonials,
+                    projectId: widget.project?.id ?? 'temp_project_id',
                   ),
 
                   const SizedBox(height: 24),
