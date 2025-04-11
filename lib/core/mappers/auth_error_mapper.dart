@@ -1,3 +1,4 @@
+// lib/core/mappers/auth_error_mapper.dart
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthErrorMapper {

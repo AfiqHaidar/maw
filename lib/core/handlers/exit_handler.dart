@@ -1,3 +1,4 @@
+// lib/core/handlers/exit_handler.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:mb/widgets/confirmation_dialog.dart';

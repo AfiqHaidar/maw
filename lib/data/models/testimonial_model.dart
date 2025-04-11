@@ -1,3 +1,4 @@
+// lib/data/models/testimonial_model.dart
 class Testimonial {
   final String quote;
   final String author;

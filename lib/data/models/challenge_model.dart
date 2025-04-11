@@ -1,3 +1,4 @@
+// lib/data/models/challenge_model.dart
 class Challenge {
   final String title;
   final String description;

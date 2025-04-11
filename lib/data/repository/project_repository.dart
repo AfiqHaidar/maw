@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mb/data/entities/project_entity.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:mb/data/service/cache/cache_manager.dart';
+import 'package:mb/data/services/cache/cache_manager.dart';
 
 class ProjectRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

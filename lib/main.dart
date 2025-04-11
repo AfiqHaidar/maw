@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/core/theme/colors.dart';
-import 'package:mb/data/service/cache/cache_initializer.dart';
+import 'package:mb/data/services/cache/cache_initializer.dart';
 import 'package:mb/features/auth/screens/auth_screen.dart';
 import 'package:mb/features/auth/screens/splash_screen.dart';
 import 'firebase_options.dart';

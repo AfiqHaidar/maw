@@ -1,4 +1,4 @@
-// lib/services/cache/image_cache_service.dart
+// lib/data/services/cache/image_cache_service.dart
 import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';

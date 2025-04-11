@@ -1,5 +1,5 @@
-// lib/services/cache/cache_initializer.dart
-import 'package:mb/data/service/cache/cache_manager.dart';
+// lib/data/services/cache/cache_initializer.dart
+import 'package:mb/data/services/cache/cache_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CacheInitializer {

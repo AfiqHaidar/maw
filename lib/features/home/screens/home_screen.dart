@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mb/core/services/sound_service.dart';
+import 'package:mb/data/services/sound/sound_service.dart';
 import 'package:mb/data/enums/sound_identifier.dart';
 import 'package:mb/data/providers/user_provider.dart';
 import 'package:mb/core/handlers/exit_handler.dart';

@@ -1,6 +1,6 @@
-// lib/services/cache/cache_manager.dart
+// lib/data/services/cache/cache_manager.dart
 import 'dart:io';
-import 'package:mb/data/service/cache/image_cache_Service.dart';
+import 'package:mb/data/services/cache/image_cache_Service.dart';
 import 'package:mb/data/entities/project_entity.dart';
 
 class CacheManager {

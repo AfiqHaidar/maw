@@ -1,3 +1,4 @@
+// lib/data/models/feature_model.dart
 class Feature {
   final String title;
   final String description;

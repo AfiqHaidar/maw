@@ -1,6 +1,6 @@
-// lib/screens/cache_management_screen.dart
+// lib/core/debuggers/cache/cache.dart
 import 'package:flutter/material.dart';
-import 'package:mb/data/service/cache/cache_manager.dart';
+import 'package:mb/data/services/cache/cache_manager.dart';
 import 'package:mb/widgets/drawer/main_drawer.dart';
 
 class CacheManagementScreen extends StatefulWidget {

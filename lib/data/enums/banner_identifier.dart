@@ -1,3 +1,4 @@
+// lib/data/enums/banner_identifier.dart
 enum BannerIdentifier { picture, lottie, none }
 
 extension BannerIdentifierExtension on BannerIdentifier {

@@ -1,3 +1,4 @@
+// lib/data/models/project_stats_model.dart
 class ProjectStats {
   final int users;
   final int stars;

@@ -1,3 +1,4 @@
+// lib/data/entities/project_entity.dart
 import 'package:flutter/material.dart';
 import 'package:mb/data/enums/banner_identifier.dart';
 import 'package:mb/data/models/challenge_model.dart';

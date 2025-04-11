@@ -1,3 +1,4 @@
+// lib/data/repository/auth_repository.dart
 import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepository {

@@ -1,3 +1,4 @@
+// lib/core/mappers/firestore_error_mapper.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirestoreErrorMapper {

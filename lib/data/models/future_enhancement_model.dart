@@ -1,3 +1,4 @@
+// lib/data/models/future_enhancement_model.dart
 class FutureEnhancement {
   final String title;
   final String description;

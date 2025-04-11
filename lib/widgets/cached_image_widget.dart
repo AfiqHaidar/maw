@@ -1,7 +1,7 @@
 // lib/widgets/cached_image_widget.dart
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:mb/data/service/cache/cache_manager.dart';
+import 'package:mb/data/services/cache/cache_manager.dart';
 
 class CachedImageWidget extends StatefulWidget {
   final String imageUrl;
