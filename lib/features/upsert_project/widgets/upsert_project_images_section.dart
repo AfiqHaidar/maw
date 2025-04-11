@@ -214,7 +214,15 @@ class _ProjectImagesSectionState extends State<ProjectImagesSection> {
   }
 
   Widget _buildImageWidget(String path, int index) {
-    if (!path.startsWith('http')) {
+    if (path.startsWith('assets/')) {
+      // Image Picker
+      return Image.asset(
+        path,
+        fit: BoxFit.cover,
+        width: 100,
+        height: 100,
+      );
+    } else if (!path.startsWith('http')) {
       // Image Picker
       return Image.file(
         File(path),

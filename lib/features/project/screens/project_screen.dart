@@ -216,6 +216,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                     ProjectImageCarousel(
                       imagePaths: widget.project.carouselImagePaths,
                       themeColor: themeColor,
+                      projectId: widget.project.id,
                     ),
                     const SizedBox(height: 24),
                   ],

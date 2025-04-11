@@ -1,14 +1,17 @@
 // lib/features/project/widgets/project_image_carousel.dart
 import 'package:flutter/material.dart';
+import 'package:mb/widgets/cached_image_widget.dart';
 
 class ProjectImageCarousel extends StatefulWidget {
   final List<String> imagePaths;
   final Color themeColor;
+  final String projectId;
 
   const ProjectImageCarousel({
     Key? key,
     required this.imagePaths,
     required this.themeColor,
+    required this.projectId,
   }) : super(key: key);
 
   @override
@@ -57,12 +60,7 @@ class _ProjectImageCarouselState extends State<ProjectImageCarousel> {
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(
-                    widget.imagePaths[index],
-                    width: double.infinity,
-                    height: 220,
-                    fit: BoxFit.cover,
-                  ),
+                  child: _buildCarouselImage(widget.imagePaths[index], index),
                 ),
               );
             },
@@ -96,5 +94,84 @@ class _ProjectImageCarouselState extends State<ProjectImageCarousel> {
         ],
       ),
     );
+  }
+
+  Widget _buildCarouselImage(String path, int index) {
+    if (path.isEmpty) {
+      return Container(
+        color: Colors.grey.shade200,
+        child: Center(
+          child: Icon(
+            Icons.image_not_supported,
+            color: Colors.grey.shade400,
+            size: 32,
+          ),
+        ),
+      );
+    }
+
+    if (path.startsWith('assets/')) {
+      // Asset image
+      return Image.asset(
+        path,
+        width: double.infinity,
+        height: 220,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: Colors.grey.shade200,
+            child: Center(
+              child: Icon(
+                Icons.image_not_supported,
+                color: Colors.grey.shade400,
+                size: 32,
+              ),
+            ),
+          );
+        },
+      );
+    } else if (path.startsWith('http')) {
+      // Remote URL - use cached image
+      return CachedImageWidget(
+        imageUrl: path,
+        projectId: widget.projectId,
+        imageType: 'carousel_$index',
+        width: double.infinity,
+        height: 220,
+        fit: BoxFit.cover,
+        borderRadius: BorderRadius.circular(20),
+        placeholder: Container(
+          color: Colors.grey.shade200,
+          child: Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(widget.themeColor),
+            ),
+          ),
+        ),
+        errorWidget: Container(
+          color: Colors.grey.shade200,
+          child: Center(
+            child: Icon(
+              Icons.image_not_supported,
+              color: Colors.grey.shade400,
+              size: 32,
+            ),
+          ),
+        ),
+      );
+    } else {
+      // Local file path (should not happen in view mode, but just in case)
+      return Container(
+        color: Colors.grey.shade200,
+        child: Center(
+          child: Icon(
+            Icons.image_not_supported,
+            color: Colors.grey.shade400,
+            size: 32,
+          ),
+        ),
+      );
+    }
   }
 }

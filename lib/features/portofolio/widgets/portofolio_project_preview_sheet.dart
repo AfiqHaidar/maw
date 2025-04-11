@@ -158,11 +158,15 @@ class _ProjectPreviewSheetState extends State<ProjectPreviewSheet> {
                             // Image Carousel
                             if (widget
                                 .project.carouselImagePaths.isNotEmpty) ...[
-                              ProjectImageCarousel(
-                                imagePaths: widget.project.carouselImagePaths,
-                                themeColor: themeColor,
-                              ),
-                              const SizedBox(height: 24),
+                              if (widget
+                                  .project.carouselImagePaths.isNotEmpty) ...[
+                                ProjectImageCarousel(
+                                  imagePaths: widget.project.carouselImagePaths,
+                                  themeColor: themeColor,
+                                  projectId: widget.project.id,
+                                ),
+                                const SizedBox(height: 24),
+                              ],
                             ],
 
                             // Brief description (first paragraph only)
