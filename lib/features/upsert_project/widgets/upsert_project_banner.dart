@@ -39,15 +39,11 @@ class UpsertProjectBanner extends StatelessWidget {
               GestureDetector(
                 onTap: onPickLogo,
                 child: Container(
-                  width: 100,
-                  height: 100,
+                  width: 120,
+                  height: 120,
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
+                    color: Colors.white.withOpacity(0),
                     shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.5),
-                      width: 2,
-                    ),
                   ),
                   // Simple logic: If user has selected a logo, show it.
                   // Otherwise, show the "Add Logo" placeholder.
@@ -62,14 +58,6 @@ class UpsertProjectBanner extends StatelessWidget {
                               Icons.add_photo_alternate,
                               color: Colors.white,
                               size: 32,
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              "Add Logo",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
                             ),
                           ],
                         ),
@@ -114,7 +102,7 @@ class UpsertProjectBanner extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
+                color: Colors.white.withOpacity(0.3),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
@@ -148,7 +136,15 @@ class UpsertProjectBanner extends StatelessWidget {
       return const SizedBox();
     }
 
-    if (!selectedLogoPath!.startsWith('http')) {
+    if (selectedLogoPath!.startsWith('assets/')) {
+      // Asset image
+      return Image.asset(
+        selectedLogoPath!,
+        fit: BoxFit.cover,
+        width: 100,
+        height: 100,
+      );
+    } else if (!selectedLogoPath!.startsWith('http')) {
       // image picker
       return Image.file(
         File(selectedLogoPath!),

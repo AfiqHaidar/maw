@@ -7,6 +7,7 @@ import 'package:mb/core/mappers/firestore_error_mapper.dart';
 import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/data/providers/project_provider.dart';
 import 'package:mb/features/portofolio/screens/portofolio_screen.dart';
+import 'package:mb/features/project/widgets/project_banner.dart';
 import 'package:mb/features/project/widgets/project_challenge_item.dart';
 import 'package:mb/features/project/widgets/project_enhancement_item.dart';
 import 'package:mb/features/project/widgets/project_feature_item.dart';
@@ -149,22 +150,28 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Project banner
-            Container(
-              width: double.infinity,
-              color: themeColor,
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+            // Using the new ProjectBanner widget (logo only)
+            ProjectBanner(
+              backgroundColor: themeColor,
+              logoPath: widget.project.bannerImagePath,
+              projectId: widget.project.id,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 16),
+
                   // Project title
                   Text(
                     widget.project.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
                       height: 1.2,
-                      color: Colors.white,
+                      color: themeColor,
                     ),
                   ),
 
@@ -173,9 +180,9 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                     const SizedBox(height: 8),
                     Text(
                       widget.project.shortDescription!,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white,
+                        color: Colors.black87,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
@@ -183,33 +190,25 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
 
                   // Release date
                   if (widget.project.releaseDate != null) ...[
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: themeColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
                         'Released: ${widget.project.releaseDate!.year}/${widget.project.releaseDate!.month.toString().padLeft(2, '0')}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                          color: themeColor,
                         ),
                       ),
                     ),
                   ],
-                ],
-              ),
-            ),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
                   const SizedBox(height: 24),
 
                   // Image Carousel
