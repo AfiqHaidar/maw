@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/data/enums/banner_identifier.dart';
+import 'package:mb/widgets/cached_image_widget.dart';
 
 class ExpandedCircleOverlay extends StatelessWidget {
   final Offset origin;
@@ -89,7 +90,7 @@ class ExpandedCircleOverlay extends StatelessWidget {
                 child: Container(
                   width: currentContentSize,
                   height: currentContentSize,
-                  child: _buildContent(),
+                  child: _buildContent(currentContentSize),
                 ),
               ),
             ],
@@ -99,21 +100,84 @@ class ExpandedCircleOverlay extends StatelessWidget {
     );
   }
 
-  Widget _buildContent() {
+  Widget _buildContent(double contentSize) {
     if (item.bannerType == BannerIdentifier.picture) {
-      return Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(item.bannerImagePath),
-            fit: BoxFit.contain,
-          ),
-        ),
-      );
+      return _buildImage(contentSize);
     } else {
       return Lottie.asset(
         item.bannerLottiePath,
         fit: BoxFit.contain,
         repeat: true,
+      );
+    }
+  }
+
+  Widget _buildImage(double contentSize) {
+    final String imagePath = item.bannerImagePath;
+
+    if (imagePath.isEmpty) {
+      return Container(
+        color: item.bannerBgColor,
+        child: const Icon(
+          Icons.image_not_supported,
+          color: Colors.white54,
+          size: 48,
+        ),
+      );
+    }
+
+    if (imagePath.startsWith('assets/')) {
+      // Asset image
+      return Image.asset(
+        imagePath,
+        fit: BoxFit.contain,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            color: item.bannerBgColor,
+            child: const Icon(
+              Icons.image_not_supported,
+              color: Colors.white54,
+              size: 48,
+            ),
+          );
+        },
+      );
+    } else if (imagePath.startsWith('http')) {
+      // Remote URL - use cached image
+      return CachedImageWidget(
+        imageUrl: imagePath,
+        projectId: item.id,
+        imageType: 'banner',
+        width: contentSize,
+        height: contentSize,
+        fit: BoxFit.contain,
+        placeholder: Container(
+          color: item.bannerBgColor,
+          child: const Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+            ),
+          ),
+        ),
+        errorWidget: Container(
+          color: item.bannerBgColor,
+          child: const Icon(
+            Icons.image_not_supported,
+            color: Colors.white54,
+            size: 48,
+          ),
+        ),
+      );
+    } else {
+      // Fallback for any other type of path
+      return Container(
+        color: item.bannerBgColor,
+        child: const Icon(
+          Icons.image_not_supported,
+          color: Colors.white54,
+          size: 48,
+        ),
       );
     }
   }

@@ -42,7 +42,7 @@ class ConfirmationDialog extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
-                color: AppColors.white,
+                color: color.onPrimary,
               ),
               textAlign: TextAlign.center,
             ),
