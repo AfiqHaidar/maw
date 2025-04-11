@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mb/features/upsert_project/widgets/collapsible_section_header.dart';
+import 'package:mb/widgets/cached_image_widget.dart';
 
 class ProjectImagesSection extends StatefulWidget {
   final List<String> carouselImages;
   final Color themeColor;
   final Function(List<String>) onImagesChanged;
-  // Add a FormFieldState to connect to parent form validation
   final GlobalKey<FormFieldState>? formFieldKey;
+  final String projectId;
 
   const ProjectImagesSection({
     Key? key,
@@ -17,6 +18,7 @@ class ProjectImagesSection extends StatefulWidget {
     required this.themeColor,
     required this.onImagesChanged,
     this.formFieldKey,
+    required this.projectId,
   }) : super(key: key);
 
   @override
@@ -31,7 +33,6 @@ class _ProjectImagesSectionState extends State<ProjectImagesSection> {
   void initState() {
     super.initState();
     _images = List.from(widget.carouselImages);
-    // Validate initial state
     _validateImages();
   }
 
@@ -42,7 +43,6 @@ class _ProjectImagesSectionState extends State<ProjectImagesSection> {
     if (image != null) {
       setState(() {
         _images.add(image.path);
-        // Clear error when image is added
         _errorMessage = null;
       });
       widget.onImagesChanged(_images);
@@ -60,13 +60,11 @@ class _ProjectImagesSectionState extends State<ProjectImagesSection> {
     _validateImages();
   }
 
-  // Validate that at least one image exists
   void _validateImages() {
     if (_images.isEmpty) {
       setState(() {
         _errorMessage = "At least one project image is required";
       });
-      // Update the parent form field state if available
       if (widget.formFieldKey?.currentState != null) {
         widget.formFieldKey!.currentState!.validate();
       }
@@ -74,7 +72,6 @@ class _ProjectImagesSectionState extends State<ProjectImagesSection> {
       setState(() {
         _errorMessage = null;
       });
-      // Update the parent form field state if available
       if (widget.formFieldKey?.currentState != null) {
         widget.formFieldKey!.currentState!.validate();
       }
@@ -154,7 +151,7 @@ class _ProjectImagesSectionState extends State<ProjectImagesSection> {
                       ),
                     ),
 
-                    // Display selected images
+                    // Display selected images using cached image widget when appropriate
                     ..._images.asMap().entries.map((entry) {
                       final index = entry.key;
                       final path = entry.value;
@@ -165,25 +162,30 @@ class _ProjectImagesSectionState extends State<ProjectImagesSection> {
                         margin: const EdgeInsets.only(right: 12),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          image: DecorationImage(
-                            image: path.startsWith('assets/')
-                                ? AssetImage(path) as ImageProvider
-                                : FileImage(File(path)),
-                            fit: BoxFit.cover,
-                          ),
                         ),
-                        alignment: Alignment.topRight,
-                        child: IconButton(
-                          icon: Container(
-                            padding: const EdgeInsets.all(4),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
+                        child: Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: _buildImageWidget(path, index),
                             ),
-                            child: const Icon(Icons.close,
-                                size: 16, color: Colors.red),
-                          ),
-                          onPressed: () => _removeImage(index),
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: IconButton(
+                                icon: Container(
+                                  padding: const EdgeInsets.all(4),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.close,
+                                      size: 16, color: Colors.red),
+                                ),
+                                onPressed: () => _removeImage(index),
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     }),
@@ -209,5 +211,45 @@ class _ProjectImagesSectionState extends State<ProjectImagesSection> {
         );
       },
     );
+  }
+
+  Widget _buildImageWidget(String path, int index) {
+    if (!path.startsWith('http')) {
+      // Image Picker
+      return Image.file(
+        File(path),
+        fit: BoxFit.cover,
+        width: 100,
+        height: 100,
+      );
+    } else {
+      // Remote/Cached
+      return CachedImageWidget(
+        imageUrl: path,
+        projectId: widget.projectId,
+        imageType: 'carousel_$index',
+        width: 100,
+        height: 100,
+        fit: BoxFit.cover,
+        borderRadius: BorderRadius.circular(12),
+        placeholder: Container(
+          color: Colors.grey.shade200,
+          child: Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(widget.themeColor),
+            ),
+          ),
+        ),
+        errorWidget: Container(
+          color: Colors.grey.shade200,
+          child: Icon(
+            Icons.image_not_supported,
+            color: Colors.grey.shade400,
+            size: 32,
+          ),
+        ),
+      );
+    }
   }
 }

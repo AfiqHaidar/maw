@@ -377,6 +377,7 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
                     themeColor: _selectedColor,
                     onImagesChanged: _updateCarouselImages,
                     formFieldKey: _imagesFormFieldKey,
+                    projectId: widget.project?.id ?? 'temp_project_id',
                   ),
 
                   const SizedBox(height: 24),
