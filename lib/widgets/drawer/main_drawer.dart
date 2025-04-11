@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mb/core/debuggers/cache/cache.dart';
 import 'package:mb/data/enums/drawer_identifier.dart';
 import 'package:mb/data/providers/selected_drawer_provider.dart';
 import 'package:mb/features/portofolio/screens/portofolio_screen.dart';
 import 'package:mb/features/home/screens/home_screen.dart';
 import 'package:mb/features/profile/screens/profile_screen.dart';
-import 'package:mb/core/seeder/seeder.dart';
+import 'package:mb/core/debuggers/seeder/seeder.dart';
 import 'package:mb/widgets/confirmation_dialog.dart';
 import 'package:mb/widgets/drawer/drawer_header.dart';
 import 'package:mb/widgets/drawer/drawer_item.dart';
@@ -39,6 +40,12 @@ class MainDrawer extends ConsumerWidget {
           MaterialPageRoute(builder: (ctx) => PortofolioScreen()),
         );
         break;
+      case DrawerIdentifier.cache:
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (ctx) => CacheManagementScreen()),
+        );
+        break;
+
       case DrawerIdentifier.seeder:
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (ctx) => AdminSeederScreen()),
@@ -102,6 +109,13 @@ class MainDrawer extends ConsumerWidget {
               identifier: DrawerIdentifier.seeder,
               onTap: () =>
                   _onSelectScreen(context, ref, DrawerIdentifier.seeder),
+            ),
+            DrawerItem(
+              icon: Icons.cached_rounded,
+              title: 'Cache',
+              identifier: DrawerIdentifier.cache,
+              onTap: () =>
+                  _onSelectScreen(context, ref, DrawerIdentifier.cache),
             ),
             const SizedBox(height: 16),
             const DrawerSectionHeader(title: 'PORTOFOLIO'),

@@ -1,21 +1,27 @@
+// lib/data/repository/project_repository.dart
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mb/data/entities/project_entity.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:mb/data/service/cache/cache_manager.dart';
 
 class ProjectRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String collectionPath = "projects";
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final CacheManager _cacheManager = CacheManager();
 
   Future<ProjectEntity?> getProject(String projectId) async {
     try {
       DocumentSnapshot doc =
           await _firestore.collection(collectionPath).doc(projectId).get();
       if (doc.exists) {
-        return ProjectEntity.fromMap(
-            doc.id, doc.data() as Map<String, dynamic>);
+        ProjectEntity project =
+            ProjectEntity.fromMap(doc.id, doc.data() as Map<String, dynamic>);
+
+        // Process project images through cache
+        return await _cacheManager.processProjectImages(project);
       }
       return null;
     } catch (e) {
@@ -30,10 +36,21 @@ class ProjectRepository {
           .where('userId', isEqualTo: userId)
           .get();
 
-      return query.docs
+      List<ProjectEntity> projects = query.docs
           .map((doc) =>
               ProjectEntity.fromMap(doc.id, doc.data() as Map<String, dynamic>))
           .toList();
+
+      // Process all projects through cache
+      List<ProjectEntity> cachedProjects = [];
+      for (var project in projects) {
+        cachedProjects.add(await _cacheManager.processProjectImages(project));
+      }
+
+      // Preload all project images in the background
+      _cacheManager.preloadMultipleProjects(projects);
+
+      return cachedProjects;
     } catch (e) {
       throw Exception("Failed to fetch user projects: $e");
     }
@@ -45,6 +62,9 @@ class ProjectRepository {
           .collection(collectionPath)
           .doc(project.id)
           .set(project.toMap(), SetOptions(merge: true));
+
+      // Preload project images after saving
+      _cacheManager.preloadProjectImages(project);
     } catch (e) {
       throw Exception("Failed to save project: $e");
     }
@@ -53,6 +73,9 @@ class ProjectRepository {
   Future<void> deleteProject(String projectId) async {
     try {
       await _firestore.collection(collectionPath).doc(projectId).delete();
+
+      // Clear project cache
+      await _cacheManager.clearProjectCache(projectId);
     } catch (e) {
       throw Exception("Failed to delete project: $e");
     }
@@ -68,7 +91,12 @@ class ProjectRepository {
           .putFile(file);
 
       final snapshot = await reference;
-      return await snapshot.ref.getDownloadURL();
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      // Cache the uploaded image
+      await _cacheManager.getImage(downloadUrl, projectId, 'logo');
+
+      return downloadUrl;
     } catch (e) {
       throw Exception("Failed to upload project logo: $e");
     }
@@ -84,7 +112,13 @@ class ProjectRepository {
           .putFile(file);
 
       final snapshot = await reference;
-      return await snapshot.ref.getDownloadURL();
+      final downloadUrl = await snapshot.ref.getDownloadURL();
+
+      // Cache the uploaded image
+      await _cacheManager.getImage(
+          downloadUrl, projectId, 'carousel_$destinationFileName');
+
+      return downloadUrl;
     } catch (e) {
       throw Exception("Failed to upload carousel image: $e");
     }
@@ -108,8 +142,21 @@ class ProjectRepository {
       } catch (e) {
         print('Error deleting images: $e');
       }
+
+      // Clear project cache
+      await _cacheManager.clearProjectCache(projectId);
     } catch (e) {
       print('Error accessing image directories: $e');
     }
+  }
+
+  // Clean all expired cache
+  Future<void> cleanExpiredCache() async {
+    await _cacheManager.cleanExpiredCache();
+  }
+
+  // Get cache statistics
+  Future<Map<String, dynamic>> getCacheStats() async {
+    return await _cacheManager.getCacheStats();
   }
 }

@@ -3,4 +3,5 @@ enum DrawerIdentifier {
   person,
   portofolio,
   seeder,
+  cache,
 }
