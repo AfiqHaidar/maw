@@ -1,6 +1,7 @@
 // lib/data/controller/project_controller.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/data/entities/project_entity.dart';
+import 'package:mb/data/models/testimonial_model.dart';
 import 'package:mb/data/repository/auth_repository.dart';
 import 'package:mb/data/repository/project_repository.dart';
 import 'package:path/path.dart' as path;
@@ -38,10 +39,14 @@ class ProjectController extends StateNotifier<List<ProjectEntity>?> {
           await _processLogoImage(project.id, project.bannerImagePath);
       List<String> processedCarouselImages =
           await _processCarouselImages(project.id, project.carouselImagePaths);
+      List<Testimonial> processedTestimonials =
+          await _processTestimonials(project.id, project.testimonials);
 
       final updatedProject = project.copyWith(
         bannerImagePath: bannerImagePath,
         carouselImagePaths: processedCarouselImages,
+        testimonials:
+            processedTestimonials.isEmpty ? null : processedTestimonials,
       );
 
       await _repository.saveProject(updatedProject);
@@ -103,5 +108,42 @@ class ProjectController extends StateNotifier<List<ProjectEntity>?> {
     }
 
     return processedImages;
+  }
+
+  Future<List<Testimonial>> _processTestimonials(
+      String projectId, List<Testimonial>? testimonials) async {
+    if (testimonials == null || testimonials.isEmpty) {
+      return [];
+    }
+
+    List<Testimonial> processedTestimonials = [];
+
+    for (int i = 0; i < testimonials.length; i++) {
+      final testimonial = testimonials[i];
+      String avatarPath = testimonial.avatarPath;
+
+      if (avatarPath.isNotEmpty &&
+          !avatarPath.startsWith('http') &&
+          !avatarPath.startsWith('assets/')) {
+        try {
+          final String uploadedPath = await _repository.uploadTestimonialAvatar(
+              projectId, avatarPath, i);
+          avatarPath = uploadedPath;
+        } catch (e) {
+          print('Error uploading testimonial avatar: $e');
+        }
+      }
+
+      final processedTestimonial = Testimonial(
+        quote: testimonial.quote,
+        author: testimonial.author,
+        role: testimonial.role,
+        avatarPath: avatarPath,
+      );
+
+      processedTestimonials.add(processedTestimonial);
+    }
+
+    return processedTestimonials;
   }
 }

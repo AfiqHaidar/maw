@@ -433,6 +433,7 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
                           .map((testimonial) => ProjectTestimonialItem(
                                 testimonial: testimonial,
                                 themeColor: themeColor,
+                                projectId: widget.project.id,
                               )),
                       const SizedBox(height: 32),
                     ],
