@@ -28,13 +28,13 @@ class ProjectTeamMemberCard extends StatelessWidget {
             width: 70,
             height: 70,
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey.shade200,
+              shape: BoxShape.rectangle,
+              color: Colors.grey.withOpacity(0),
             ),
             clipBehavior: Clip.antiAlias,
             child: Lottie.asset(
               member.avatarPath,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
           ),
           const SizedBox(height: 8),

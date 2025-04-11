@@ -1,6 +1,7 @@
 // lib/features/upsert_project/widgets/upsert_team_member_section.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 import 'package:mb/data/entities/user_entity.dart';
 import 'package:mb/data/models/team_member_model.dart';
 import 'package:mb/data/providers/user_provider.dart';
@@ -214,30 +215,15 @@ class _ProjectTeamMemberSectionState
                               horizontal: 12,
                             ),
                             leading: Container(
-                              width: 40,
-                              height: 40,
+                              width: 48,
+                              height: 48,
                               decoration: BoxDecoration(
-                                color: widget.themeColor.withOpacity(0.1),
-                                shape: BoxShape.circle,
+                                color: widget.themeColor.withOpacity(0),
+                                shape: BoxShape.rectangle,
                               ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: user.profilePicture.isNotEmpty
-                                    ? Image.asset(
-                                        user.profilePicture,
-                                        fit: BoxFit.cover,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                          return Icon(
-                                            Icons.person,
-                                            color: widget.themeColor,
-                                          );
-                                        },
-                                      )
-                                    : Icon(
-                                        Icons.person,
-                                        color: widget.themeColor,
-                                      ),
+                              child: Lottie.asset(
+                                user.profilePicture,
+                                fit: BoxFit.contain,
                               ),
                             ),
                             title: Text(
@@ -351,28 +337,12 @@ class _ProjectTeamMemberSectionState
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: widget.themeColor.withOpacity(0.1),
-                        shape: BoxShape.circle,
+                        color: widget.themeColor.withOpacity(0),
+                        shape: BoxShape.rectangle,
                       ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: member.avatarPath.isNotEmpty
-                            ? Image.asset(
-                                member.avatarPath,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Icon(
-                                    Icons.person,
-                                    color: widget.themeColor,
-                                    size: 28,
-                                  );
-                                },
-                              )
-                            : Icon(
-                                Icons.person,
-                                color: widget.themeColor,
-                                size: 28,
-                              ),
+                      child: Lottie.asset(
+                        member.avatarPath,
+                        fit: BoxFit.contain,
                       ),
                     ),
                     title: Text(
@@ -570,31 +540,15 @@ class _TeamMemberRoleDialogState extends State<TeamMemberRoleDialog> {
               Row(
                 children: [
                   Container(
-                    width: 50,
-                    height: 50,
+                    width: 48,
+                    height: 48,
                     decoration: BoxDecoration(
-                      color: widget.themeColor.withOpacity(0.1),
-                      shape: BoxShape.circle,
+                      color: widget.themeColor.withOpacity(0),
+                      shape: BoxShape.rectangle,
                     ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(25),
-                      child: widget.userAvatar.isNotEmpty
-                          ? Image.asset(
-                              widget.userAvatar,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) {
-                                return Icon(
-                                  Icons.person,
-                                  color: widget.themeColor,
-                                  size: 30,
-                                );
-                              },
-                            )
-                          : Icon(
-                              Icons.person,
-                              color: widget.themeColor,
-                              size: 30,
-                            ),
+                    child: Lottie.asset(
+                      widget.userAvatar,
+                      fit: BoxFit.contain,
                     ),
                   ),
                   const SizedBox(width: 12),
