@@ -71,7 +71,7 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
   late List<Testimonial> _testimonials;
   late ProjectStats _stats;
 
-  // Sample categories
+  // Default Categories
   final List<String> _categories = [
     'Arcade Games',
     'Logic Puzzles',
@@ -148,9 +148,7 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
                 userId: user.id,
                 name: _nameController.text,
                 bannerBgColor: _selectedColor,
-                bannerType: _selectedLogoPath.isNotEmpty
-                    ? BannerIdentifier.picture
-                    : BannerIdentifier.lottie,
+                bannerType: BannerIdentifier.picture,
                 bannerImagePath: _selectedLogoPath,
                 bannerLottiePath: user.profilePicture,
                 carouselImagePaths: _carouselImages,
@@ -186,14 +184,10 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
                 userId: widget.project!.userId,
                 name: _nameController.text,
                 bannerBgColor: _selectedColor,
-                bannerType: _selectedLogoPath.isNotEmpty
-                    ? BannerIdentifier.picture
-                    : BannerIdentifier.lottie,
-                bannerImagePath:
-                    _selectedLogoPath, // Raw local path as picked from device
+                bannerType: BannerIdentifier.picture,
+                bannerImagePath: _selectedLogoPath,
                 bannerLottiePath: widget.project!.bannerLottiePath,
-                carouselImagePaths:
-                    _carouselImages, // Raw local paths as picked from device
+                carouselImagePaths: _carouselImages,
                 details: _detailsController.text,
                 shortDescription: _shortDescriptionController.text.isEmpty
                     ? null
@@ -333,15 +327,18 @@ class _ProjectFormState extends ConsumerState<ProjectForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Project banner with color picker and logo selection
             UpsertProjectBanner(
               selectedColor: _selectedColor,
               selectedLogoPath: _selectedLogoPath,
+              projectId: widget.project?.id ?? 'temp_project_id',
               onPickLogo: () async {
                 final path = await _pickLogo();
                 if (path != null) {
                   _updateLogoPath(path);
                 }
+              },
+              onRemoveLogo: () {
+                _updateLogoPath('');
               },
               onColorChange: _updateColor,
             ),
