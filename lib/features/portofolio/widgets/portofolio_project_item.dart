@@ -30,7 +30,7 @@ class ProjectItem extends StatelessWidget {
           const SizedBox(height: 12),
           _buildProjectName(),
           if (project.shortDescription != null) _buildProjectDescription(),
-          if (project.releaseDate != null) _buildReleaseDateBadge(),
+          // if (project.releaseDate != null) _buildReleaseDateBadge(),
         ],
       ),
     );

@@ -24,16 +24,21 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
         Scaffold(
           appBar: AppBar(
             title: const Text(
-              "Add New Project",
+              "Add",
               style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            backgroundColor: Theme.of(context).colorScheme.onBackground,
+            centerTitle: true,
             elevation: 0,
-            foregroundColor: Colors.white,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.save),
+                tooltip: 'Save Project',
+                onPressed: () {},
+              ),
+            ],
           ),
           body: ProjectForm(
             selectedColor: Colors.blue,

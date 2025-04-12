@@ -29,16 +29,21 @@ class _EditProjectScreenState extends ConsumerState<EditProjectScreen> {
         Scaffold(
           appBar: AppBar(
             title: const Text(
-              "Edit Project",
+              "Edit",
               style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            backgroundColor: widget.project.bannerBgColor,
+            centerTitle: true,
             elevation: 0,
-            foregroundColor: Colors.white,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.save),
+                tooltip: 'Save Project',
+                onPressed: () {},
+              ),
+            ],
           ),
           body: ProjectForm(
             project: widget.project,

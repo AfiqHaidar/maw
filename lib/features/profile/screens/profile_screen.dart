@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mb/data/entities/user_entity.dart';
+import 'package:mb/data/providers/auth_provider.dart';
 import 'dart:ui';
 import 'package:mb/data/providers/user_provider.dart';
-import 'package:mb/widgets/drawer/main_drawer.dart';
+import 'package:mb/widgets/confirmation_dialog.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -17,7 +18,7 @@ class ProfileScreen extends ConsumerWidget {
 
     return userAsyncValue.when(
       data: (user) =>
-          _buildProfileContent(context, user, colorScheme, textTheme),
+          _buildProfileContent(context, user, colorScheme, textTheme, ref),
       loading: () => const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -32,9 +33,8 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   Widget _buildProfileContent(BuildContext context, UserEntity user,
-      ColorScheme colorScheme, TextTheme textTheme) {
+      ColorScheme colorScheme, TextTheme textTheme, WidgetRef ref) {
     return Scaffold(
-      drawer: MainDrawer(),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
@@ -54,124 +54,86 @@ class ProfileScreen extends ConsumerWidget {
                     end: Alignment.bottomRight,
                   ),
                 ),
-                child: Stack(
-                  children: [
-                    // Background decorative elements
-                    Positioned(
-                      top: -30,
-                      right: -30,
-                      child: Container(
-                        width: 120,
-                        height: 120,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 20),
+                      // Animated avatar with fancy border
+                      Container(
+                        width: 110,
+                        height: 110,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.1),
+                          color: Colors.transparent,
+                        ),
+                        padding: const EdgeInsets.all(3), // Border width
+                        child: ClipOval(
+                          child: Lottie.asset(
+                            user.profilePicture.isNotEmpty
+                                ? user.profilePicture
+                                : 'assets/animations/blue_hang.json',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: -40,
-                      left: -40,
-                      child: Container(
-                        width: 150,
-                        height: 150,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.08),
-                        ),
-                      ),
-                    ),
 
-                    // User profile content
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const SizedBox(height: 20),
-                          // Animated avatar with fancy border
-                          Container(
-                            width: 110,
-                            height: 110,
+                      const SizedBox(height: 16),
+
+                      // User name with shimmer effect
+                      ShaderMask(
+                        shaderCallback: (bounds) => LinearGradient(
+                          colors: [
+                            Colors.white,
+                            Colors.white.withOpacity(0.9),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ).createShader(bounds),
+                        child: Text(
+                          user.name,
+                          style: textTheme.headlineSmall?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      // Username with backdrop filter
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 6),
                             decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.transparent,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.2),
-                                  blurRadius: 10,
-                                  spreadRadius: 2,
-                                ),
-                              ],
-                            ),
-                            padding: const EdgeInsets.all(3), // Border width
-                            child: ClipOval(
-                              child: Lottie.asset(
-                                user.profilePicture.isNotEmpty
-                                    ? user.profilePicture
-                                    : 'assets/animations/default_avatar.json',
-                                fit: BoxFit.cover,
+                              color: Colors.white.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.2),
+                                width: 1,
                               ),
                             ),
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          // User name with shimmer effect
-                          ShaderMask(
-                            shaderCallback: (bounds) => LinearGradient(
-                              colors: [
-                                Colors.white,
-                                Colors.white.withOpacity(0.9),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ).createShader(bounds),
                             child: Text(
-                              user.name,
-                              style: textTheme.headlineSmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 0.5,
+                              "@${user.username}",
+                              style: textTheme.bodyMedium?.copyWith(
+                                color: Colors.white.withOpacity(0.95),
+                                letterSpacing: 0.3,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-
-                          const SizedBox(height: 8),
-
-                          // Username with backdrop filter
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.15),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.2),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Text(
-                                  "@${user.username}",
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: Colors.white.withOpacity(0.95),
-                                    letterSpacing: 0.3,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -184,14 +146,6 @@ class ProfileScreen extends ConsumerWidget {
                 },
               ),
             ],
-            leading: Builder(
-              builder: (context) => IconButton(
-                icon: const Icon(Icons.menu, color: Colors.white),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              ),
-            ),
           ),
 
           // Profile content
@@ -285,8 +239,22 @@ class ProfileScreen extends ConsumerWidget {
                     width: double.infinity,
                     child: ElevatedButton.icon(
                       onPressed: () {
-                        // You can use ref.read here for sign out functionality
-                        // Example: ref.read(authControllerProvider.notifier).signOut();
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => ConfirmationDialog(
+                            header: "Logout Confirmation",
+                            subheader:
+                                "Are you sure you want to log out of the account?",
+                            confirmButtonText: "Logout",
+                            cancelButtonText: "Cancel",
+                            onConfirm: () async {
+                              Navigator.of(context).pop(); // Close dialog
+                              await ref.read(authProvider.notifier).logout();
+                              // No need to manually navigate - your main.dart StreamBuilder should handle this
+                              // Firebase authStateChanges() will trigger the navigation
+                            },
+                          ),
+                        );
                       },
                       icon: const Icon(Icons.logout_rounded, size: 20),
                       label: const Text("Log Out"),

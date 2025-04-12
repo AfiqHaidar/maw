@@ -3,6 +3,7 @@ import 'package:mb/core/handlers/exit_handler.dart';
 import 'package:mb/features/home/screens/home_screen.dart';
 import 'package:mb/features/portofolio/screens/portofolio_screen.dart';
 import 'package:mb/features/profile/screens/profile_screen.dart';
+import 'package:mb/widgets/drawer/main_drawer.dart';
 
 class TabsWrapper extends StatefulWidget {
   const TabsWrapper({super.key});
@@ -23,6 +24,7 @@ class TabsWrapperState extends State<TabsWrapper> {
         ExitHandler.showExitConfirmationDialog(context);
       },
       child: Scaffold(
+        drawer: const MainDrawer(),
         bottomNavigationBar: NavigationBar(
           onDestinationSelected: (int index) {
             setState(() {
@@ -39,22 +41,28 @@ class TabsWrapperState extends State<TabsWrapper> {
               label: 'Home',
             ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.app_blocking),
-              icon: Icon(Icons.app_blocking_outlined),
+              selectedIcon: Icon(Icons.business_center),
+              icon: Icon(Icons.business_center_outlined),
               label: 'Portofolio',
             ),
             NavigationDestination(
-              selectedIcon: Icon(Icons.account_circle),
-              icon: Icon(Icons.account_circle_outlined),
+              selectedIcon: Icon(Icons.person),
+              icon: Icon(Icons.person_outline),
               label: 'Profile',
             ),
           ],
         ),
-        body: <Widget>[
-          const HomeScreen(),
-          PortofolioScreen(),
-          ProfileScreen(),
-        ][selectedPageIndex],
+        body: Builder(
+          builder: (context) => <Widget>[
+            HomeScreen(
+              onMenuPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            ),
+            const PortofolioScreen(),
+            const ProfileScreen(),
+          ][selectedPageIndex],
+        ),
       ),
     );
   }

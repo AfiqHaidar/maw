@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:mb/core/theme/colors.dart';
 
 class ConfirmationDialog extends StatelessWidget {
   final String header;
@@ -24,16 +23,16 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Dialog(
-      // backgroundColor: Color(0xFF121212),
-      backgroundColor: color.onBackground,
+      backgroundColor: colorScheme.surface,
+      elevation: 8,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -41,8 +40,8 @@ class ConfirmationDialog extends StatelessWidget {
               header,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: color.onPrimary,
+                fontSize: 16,
+                color: colorScheme.onSurface,
               ),
               textAlign: TextAlign.center,
             ),
@@ -51,11 +50,11 @@ class ConfirmationDialog extends StatelessWidget {
               subheader,
               style: TextStyle(
                 fontSize: 14,
-                color: AppColors.gray,
+                color: colorScheme.onSurface.withOpacity(0.8),
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -63,39 +62,41 @@ class ConfirmationDialog extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: onCancel ?? () => Navigator.of(context).pop(),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.gray,
+                      backgroundColor: colorScheme.surfaceVariant,
+                      foregroundColor: colorScheme.onSurfaceVariant,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     child: Text(
                       cancelButtonText ?? 'Cancel',
-                      style: const TextStyle(
-                        color: AppColors.white,
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
                       await onConfirm();
+                      Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: confirmButtonColor ?? color.primary,
-                      foregroundColor: AppColors.white,
+                      backgroundColor:
+                          confirmButtonColor ?? colorScheme.primary,
+                      foregroundColor: colorScheme.onPrimary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     child: Text(
                       confirmButtonText,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
                       ),

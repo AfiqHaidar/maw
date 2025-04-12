@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:mb/data/services/sound/sound_service.dart';
 import 'package:mb/data/enums/sound_identifier.dart';
 import 'package:mb/data/providers/user_provider.dart';
-import 'package:mb/core/handlers/exit_handler.dart';
 import 'package:mb/widgets/drawer/main_drawer.dart';
 import 'package:lottie/lottie.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/data/entities/user_entity.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
-  const HomeScreen({super.key});
+  final VoidCallback onMenuPressed;
+  const HomeScreen({required this.onMenuPressed, super.key});
 
   @override
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
@@ -63,45 +63,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   Widget _buildProfileContent(BuildContext context, UserEntity user) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (bool didPop) async {
-        if (didPop) return;
-        ExitHandler.showExitConfirmationDialog(context);
-      },
-      child: Scaffold(
-        appBar: AppBar(),
-        drawer: const MainDrawer(),
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Expanded(
-                  child: FadeTransition(
-                    opacity: _fadeAnimation,
-                    child: Center(
-                      child: InkWell(
-                        onTap: () async {
-                          SoundService().playSound(SoundIdentifier.meow);
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: widget.onMenuPressed,
+        ),
+      ),
+      drawer: const MainDrawer(),
+      body: Stack(
+        children: [
+          Column(
+            children: [
+              Expanded(
+                child: FadeTransition(
+                  opacity: _fadeAnimation,
+                  child: Center(
+                    child: InkWell(
+                      onTap: () async {
+                        SoundService().playSound(SoundIdentifier.meow);
 
-                          print("debug: ${ref.read(userProvider)!.id}");
-                        },
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        child: Lottie.asset(
-                          user.profilePicture.isNotEmpty
-                              ? user.profilePicture
-                              : 'assets/animations/hanging_cat.json',
-                          fit: BoxFit.cover,
-                        ),
+                        print("debug: ${ref.read(userProvider)!.id}");
+                      },
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
+                      child: Lottie.asset(
+                        user.profilePicture.isNotEmpty
+                            ? user.profilePicture
+                            : 'assets/animations/hanging_cat.json',
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

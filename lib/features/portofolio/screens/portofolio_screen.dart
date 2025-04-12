@@ -1,7 +1,6 @@
 // lib/features/portfolio/screens/portfolio_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mb/core/theme/colors.dart';
 import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/data/providers/project_provider.dart';
 import 'package:mb/features/project/screens/project_screen.dart';
@@ -9,10 +8,8 @@ import 'package:mb/features/portofolio/controllers/project_animation_controller.
 import 'package:mb/features/portofolio/utils/position_utils.dart';
 import 'package:mb/features/portofolio/widgets/expandable_circle_overlay.dart';
 import 'package:mb/features/portofolio/widgets/portofolio_category_section.dart';
-import 'package:mb/features/portofolio/widgets/portofolio_header.dart';
 import 'package:mb/features/portofolio/widgets/portofolio_project_preview_sheet.dart';
 import 'package:mb/features/upsert_project/screens/add_project_screen.dart';
-import 'package:mb/widgets/drawer/main_drawer.dart';
 
 class PortofolioScreen extends ConsumerStatefulWidget {
   const PortofolioScreen({Key? key}) : super(key: key);
@@ -49,7 +46,6 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
     super.dispose();
   }
 
-  // Function to handle refresh
   Future<void> _onRefresh() async {
     setState(() {
       _isRefreshing = true;
@@ -59,7 +55,6 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
       await ref.read(projectProvider.notifier).fetch();
       _initializeAnimationControllers();
     } catch (e) {
-      // Handle any errors that occur during refresh
       debugPrint('Error refreshing projects: $e');
     } finally {
       setState(() {
@@ -72,7 +67,6 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
     final projects = ref.read(projectProvider);
 
     if (projects == null) {
-      // Initial fetch if projects is null
       ref.read(projectProvider.notifier).fetch();
       return;
     }
@@ -183,15 +177,20 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
     final hasProjects = projects != null && projects.isNotEmpty;
 
     return Scaffold(
-        drawer: const MainDrawer(),
-        backgroundColor: Colors.white,
+        floatingActionButton: FloatingActionButton.small(
+          onPressed: _navigateToAddProject,
+          child: const Icon(Icons.add),
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          foregroundColor: Theme.of(context).colorScheme.onPrimary,
+          tooltip: 'Add Project',
+        ),
         body: Stack(
           fit: StackFit.expand,
           children: [
             RefreshIndicator(
               onRefresh: _onRefresh,
               color: Theme.of(context).colorScheme.primary,
-              backgroundColor: Colors.white,
+              backgroundColor: Theme.of(context).colorScheme.onPrimary,
               displacement: 40,
               strokeWidth: 3,
               child: hasProjects
@@ -229,17 +228,8 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Builder(
-            builder: (context) => PortofolioHeader(
-              themeColor: Theme.of(context).colorScheme.primary,
-              onAddProject: _navigateToAddProject,
-              onMenuPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
-          ),
           SizedBox(
-            height: MediaQuery.of(context).size.height * 0.5,
+            height: MediaQuery.of(context).size.height,
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -249,7 +239,7 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
                     'assets/images/logo.png',
                     width: 120,
                     height: 120,
-                    color: AppColors.lightgrey,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
 
                   Padding(
@@ -259,7 +249,10 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 16,
-                        color: AppColors.lightgrey,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.5),
                       ),
                     ),
                   ),
@@ -282,16 +275,19 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Builder(
-            builder: (context) => PortofolioHeader(
-              themeColor: Theme.of(context).colorScheme.primary,
-              onAddProject: _navigateToAddProject,
-              onMenuPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
-          ),
-          const SizedBox(height: 20),
+          // Builder(
+          //   builder: (context) => PortfolioHeader(
+          //     title: "My Projects",
+          //     onActionPressed: () => Navigator.of(context).push(
+          //       MaterialPageRoute(
+          //         builder: (context) => const AddProjectScreen(),
+          //       ),
+          //     ),
+          //     actionIcon: Icons.add,
+          //   ),
+          // ),
+          SizedBox(height: MediaQuery.of(context).padding.top + 16),
+
           ...categories
               .map((category) => CategorySection(
                     category: category,
