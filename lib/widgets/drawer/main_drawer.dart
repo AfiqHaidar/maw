@@ -3,9 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/core/debuggers/cache/cache.dart';
 import 'package:mb/data/enums/drawer_identifier.dart';
 import 'package:mb/data/providers/selected_drawer_provider.dart';
-import 'package:mb/features/portofolio/screens/portofolio_screen.dart';
-import 'package:mb/features/home/screens/home_screen.dart';
-import 'package:mb/features/profile/screens/profile_screen.dart';
 import 'package:mb/core/debuggers/seeder/seeder.dart';
 import 'package:mb/widgets/confirmation_dialog.dart';
 import 'package:mb/widgets/drawer/drawer_header.dart';
@@ -13,6 +10,7 @@ import 'package:mb/widgets/drawer/drawer_item.dart';
 import 'package:mb/widgets/drawer/drawer_buttom_action.dart';
 import 'package:mb/widgets/drawer/drawer_section_header.dart';
 import 'package:mb/data/providers/auth_provider.dart';
+import 'package:mb/widgets/tabs.dart';
 
 class MainDrawer extends ConsumerWidget {
   const MainDrawer({
@@ -27,17 +25,7 @@ class MainDrawer extends ConsumerWidget {
     switch (identifier) {
       case DrawerIdentifier.home:
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => HomeScreen()),
-        );
-        break;
-      case DrawerIdentifier.person:
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => ProfileScreen()),
-        );
-        break;
-      case DrawerIdentifier.portofolio:
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (ctx) => PortofolioScreen()),
+          MaterialPageRoute(builder: (ctx) => TabsWrapper()),
         );
         break;
       case DrawerIdentifier.cache:
@@ -96,13 +84,7 @@ class MainDrawer extends ConsumerWidget {
               identifier: DrawerIdentifier.home,
               onTap: () => _onSelectScreen(context, ref, DrawerIdentifier.home),
             ),
-            DrawerItem(
-              icon: Icons.person_rounded,
-              title: 'Profile',
-              identifier: DrawerIdentifier.person,
-              onTap: () =>
-                  _onSelectScreen(context, ref, DrawerIdentifier.person),
-            ),
+            const DrawerSectionHeader(title: 'CONFIGURATION'),
             DrawerItem(
               icon: Icons.data_object,
               title: 'Seeder',
@@ -118,14 +100,6 @@ class MainDrawer extends ConsumerWidget {
                   _onSelectScreen(context, ref, DrawerIdentifier.cache),
             ),
             const SizedBox(height: 16),
-            const DrawerSectionHeader(title: 'PORTOFOLIO'),
-            DrawerItem(
-              icon: Icons.folder_copy_rounded,
-              title: 'Portofolio',
-              identifier: DrawerIdentifier.portofolio,
-              onTap: () =>
-                  _onSelectScreen(context, ref, DrawerIdentifier.portofolio),
-            ),
             const Spacer(),
             DrawerBottomActions(
               onLogout: () => _showLogoutConfirmation(context, ref),

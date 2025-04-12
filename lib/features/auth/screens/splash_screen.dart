@@ -5,7 +5,7 @@ import 'package:mb/core/theme/colors.dart';
 import 'package:mb/data/providers/project_provider.dart';
 import 'package:mb/data/providers/user_provider.dart';
 import 'package:mb/features/auth/controller/auth_animation_controller.dart';
-import 'package:mb/features/home/screens/home_screen.dart';
+import 'package:mb/widgets/tabs.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -22,7 +22,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   void _startNavigationTimer() {
     _navTimer = Timer(const Duration(seconds: 5), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => const HomeScreen()),
+        MaterialPageRoute(builder: (_) => const TabsWrapper()),
       );
     });
   }
