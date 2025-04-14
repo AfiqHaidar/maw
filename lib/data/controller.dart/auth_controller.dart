@@ -38,7 +38,7 @@ class AuthController extends StateNotifier<bool> {
   Future<void> logout() async {
     state = true;
     try {
-      await _authRepository.logout();
+      _authRepository.logout();
       await _userController.clearUser();
     } finally {
       state = false;

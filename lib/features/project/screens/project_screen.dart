@@ -51,12 +51,12 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
     showDialog(
       context: context,
       builder: (ctx) => ConfirmationDialog(
-        header: 'Delete ${widget.project.name}?',
-        subheader:
+        title: 'Delete ${widget.project.name}?',
+        description:
             'This action cannot be undone. All data associated with this project will be permanently removed.',
         confirmButtonText: 'Delete',
         cancelButtonText: 'Cancel',
-        confirmButtonColor: Colors.red,
+        icon: Icons.delete_forever_outlined,
         onConfirm: () async {
           Navigator.of(ctx).pop();
           await _deleteProject();

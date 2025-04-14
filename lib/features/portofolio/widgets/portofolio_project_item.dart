@@ -99,22 +99,22 @@ class ProjectItem extends StatelessWidget {
     );
   }
 
-  Widget _buildReleaseDateBadge() {
-    return Container(
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: project.bannerBgColor.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        '${project.releaseDate!.year}/${project.releaseDate!.month.toString().padLeft(2, '0')}',
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: project.bannerBgColor,
-        ),
-      ),
-    );
-  }
+  // Widget _buildReleaseDateBadge() {
+  //   return Container(
+  //     margin: const EdgeInsets.only(top: 8),
+  //     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+  //     decoration: BoxDecoration(
+  //       color: project.bannerBgColor.withOpacity(0.1),
+  //       borderRadius: BorderRadius.circular(12),
+  //     ),
+  //     child: Text(
+  //       '${project.releaseDate!.year}/${project.releaseDate!.month.toString().padLeft(2, '0')}',
+  //       style: TextStyle(
+  //         fontSize: 12,
+  //         fontWeight: FontWeight.w500,
+  //         color: project.bannerBgColor,
+  //       ),
+  //     ),
+  //   );
+  // }
 }

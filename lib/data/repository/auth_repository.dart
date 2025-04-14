@@ -20,9 +20,8 @@ class AuthRepository {
     return userCredential;
   }
 
-  Future<void> logout() async {
-    await auth.signOut();
-    await auth.currentUser?.reload();
+  void logout() {
+    auth.signOut();
   }
 
   User? getCurrentUser() {

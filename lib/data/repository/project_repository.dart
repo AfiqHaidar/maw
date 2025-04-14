@@ -21,8 +21,8 @@ class ProjectRepository {
             ProjectEntity.fromMap(doc.id, doc.data() as Map<String, dynamic>);
 
         // Process project images through cache
-        // return await _cacheManager.processProjectImages(project);
-        return project;
+        return await _cacheManager.processProjectImages(project);
+        // return project;
       }
       return null;
     } catch (e) {
@@ -42,14 +42,14 @@ class ProjectRepository {
               ProjectEntity.fromMap(doc.id, doc.data() as Map<String, dynamic>))
           .toList();
 
-      // // Process all projects through cache
-      // List<ProjectEntity> cachedProjects = [];
-      // for (var project in projects) {
-      //   cachedProjects.add(await _cacheManager.processProjectImages(project));
-      // }
+      // Process all projects through cache
+      List<ProjectEntity> cachedProjects = [];
+      for (var project in projects) {
+        cachedProjects.add(await _cacheManager.processProjectImages(project));
+      }
 
-      // // Preload all project images in the background
-      // _cacheManager.preloadMultipleProjects(projects);
+      // Preload all project images in the background
+      _cacheManager.preloadMultipleProjects(projects);
 
       return projects;
     } catch (e) {
@@ -65,7 +65,7 @@ class ProjectRepository {
           .set(project.toMap(), SetOptions(merge: true));
 
       // Preload project images after saving
-      // _cacheManager.preloadProjectImages(project);
+      _cacheManager.preloadProjectImages(project);
     } catch (e) {
       throw Exception("Failed to save project: $e");
     }
@@ -76,7 +76,7 @@ class ProjectRepository {
       await _firestore.collection(collectionPath).doc(projectId).delete();
 
       // Clear project cache
-      // await _cacheManager.clearProjectCache(projectId);
+      await _cacheManager.clearProjectCache(projectId);
     } catch (e) {
       throw Exception("Failed to delete project: $e");
     }
@@ -95,7 +95,7 @@ class ProjectRepository {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       // Cache the uploaded image
-      // await _cacheManager.getImage(downloadUrl, projectId, 'logo');
+      await _cacheManager.getImage(downloadUrl, projectId, 'logo');
 
       return downloadUrl;
     } catch (e) {
@@ -116,8 +116,8 @@ class ProjectRepository {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       // Cache the uploaded image
-      // await _cacheManager.getImage(
-      //     downloadUrl, projectId, 'carousel_$destinationFileName');
+      await _cacheManager.getImage(
+          downloadUrl, projectId, 'carousel_$destinationFileName');
 
       return downloadUrl;
     } catch (e) {
@@ -138,8 +138,8 @@ class ProjectRepository {
       final downloadUrl = await snapshot.ref.getDownloadURL();
 
       // Cache the uploaded image
-      // await _cacheManager.getImage(
-      //     downloadUrl, projectId, 'testimonial_avatar_$testimonialIndex');
+      await _cacheManager.getImage(
+          downloadUrl, projectId, 'testimonial_avatar_$testimonialIndex');
 
       return downloadUrl;
     } catch (e) {
@@ -167,7 +167,7 @@ class ProjectRepository {
       }
 
       // Clear project cache
-      // await _cacheManager.clearProjectCache(projectId);
+      await _cacheManager.clearProjectCache(projectId);
     } catch (e) {
       print('Error accessing image directories: $e');
     }

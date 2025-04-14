@@ -13,10 +13,11 @@ class ExitHandler {
       context: context,
       builder: (BuildContext dialogContext) {
         return const ConfirmationDialog(
-          header: "Konfirmasi Keluar",
-          subheader: "Apakah Anda yakin ingin keluar dari aplikasi?",
-          confirmButtonText: "Keluar",
-          cancelButtonText: "Batal",
+          title: "Exit App",
+          description: "Are you sure you want to exit?",
+          icon: Icons.exit_to_app_outlined,
+          confirmButtonText: "Exit",
+          cancelButtonText: "Cancel",
           onConfirm: exitApp,
         );
       },

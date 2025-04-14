@@ -5,7 +5,7 @@ import 'package:mb/core/theme/colors.dart';
 import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/data/providers/project_provider.dart';
 import 'package:mb/features/upsert_project/widgets/upsert_project_form.dart';
-import 'package:mb/features/portofolio/screens/portofolio_screen.dart';
+import 'package:mb/widgets/tabs.dart';
 
 class AddProjectScreen extends ConsumerStatefulWidget {
   const AddProjectScreen({Key? key}) : super(key: key);
@@ -100,7 +100,7 @@ class _AddProjectScreenState extends ConsumerState<AddProjectScreen> {
       );
 
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (ctx) => PortofolioScreen()),
+        MaterialPageRoute(builder: (ctx) => TabsWrapper()),
       );
     } catch (e) {
       setState(() {
