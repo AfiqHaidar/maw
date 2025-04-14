@@ -6,7 +6,7 @@
 
 ## 📌 Short Description
 
-Maw helps developers display their projects in a beautiful and structured format — including details like technologies used, team members, features, and challenges. Future versions aim to make it a hub where users can share, review, and engage with others’ projects.
+Maw helps developers display their projects in a beautiful and structured format — including details like technologies used, team members, features, and challenges. It serves as a hub where users can share, review, and engage with others' projects.
 
 ---
 
@@ -16,28 +16,45 @@ https://youtube.com/shorts/HalqDkYXgLQ?feature=share
 
 ---
 
-## 📖 Overview Current Features
+## 📖 Current Features
 
 - **Authentication Flow**  
-  Secure login and registration system for users.
+  Secure login and registration system with profile management.
 
 - **CRUD for Projects**  
   Full project management capabilities, including:
   - Banner customization (image or Lottie)
   - Tech stack list
   - Team member management
-  - Features and challenges
+  - Features and challenges documentation
   - Testimonials
-  - Stats & future plans
+  - Project statistics & future plans
+  
+- **Project Showcase**
+  - Beautiful, animated UI for project visualization
+  - Carousel image display
+  - Expandable sections for detailed information
+  
+- **Cache Management**
+  - Efficient caching of project images
+  - Automatic cache cleanup
+  - Manual cache management options
+
+- **Seeding Functionality**
+  - Database seeding for demonstration and testing
+  - Sample project templates
 
 ---
 
 ## 🧱 Tech Stack
 
-- **Flutter** – Cross-platform UI
-- **Firebase Auth**  – Authentication
-- **Cloud Firestore**  – NoSQL database
-- **Firebase Storage**  – Media storage
+- **Flutter** – Cross-platform UI framework
+- **Riverpod** – State management
+- **Firebase Auth** – Authentication
+- **Cloud Firestore** – NoSQL database
+- **Firebase Storage** – Media storage
+- **Lottie** – Animation integration
+- **SQFLite** – Local cache database
 
 ---
 
@@ -88,21 +105,35 @@ flutter run
 
 ## 🌱 Future Enhancements
 
-Here’s what’s coming to Maw in the future:
+Here's what's coming to Maw in the future:
 
-- 📤 **Project Sharing**
-  - Generate sharable links for your portfolio
-  - Public and private visibility settings
+- 🔍 **Search Functionality**
+  - Search for projects by name, technology, or category
+  - Advanced filtering options for precise results
+  - Discover trending projects and developers
 
-- ❤️ **Social Features**
-  - Like and comment on projects
-  - Leave and receive reviews
-  - Follow other developers
+- 👥 **Social Features**
+  - Connect with other developers
+  - Follow your favorite creators
+  - Build a network of professionals
+  - View other users' portfolios
 
-- 📊 **Analytics and Stats**
-  - Track project views, likes, and engagement
-  - Developer profile insights
+- ⭐ **Engagement System**
+  - Star projects you like
+  - Leave meaningful reviews and feedback
+  - Rate projects based on multiple criteria
+  - Showcase project popularity metrics
+
+- 🔔 **Notifications**
+  - Get notified about interactions with your projects
+  - Receive feedback alerts
 
 ---
 
-Let’s build the ultimate social platform for showcasing software projects!
+## 🐈‍⬛ Cat
+
+Meow maw.
+
+---
+
+Let's build the ultimate social platform for showcasing software projects!
