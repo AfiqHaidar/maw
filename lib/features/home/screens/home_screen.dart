@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mb/data/services/notification/notification_service.dart';
 import 'package:mb/data/services/sound/sound_service.dart';
 import 'package:mb/data/enums/sound_identifier.dart';
 import 'package:mb/data/providers/user_provider.dart';
@@ -83,7 +84,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       onTap: () async {
                         SoundService().playSound(SoundIdentifier.meow);
 
-                        print("debug: ${ref.read(userProvider)!.id}");
+                        NotificationService.requestPermissions();
+
+                        print("debug: notification start");
+                        await NotificationService.showBasicNotification(
+                          id: 2,
+                          title: 'New Notification anjay',
+                          body: 'You have a new message. xixixi',
+                          payload: {'userId': user.id},
+                        );
+
+                        print("debug: notification sent");
                       },
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
