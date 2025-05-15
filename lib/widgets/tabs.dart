@@ -37,6 +37,7 @@ class TabsWrapperState extends State<TabsWrapper> {
       child: Scaffold(
         drawer: const MainDrawer(),
         bottomNavigationBar: NavigationBar(
+          backgroundColor: Theme.of(context).colorScheme.surface,
           onDestinationSelected: (int index) {
             setState(() {
               selectedPageIndex = index;
