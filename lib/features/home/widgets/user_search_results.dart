@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:mb/data/entities/user_entity.dart';
+import 'package:mb/features/portofolio/screens/user_portofolio_screen.dart';
 
 class UserSearchResults extends ConsumerWidget {
   final AsyncValue<List<UserEntity>> allUsersAsync;
@@ -111,10 +112,10 @@ class UserSearchResults extends ConsumerWidget {
           ],
         ),
         onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Viewing ${user.name}\'s profile'),
-              behavior: SnackBarBehavior.floating,
+          // Navigate to the user's portfolio screen
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => UserPortfolioScreen(userId: user.id),
             ),
           );
         },

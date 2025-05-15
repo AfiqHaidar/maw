@@ -111,7 +111,10 @@ class _EditProjectScreenState extends ConsumerState<EditProjectScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => ProjectScreen(project: updatedProject),
+          builder: (context) => ProjectScreen(
+            project: updatedProject,
+            isOwner: true,
+          ),
         ),
       );
     } catch (e) {
