@@ -1,7 +1,7 @@
 // lib/data/controller/auth_controller.dart
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mb/data/controller.dart/user_controller.dart';
+import 'package:mb/data/controller/user_controller.dart';
 import 'package:mb/data/repository/auth_repository.dart';
 
 class AuthController extends StateNotifier<bool> {
