@@ -11,9 +11,7 @@ import 'package:mb/data/services/navigation/navigation.service.dart';
 import 'package:mb/data/services/notification/notification_service.dart';
 import 'package:mb/features/auth/screens/auth_screen.dart';
 import 'package:mb/features/auth/screens/splash_screen.dart';
-import 'package:mb/features/portofolio/screens/portofolio_screen.dart';
-import 'package:mb/features/profile/screens/profile_screen.dart';
-import 'package:mb/widgets/tabs.dart';
+import 'package:mb/route.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -24,7 +22,8 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await NotificationService.initialize();
+  await NotificationService.initializeLocalNotifications(debug: true);
+  await NotificationService.initializeRemoteNotifications(debug: true);
   await CacheInitializer().initialize();
 
   runApp(
@@ -46,64 +45,7 @@ class App extends ConsumerWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary),
       ),
       initialRoute: RouteIdentifier.splash,
-      onGenerateRoute: (settings) {
-        final args = settings.arguments as Map<String, dynamic>? ?? {};
-
-        switch (settings.name) {
-          case RouteIdentifier.splash:
-            return MaterialPageRoute(
-              builder: (context) => StreamBuilder<User?>(
-                stream: ref.read(authRepositoryProvider).auth.idTokenChanges(),
-                builder: (context, authSnapshot) {
-                  if (authSnapshot.hasData) return const SplashScreen();
-                  return AuthScreen();
-                },
-              ),
-            );
-
-          case RouteIdentifier.auth:
-            return MaterialPageRoute(
-              builder: (context) => AuthScreen(),
-            );
-
-          case RouteIdentifier.home:
-            return MaterialPageRoute(
-              builder: (context) => const TabsWrapper(),
-            );
-
-          case RouteIdentifier.project:
-            if (args.containsKey('projectId') && args['projectId'] != null) {
-              return MaterialPageRoute(
-                builder: (context) {
-                  return Scaffold(
-                    body: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                },
-              );
-            }
-
-            return MaterialPageRoute(
-              builder: (context) => const TabsWrapper(),
-            );
-
-          case RouteIdentifier.portfolio:
-            return MaterialPageRoute(
-              builder: (context) => const PortofolioScreen(),
-            );
-
-          case RouteIdentifier.profile:
-            return MaterialPageRoute(
-              builder: (context) => const ProfileScreen(),
-            );
-
-          default:
-            return MaterialPageRoute(
-              builder: (context) => const TabsWrapper(),
-            );
-        }
-      },
+      onGenerateRoute: (settings) => AppRouter.onGenerateRoute(settings, ref),
       home: StreamBuilder<User?>(
         stream: ref.read(authRepositoryProvider).auth.idTokenChanges(),
         builder: (context, authSnapshot) {

@@ -83,18 +83,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     child: InkWell(
                       onTap: () async {
                         SoundService().playSound(SoundIdentifier.meow);
-
-                        NotificationService.requestPermissions();
-
-                        print("debug: notification start");
-                        await NotificationService.showBasicNotification(
-                          id: 2,
-                          title: 'New Notification anjay',
-                          body: 'You have a new message. xixixi',
+                        await NotificationService.createBasicNotification(
+                          id: 1,
+                          title: 'Maw!',
+                          body: 'UIIAIUIIIAIUIA',
                           payload: {'userId': user.id},
                         );
-
-                        print("debug: notification sent");
                       },
                       splashColor: Colors.transparent,
                       highlightColor: Colors.transparent,
