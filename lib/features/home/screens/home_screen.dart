@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mb/data/services/notification/notification_service.dart';
+import 'package:mb/data/services/notification/notification_type.dart';
 import 'package:mb/data/services/sound/sound_service.dart';
 import 'package:mb/data/enums/sound_identifier.dart';
 import 'package:mb/data/providers/user_provider.dart';
@@ -83,9 +83,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     child: InkWell(
                       onTap: () async {
                         SoundService().playSound(SoundIdentifier.meow);
-                        await NotificationService.createBasicNotification(
+                        await NotificationTypes.createBasicNotification(
                           id: 1,
                           title: 'Maw!',
+                          body: 'UIIAIUIIIAIUIA',
+                          payload: {'userId': user.id},
+                        );
+                        await NotificationTypes.createBasicNotification(
+                          id: 2,
+                          title: 'Maw Maw!',
                           body: 'UIIAIUIIIAIUIA',
                           payload: {'userId': user.id},
                         );

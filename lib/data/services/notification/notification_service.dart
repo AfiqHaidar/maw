@@ -54,8 +54,6 @@ class NotificationService {
       onNotificationDisplayedMethod: onNotificationDisplayedMethod,
       onDismissActionReceivedMethod: onDismissActionReceivedMethod,
     );
-
-    await requestPermissions();
   }
 
   static Future<void> initializeRemoteNotifications(
@@ -146,56 +144,5 @@ class NotificationService {
   static Future<void> onDismissActionReceivedMethod(
       ReceivedAction receivedAction) async {
     debugPrint('Notification dismissed: ${receivedAction.toString()}');
-  }
-
-  ///  *********************************************
-  ///     NOTIFICATION METHODS
-  ///  *********************************************
-
-  // Create a simple notification
-  static Future<bool> createBasicNotification({
-    required int id,
-    required String title,
-    required String body,
-    Map<String, String>? payload,
-  }) async {
-    return await AwesomeNotifications().createNotification(
-      content: NotificationContent(
-        id: id,
-        channelKey: 'basic_channel',
-        title: title,
-        body: body,
-        payload: payload,
-        notificationLayout: NotificationLayout.Default,
-      ),
-    );
-  }
-
-  // Get Firebase FCM token
-  static Future<String> getFirebaseMessagingToken() async {
-    String firebaseAppToken = '';
-    if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
-      try {
-        firebaseAppToken =
-            await AwesomeNotificationsFcm().requestFirebaseAppToken();
-      } catch (exception) {
-        debugPrint('$exception');
-      }
-    } else {
-      debugPrint('Firebase is not available on this project');
-    }
-    return firebaseAppToken;
-  }
-
-  // Subscribe to a topic
-  static Future<void> subscribeToTopic(String topic) async {
-    await AwesomeNotificationsFcm().subscribeToTopic(topic);
-    debugPrint('Subscribed to topic: $topic');
-  }
-
-  // Unsubscribe from a topic
-  static Future<void> unsubscribeFromTopic(String topic) async {
-    await AwesomeNotificationsFcm().unsubscribeToTopic(topic);
-    debugPrint('Unsubscribed from topic: $topic');
   }
 }
