@@ -8,6 +8,7 @@ import 'package:mb/data/enums/sound_identifier.dart';
 import 'package:mb/features/home/widgets/user_search_bar.dart';
 import 'package:mb/features/home/widgets/user_search_results.dart';
 import 'package:lottie/lottie.dart';
+import 'package:mb/features/home/screens/inbox_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   final VoidCallback onMenuPressed;
@@ -69,6 +70,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.dispose();
   }
 
+  void _navigateToInbox() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const InboxScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final userAsyncValue = ref.watch(userStreamProvider);
@@ -95,6 +104,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               controller: _searchController,
               isSearching: _isSearching,
               onToggleSearch: _toggleSearch,
+              onInboxPressed: _navigateToInbox,
             ),
             Expanded(
               child: _isSearching && _searchQuery.isNotEmpty

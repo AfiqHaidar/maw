@@ -1,7 +1,6 @@
-import 'dart:ui';
+// lib/features/portfolio/screens/user_portfolio_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart';
 import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/data/entities/user_entity.dart';
 import 'package:mb/data/providers/project_provider.dart';
@@ -11,6 +10,7 @@ import 'package:mb/features/portofolio/utils/position_utils.dart';
 import 'package:mb/features/portofolio/widgets/expandable_circle_overlay.dart';
 import 'package:mb/features/portofolio/widgets/portofolio_category_section.dart';
 import 'package:mb/features/portofolio/widgets/portofolio_project_preview_sheet.dart';
+import 'package:mb/features/portofolio/widgets/user_portofolio_header.dart';
 import 'package:mb/features/project/screens/project_screen.dart';
 
 class UserPortfolioScreen extends ConsumerStatefulWidget {
@@ -194,7 +194,8 @@ class _UserPortfolioScreenState extends ConsumerState<UserPortfolioScreen>
         children: [
           CustomScrollView(
             slivers: [
-              _buildProfileHeader(),
+              // Use the new header component
+              UserPortfolioHeader(user: _user),
               SliverPadding(
                 padding: const EdgeInsets.only(top: 16.0),
                 sliver: SliverToBoxAdapter(
@@ -269,111 +270,6 @@ class _UserPortfolioScreenState extends ConsumerState<UserPortfolioScreen>
             .toList(),
         const SizedBox(height: 80),
       ],
-    );
-  }
-
-  SliverAppBar _buildProfileHeader() {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
-
-    return SliverAppBar(
-      expandedHeight: 280,
-      pinned: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
-        onPressed: () => Navigator.of(context).pop(),
-      ),
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                colorScheme.primary.withOpacity(0.8),
-                colorScheme.secondary,
-                colorScheme.onPrimaryContainer.withOpacity(0.9),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-          child: _user != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 40),
-
-                      // Profile avatar with animation
-                      CircleAvatar(
-                        radius: 55,
-                        child: ClipOval(
-                          child: Lottie.asset(
-                            _user!.profilePicture,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // User name with shimmer effect
-                      ShaderMask(
-                        shaderCallback: (bounds) => LinearGradient(
-                          colors: [
-                            Colors.white,
-                            Colors.white.withOpacity(0.9),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ).createShader(bounds),
-                        child: Text(
-                          _user!.name,
-                          style: textTheme.headlineSmall?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-
-                      const SizedBox(height: 8),
-
-                      // Username with backdrop filter
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.2),
-                                width: 1,
-                              ),
-                            ),
-                            child: Text(
-                              "@${_user!.username}",
-                              style: textTheme.bodyMedium?.copyWith(
-                                color: Colors.white.withOpacity(0.95),
-                                letterSpacing: 0.3,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : Container(),
-        ),
-      ),
     );
   }
 
