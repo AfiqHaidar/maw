@@ -6,12 +6,14 @@ class ProfileStatsCard extends StatelessWidget {
   final int projectCount;
   final int connectionCount;
   final bool isProjectsLoading;
+  final bool isConnectionsLoading;
 
   const ProfileStatsCard({
     Key? key,
     this.projectCount = 0,
     this.connectionCount = 0,
     this.isProjectsLoading = false,
+    this.isConnectionsLoading = false,
   }) : super(key: key);
 
   @override
@@ -47,6 +49,7 @@ class ProfileStatsCard extends StatelessWidget {
             label: "Connections",
             icon: Icons.people_alt_outlined,
             color: colorScheme.secondary,
+            isLoading: isConnectionsLoading,
           ),
         ],
       ),

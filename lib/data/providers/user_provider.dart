@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mb/data/entities/user_entity.dart';
 import 'package:mb/data/providers/auth_provider.dart';
 import 'package:mb/data/repository/user_repository.dart';
-import 'package:mb/data/controller.dart/user_controller.dart';
+import 'package:mb/data/controller/user_controller.dart';
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {
   return UserRepository();

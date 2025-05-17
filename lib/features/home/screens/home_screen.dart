@@ -1,11 +1,14 @@
+// lib/features/home/screens/home_screen.dart
 import 'package:flutter/material.dart';
-import 'package:mb/data/services/sound/sound_service.dart';
-import 'package:mb/data/enums/sound_identifier.dart';
-import 'package:mb/data/providers/user_provider.dart';
-import 'package:mb/widgets/drawer/main_drawer.dart';
-import 'package:lottie/lottie.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/data/entities/user_entity.dart';
+import 'package:mb/data/providers/user_provider.dart';
+import 'package:mb/data/services/sound/sound_service.dart';
+import 'package:mb/data/enums/sound_identifier.dart';
+import 'package:mb/features/home/widgets/user_search_bar.dart';
+import 'package:mb/features/home/widgets/user_search_results.dart';
+import 'package:lottie/lottie.dart';
+import 'package:mb/features/home/screens/inbox_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   final VoidCallback onMenuPressed;
@@ -19,11 +22,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+  bool _isSearching = false;
 
   @override
   void initState() {
     super.initState();
     _initializeLottieAnimation();
+    _searchController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    setState(() {
+      _searchQuery = _searchController.text.toLowerCase();
+    });
   }
 
   void _initializeLottieAnimation() {
@@ -41,18 +54,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     });
   }
 
+  void _toggleSearch() {
+    setState(() {
+      _isSearching = !_isSearching;
+      if (!_isSearching) {
+        _searchController.clear();
+      }
+    });
+  }
+
   @override
   void dispose() {
     _controller.dispose();
+    _searchController.dispose();
     super.dispose();
+  }
+
+  void _navigateToInbox() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const InboxScreen(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final userAsyncValue = ref.watch(userStreamProvider);
+    final allUsersAsyncValue = ref.watch(allUsersProvider);
 
     return userAsyncValue.when(
-      data: (user) => _buildProfileContent(context, user),
+      data: (user) => _buildHomeContent(context, user, allUsersAsyncValue),
       loading: () => const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       ),
@@ -62,44 +94,51 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  Widget _buildProfileContent(BuildContext context, UserEntity user) {
+  Widget _buildHomeContent(BuildContext context, UserEntity user,
+      AsyncValue<List<UserEntity>> allUsersAsyncValue) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: widget.onMenuPressed,
+      body: SafeArea(
+        child: Column(
+          children: [
+            UserSearchBar(
+              controller: _searchController,
+              isSearching: _isSearching,
+              onToggleSearch: _toggleSearch,
+              onInboxPressed: _navigateToInbox,
+            ),
+            Expanded(
+              child: _isSearching && _searchQuery.isNotEmpty
+                  ? UserSearchResults(
+                      allUsersAsync: allUsersAsyncValue,
+                      currentUser: user,
+                      searchQuery: _searchQuery,
+                    )
+                  : _buildMainContent(user),
+            ),
+          ],
         ),
       ),
-      drawer: const MainDrawer(),
-      body: Stack(
-        children: [
-          Column(
-            children: [
-              Expanded(
-                child: FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Center(
-                    child: InkWell(
-                      onTap: () async {
-                        SoundService().playSound(SoundIdentifier.meow);
+    );
+  }
 
-                        print("debug: ${ref.read(userProvider)!.id}");
-                      },
-                      splashColor: Colors.transparent,
-                      highlightColor: Colors.transparent,
-                      child: Lottie.asset(
-                        user.profilePicture.isNotEmpty
-                            ? user.profilePicture
-                            : 'assets/animations/hanging_cat.json',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+  Widget _buildMainContent(UserEntity user) {
+    return FadeTransition(
+      opacity: _fadeAnimation,
+      child: Center(
+        child: InkWell(
+          onTap: () async {
+            SoundService().playSound(SoundIdentifier.meow);
+            widget.onMenuPressed();
+          },
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          child: Lottie.asset(
+            user.profilePicture.isNotEmpty
+                ? user.profilePicture
+                : 'assets/animations/hanging_cat.json',
+            fit: BoxFit.cover,
           ),
-        ],
+        ),
       ),
     );
   }

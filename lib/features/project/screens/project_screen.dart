@@ -22,10 +22,12 @@ import 'package:mb/widgets/confirmation_dialog.dart';
 
 class ProjectScreen extends ConsumerStatefulWidget {
   final ProjectEntity project;
+  final bool isOwner;
 
   const ProjectScreen({
     Key? key,
     required this.project,
+    required this.isOwner,
   }) : super(key: key);
 
   @override
@@ -112,38 +114,39 @@ class _ProjectScreenState extends ConsumerState<ProjectScreen> {
         foregroundColor: Colors.white,
         elevation: 0,
         actions: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            onSelected: (value) {
-              if (value == 'edit') {
-                _navigateToEditScreen();
-              } else if (value == 'delete') {
-                _showDeleteConfirmation();
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'edit',
-                child: Row(
-                  children: [
-                    Icon(Icons.edit, color: Colors.blue),
-                    SizedBox(width: 8),
-                    Text('Edit'),
-                  ],
+          if (widget.isOwner)
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert, color: Colors.white),
+              onSelected: (value) {
+                if (value == 'edit') {
+                  _navigateToEditScreen();
+                } else if (value == 'delete') {
+                  _showDeleteConfirmation();
+                }
+              },
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit, color: Colors.blue),
+                      SizedBox(width: 8),
+                      Text('Edit'),
+                    ],
+                  ),
                 ),
-              ),
-              const PopupMenuItem(
-                value: 'delete',
-                child: Row(
-                  children: [
-                    Icon(Icons.delete, color: Colors.red),
-                    SizedBox(width: 8),
-                    Text('Delete'),
-                  ],
+                const PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete, color: Colors.red),
+                      SizedBox(width: 8),
+                      Text('Delete'),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
         ],
       ),
       body: SingleChildScrollView(

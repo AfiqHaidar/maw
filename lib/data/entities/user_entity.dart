@@ -5,6 +5,7 @@ class UserEntity {
   final String name;
   final String username;
   final String profilePicture;
+  final String? fcmToken;
 
   UserEntity({
     required this.id,
@@ -12,6 +13,7 @@ class UserEntity {
     required this.name,
     required this.username,
     required this.profilePicture,
+    this.fcmToken,
   });
 
   factory UserEntity.fromMap(String id, Map<String, dynamic> map) {
@@ -21,6 +23,7 @@ class UserEntity {
       name: map['name'] ?? '',
       username: map['username'] ?? '',
       profilePicture: map['profilePicture'] ?? '',
+      fcmToken: map['fcmToken'],
     );
   }
 
@@ -30,6 +33,7 @@ class UserEntity {
       'name': name,
       'username': username,
       'profilePicture': profilePicture,
+      'fcmToken': fcmToken,
     };
   }
 }

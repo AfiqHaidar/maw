@@ -1,8 +1,10 @@
 // lib/features/profile/screens/profile_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mb/data/entities/connection_entity.dart';
 import 'package:mb/data/entities/project_entity.dart';
 import 'package:mb/data/entities/user_entity.dart';
+import 'package:mb/data/providers/connection_provider.dart';
 import 'package:mb/data/providers/project_provider.dart';
 import 'package:mb/data/providers/user_provider.dart';
 import 'package:mb/features/profile/widgets/profile_header.dart';
@@ -20,14 +22,16 @@ class ProfileScreen extends ConsumerStatefulWidget {
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   bool _isProjectsLoading = false;
+  bool _isConnectionsLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _fetchProjectsIfNeeded();
+    _fetchProjects();
+    _fetchConnections();
   }
 
-  Future<void> _fetchProjectsIfNeeded() async {
+  Future<void> _fetchProjects() async {
     final projects = ref.read(projectProvider);
 
     if (projects == null) {
@@ -48,13 +52,36 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     }
   }
 
+  Future<void> _fetchConnections() async {
+    final connection = ref.read(connectionProvider);
+
+    if (connection == null) {
+      setState(() {
+        _isConnectionsLoading = true;
+      });
+
+      try {
+        await ref.read(connectionProvider.notifier).fetchConnections();
+      } catch (e) {
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isConnectionsLoading = false;
+          });
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final userAsyncValue = ref.watch(userStreamProvider);
     final projects = ref.watch(projectProvider);
+    final connections = ref.watch(connectionProvider);
 
     return userAsyncValue.when(
-      data: (user) => _buildProfileContent(context, user, projects),
+      data: (user) =>
+          _buildProfileContent(context, user, projects, connections),
       loading: () => const Scaffold(
         body: Center(
           child: CircularProgressIndicator(),
@@ -68,9 +95,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileContent(
-      BuildContext context, UserEntity user, List<ProjectEntity>? projects) {
+  Widget _buildProfileContent(BuildContext context, UserEntity user,
+      List<ProjectEntity>? projects, List<ConnectionEntity>? connections) {
     final projectCount = projects?.length ?? 0;
+    final connectionCount = connections?.length ?? 0;
 
     return Scaffold(
       body: CustomScrollView(
@@ -89,6 +117,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ProfileStatsCard(
                     projectCount: projectCount,
                     isProjectsLoading: _isProjectsLoading,
+                    connectionCount: connectionCount,
+                    isConnectionsLoading: _isConnectionsLoading,
                   ),
                   const SizedBox(height: 24),
                   ProfileInfoSection(user: user),

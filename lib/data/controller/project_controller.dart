@@ -31,6 +31,22 @@ class ProjectController extends StateNotifier<List<ProjectEntity>?> {
     }
   }
 
+  Future<List<ProjectEntity>?> fetchByUserId(String userId) async {
+    if (_isLoading) return null;
+
+    _isLoading = true;
+    try {
+      await Future.delayed(const Duration(milliseconds: 800));
+      state = await _repository.getProjectsByUser(userId);
+      return state;
+    } catch (e) {
+      print('Error fetching projects by userId: $e');
+      rethrow;
+    } finally {
+      _isLoading = false;
+    }
+  }
+
   Future<void> upsertProject(ProjectEntity project) async {
     try {
       _isLoading = true;

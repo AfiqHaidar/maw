@@ -28,11 +28,6 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
   bool _isRefreshing = false;
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _initializeAnimationControllers();
@@ -133,7 +128,10 @@ class _PortofolioScreenState extends ConsumerState<PortofolioScreen>
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ProjectScreen(project: project),
+        builder: (context) => ProjectScreen(
+          project: project,
+          isOwner: true,
+        ),
       ),
     );
   }

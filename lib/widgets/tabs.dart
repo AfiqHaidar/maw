@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mb/core/handlers/exit_handler.dart';
+import 'package:mb/data/services/notification/notification_service.dart';
 import 'package:mb/features/home/screens/home_screen.dart';
 import 'package:mb/features/portofolio/screens/portofolio_screen.dart';
 import 'package:mb/features/profile/screens/profile_screen.dart';
@@ -16,6 +17,16 @@ class TabsWrapperState extends State<TabsWrapper> {
   int selectedPageIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _requestNotificationPermissions();
+  }
+
+  Future<void> _requestNotificationPermissions() async {
+    await NotificationService.requestPermissions();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
@@ -26,6 +37,7 @@ class TabsWrapperState extends State<TabsWrapper> {
       child: Scaffold(
         drawer: const MainDrawer(),
         bottomNavigationBar: NavigationBar(
+          backgroundColor: Theme.of(context).colorScheme.surface,
           onDestinationSelected: (int index) {
             setState(() {
               selectedPageIndex = index;

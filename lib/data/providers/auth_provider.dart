@@ -2,7 +2,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/data/providers/user_provider.dart';
 import 'package:mb/data/repository/auth_repository.dart';
-import 'package:mb/data/controller.dart/auth_controller.dart';
+import 'package:mb/data/controller/auth_controller.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   return AuthRepository();
