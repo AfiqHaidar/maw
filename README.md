@@ -10,12 +10,6 @@ Maw helps developers display their projects in a beautiful and structured format
 
 ---
 
-## 🎥 Demo
-
-https://youtube.com/shorts/HalqDkYXgLQ?feature=share
-
----
-
 ## 📖 Current Features
 
 - **Authentication Flow**  
@@ -34,6 +28,18 @@ https://youtube.com/shorts/HalqDkYXgLQ?feature=share
   - Beautiful, animated UI for project visualization
   - Carousel image display
   - Expandable sections for detailed information
+ 
+- **Social Features**
+  - Connect with other developers
+  - Send and accept connection requests
+  - View other users' portfolios
+  - Build your professional network
+
+- **Push Notifications**
+  - Real-time notifications for connection activities
+  - Get notified when someone sends you a connection request
+  - Receive notifications when someone accepts your request
+  - Inbox system to manage all your notifications
   
 - **Cache Management**
   - Efficient caching of project images
@@ -53,6 +59,9 @@ https://youtube.com/shorts/HalqDkYXgLQ?feature=share
 - **Firebase Auth** – Authentication
 - **Cloud Firestore** – NoSQL database
 - **Firebase Storage** – Media storage
+- **Firebase Cloud Messaging** – Push notifications
+- **Firebase Cloud Functions** – Backend for notifications
+- **Awesome Notifications** – Local notification handling
 - **Lottie** – Animation integration
 - **SQFLite** – Local cache database
 
@@ -112,11 +121,10 @@ Here's what's coming to Maw in the future:
   - Advanced filtering options for precise results
   - Discover trending projects and developers
 
-- 👥 **Social Features**
-  - Connect with other developers
-  - Follow your favorite creators
-  - Build a network of professionals
-  - View other users' portfolios
+- 👥 **Enhanced Social Features**
+  - Activity feed to track network updates
+  - Group discussions about projects
+  - Collaborative project showcases
 
 - ⭐ **Engagement System**
   - Star projects you like
@@ -124,9 +132,10 @@ Here's what's coming to Maw in the future:
   - Rate projects based on multiple criteria
   - Showcase project popularity metrics
 
-- 🔔 **Notifications**
-  - Get notified about interactions with your projects
-  - Receive feedback alerts
+- 🔔 **Advanced Notifications**
+  - Project engagement notifications
+  - Weekly digests of network activity
+  - Trending project alerts
 
 ---
 
