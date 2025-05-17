@@ -1,20 +1,21 @@
 // lib/data/services/notification/notification_types.dart
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:awesome_notifications_fcm/awesome_notifications_fcm.dart';
-import 'package:flutter/cupertino.dart';
 
+@pragma('vm:entry-point')
 class NotificationTypes {
   /// Creates a simple notification with title and body
+  @pragma('vm:entry-point')
   static Future<bool> createBasicNotification({
     required int id,
     required String title,
     required String body,
     Map<String, String>? payload,
+    String channelKey = 'basic_channel',
   }) async {
     return await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: id,
-        channelKey: 'basic_channel',
+        channelKey: channelKey,
         title: title,
         body: body,
         payload: payload,
@@ -147,43 +148,5 @@ class NotificationTypes {
         notificationLayout: NotificationLayout.Messaging,
       ),
     );
-  }
-
-  /// Cancels a specific notification by ID
-  static Future<void> cancelNotification(int id) async {
-    await AwesomeNotifications().cancel(id);
-  }
-
-  /// Cancels all active notifications
-  static Future<void> cancelAllNotifications() async {
-    await AwesomeNotifications().cancelAll();
-  }
-
-  // Get Firebase FCM token
-  static Future<String> getFirebaseMessagingToken() async {
-    String firebaseAppToken = '';
-    if (await AwesomeNotificationsFcm().isFirebaseAvailable) {
-      try {
-        firebaseAppToken =
-            await AwesomeNotificationsFcm().requestFirebaseAppToken();
-      } catch (exception) {
-        debugPrint('$exception');
-      }
-    } else {
-      debugPrint('Firebase is not available on this project');
-    }
-    return firebaseAppToken;
-  }
-
-  // Subscribe to a topic
-  static Future<void> subscribeToTopic(String topic) async {
-    await AwesomeNotificationsFcm().subscribeToTopic(topic);
-    debugPrint('Subscribed to topic: $topic');
-  }
-
-  // Unsubscribe from a topic
-  static Future<void> unsubscribeFromTopic(String topic) async {
-    await AwesomeNotificationsFcm().unsubscribeToTopic(topic);
-    debugPrint('Unsubscribed from topic: $topic');
   }
 }

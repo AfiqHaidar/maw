@@ -7,7 +7,8 @@ import 'package:mb/core/theme/colors.dart';
 import 'package:mb/data/enums/route_identifier.dart';
 import 'package:mb/data/providers/auth_provider.dart';
 import 'package:mb/data/services/cache/cache_initializer.dart';
-import 'package:mb/data/services/navigation/navigation.service.dart';
+import 'package:mb/data/services/navigation/navigation_service.dart';
+import 'package:mb/data/services/notification/fcm_token_service.dart';
 import 'package:mb/data/services/notification/notification_service.dart';
 import 'package:mb/features/auth/screens/auth_screen.dart';
 import 'package:mb/features/auth/screens/splash_screen.dart';
@@ -24,6 +25,7 @@ void main() async {
 
   await NotificationService.initializeLocalNotifications(debug: true);
   await NotificationService.initializeRemoteNotifications(debug: true);
+  await FcmTokenService().updateFcmToken();
   await CacheInitializer().initialize();
 
   runApp(

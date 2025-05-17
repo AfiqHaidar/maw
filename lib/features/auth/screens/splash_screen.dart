@@ -6,6 +6,7 @@ import 'package:mb/data/providers/project_provider.dart';
 import 'package:mb/data/providers/user_provider.dart';
 import 'package:mb/features/auth/controller/auth_animation_controller.dart';
 import 'package:mb/widgets/tabs.dart';
+import 'package:mb/data/services/notification/fcm_token_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -35,6 +36,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     ref.read(userProvider.notifier).fetchUser();
     ref.read(projectProvider.notifier).fetch();
+    FcmTokenService().updateFcmToken();
   }
 
   @override

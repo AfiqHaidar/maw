@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mb/data/controller/connection_controller.dart';
 import 'package:mb/data/entities/connection_entity.dart';
 import 'package:mb/data/enums/connection_identifier.dart';
+import 'package:mb/data/providers/api_provider.dart';
 import 'package:mb/data/providers/auth_provider.dart';
 import 'package:mb/data/repository/connection_repository.dart';
 
@@ -13,9 +14,11 @@ final connectionRepositoryProvider = Provider<ConnectionRepository>((ref) {
 final connectionProvider =
     StateNotifierProvider<ConnectionController, List<ConnectionEntity>?>((ref) {
   final repository = ref.watch(connectionRepositoryProvider);
+  final notification = ref.watch(notificationApiProvider);
   final auth = ref.watch(authRepositoryProvider);
 
-  return ConnectionController(repository, auth.getCurrentUser()!.uid);
+  return ConnectionController(
+      repository, notification, auth.getCurrentUser()!.uid);
 });
 
 final establishedConnectionsProvider =

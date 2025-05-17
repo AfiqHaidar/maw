@@ -6,6 +6,7 @@ import 'package:mb/data/enums/route_identifier.dart';
 import 'package:mb/data/providers/auth_provider.dart';
 import 'package:mb/features/auth/screens/auth_screen.dart';
 import 'package:mb/features/auth/screens/splash_screen.dart';
+import 'package:mb/features/home/screens/inbox_screen.dart';
 import 'package:mb/features/portofolio/screens/portofolio_screen.dart';
 import 'package:mb/features/profile/screens/profile_screen.dart';
 import 'package:mb/widgets/tabs.dart';
@@ -37,6 +38,11 @@ class AppRouter {
       case RouteIdentifier.home:
         return MaterialPageRoute(
           builder: (context) => const TabsWrapper(),
+        );
+
+      case RouteIdentifier.inbox:
+        return MaterialPageRoute(
+          builder: (context) => const InboxScreen(),
         );
 
       case RouteIdentifier.project:
