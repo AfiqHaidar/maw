@@ -10,6 +10,25 @@ Maw helps developers display their projects in a beautiful and structured format
 
 ---
 
+## 📷 Screenshots for this Update
+1. User 1 is in homescreen, goes to searchbar, types User 2 (@fluter), and opens his profile page. Then he sends a connection request using the button on the top right.
+<img src="https://github.com/user-attachments/assets/fdb20931-9fc2-4bdf-a117-3117a938dfa7" width="200"/>
+<img src="https://github.com/user-attachments/assets/e04e3d38-defb-4754-acda-0c0fc5411a19" width="200"/>
+<img src="https://github.com/user-attachments/assets/934dd446-4a29-48f7-ab54-799b44c0df5d" width="200"/>
+<img src="https://github.com/user-attachments/assets/ac6e5ae3-a876-4497-9ae9-45cd43f98a6d" width="200"/>
+
+2. User 2 (@fluter) get notification of connection request from User 1 (@cota). When he tap the notification, it opens the account inbox. in there User 1 (@fluter) Accept the connection request from User 1 (@cota). Another way to open the inbox is from the Inbox Icon on homescreen, at the searchbar.
+<img src="https://github.com/user-attachments/assets/dce551bb-9171-4783-841d-34468e1ac167" width="200"/>
+<img src="https://github.com/user-attachments/assets/97865f49-c5d9-458a-b600-910f1e1aa980" width="200"/>
+<img src="https://github.com/user-attachments/assets/e4e764ea-d371-4f05-8b85-4660cfb1004a" width="200"/>
+<img src="https://github.com/user-attachments/assets/94d1d9c6-ee6c-4440-82b2-f688c7e7ccd4" width="200"/>
+
+3. After User 2 (@fluter) accepts the connection, User 1 (@cota) receives a notification that the connection request has been accepted.
+<img src="https://github.com/user-attachments/assets/9fa759b6-0b26-45c1-89f4-89d698392c9f" width="200"/>
+<img src="https://github.com/user-attachments/assets/570e5e98-49f2-478f-8337-933c493ca78f" width="200"/>
+
+---
+
 ## 📖 Current Features
 
 - **Authentication Flow**  
